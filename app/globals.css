@@ -1,0 +1,639 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    /* Background - Deep void */
+    --background: 222 47% 7%;
+    --background-rgb: 12 19 36;
+    
+    /* Surface Hierarchy */
+    --surface: 222 47% 7%;          /* #0c1324 - Base */
+    --surface-container-low: 222 44% 10%;  /* #151b2d */
+    --surface-container: 222 42% 13%;       /* #1e2538 */
+    --surface-container-high: 222 40% 16%;  /* #262d42 */
+    --surface-container-highest: 222 38% 22%; /* #2e3447 */
+    
+    /* Foreground */
+    --foreground: 226 33% 93%;       /* #dce1fb - Body text */
+    --foreground-heading: 0 0% 100%; /* #ffffff - Headlines */
+    
+    /* Primary - Neon Accent */
+    --primary: 163 100% 50%;         /* #00FFC2 */
+    --primary-dim: 168 100% 40%;     /* #00e1ab */
+    --primary-foreground: 158 100% 11%; /* #003828 */
+    
+    /* Secondary */
+    --secondary: 222 30% 15%;
+    --secondary-foreground: 226 33% 93%;
+    
+    /* Muted */
+    --muted: 222 30% 15%;
+    --muted-foreground: 215 20% 65%;
+    
+    /* Accent */
+    --accent: 163 100% 50%;
+    --accent-foreground: 158 100% 11%;
+    
+    /* Borders - Ghost borders */
+    --border: 215 25% 20%;
+    --border-subtle: 215 25% 15%;    /* 10% opacity */
+    --outline: 215 25% 27%;         /* #3a4a43 */
+    --outline-variant: 215 25% 20%; /* 15% opacity */
+    
+    /* Input */
+    --input: 222 30% 10%;
+    --input-border: 215 25% 15%;
+    
+    /* Ring */
+    --ring: 163 100% 50%;
+    
+    /* Chart colors */
+    --chart-1: 163 100% 50%;
+    --chart-2: 280 60% 50%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    
+    /* Radius - Sharp engineered */
+    --radius: 0.5rem;
+    
+    /* Sidebar */
+    --sidebar-background: 222 47% 10%;
+    --sidebar-foreground: 226 33% 93%;
+    --sidebar-primary: 163 100% 50%;
+    --sidebar-primary-foreground: 158 100% 11%;
+    --sidebar-accent: 222 30% 15%;
+    --sidebar-accent-foreground: 226 33% 93%;
+    --sidebar-border: 215 25% 20%;
+    --sidebar-ring: 163 100% 50%;
+
+    /* Spacing Scale - Editorial Breathing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+    --space-24: 6rem;
+
+    /* Z-index */
+    --z-base: 1;
+    --z-above: 10;
+    --z-dropdown: 20;
+    --z-sticky: 30;
+    --z-fixed: 40;
+    --z-modal-backdrop: 50;
+    --z-modal: 60;
+    --z-popover: 70;
+    --z-tooltip: 80;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #00FFC2 rgba(0, 255, 194, 0.05);
+  }
+  
+  /* Global scrollbar styles */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 255, 194, 0.03);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #00FFC2 0%, #00e1ab 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(0, 255, 194, 0.3);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00ffc2 0%, #00ffc2 100%);
+    box-shadow: 0 0 10px rgba(0, 255, 194, 0.5);
+  }
+  
+  /* Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Kinetic Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes whatsapp-pulse {
+  0%, 100% { 
+    opacity: 1;
+    box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.5);
+  }
+  50% { 
+    opacity: 0.7;
+    box-shadow: 0 10px 40px -5px rgba(34, 197, 94, 0.8);
+  }
+}
+
+@keyframes pulse-cta {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 194, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(0, 255, 194, 0);
+  }
+}
+
+@keyframes neon-flicker {
+  0%, 100% { 
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% { 
+    opacity: 0.95;
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes neon-pulse {
+  0%, 100% { 
+    text-shadow: 0 0 10px rgba(0, 255, 194, 0.5), 0 0 20px rgba(0, 255, 194, 0.3);
+  }
+  50% { 
+    text-shadow: 0 0 20px rgba(0, 255, 194, 0.8), 0 0 40px rgba(0, 255, 194, 0.5), 0 0 60px rgba(0, 255, 194, 0.3);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-whatsapp-pulse {
+  animation: whatsapp-pulse 2s ease-in-out infinite;
+}
+
+.animate-pulse-cta {
+  animation: pulse-cta 2s ease-in-out infinite;
+}
+
+@keyframes button-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(0, 255, 194, 0.4), 0 0 30px rgba(0, 255, 194, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(0, 255, 194, 0.6), 0 0 50px rgba(0, 255, 194, 0.4), 0 0 75px rgba(0, 255, 194, 0.2);
+  }
+}
+
+.animate-button-pulse {
+  animation: button-pulse 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-whatsapp-pulse {
+  animation: whatsapp-pulse 2s ease-in-out infinite;
+}
+
+.animate-neon-pulse {
+  animation: button-neon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes button-neon-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(0, 255, 194, 0.4), 0 0 30px rgba(0, 255, 194, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(0, 255, 194, 0.6), 0 0 50px rgba(0, 255, 194, 0.4), 0 0 75px rgba(0, 255, 194, 0.2);
+  }
+}
+
+.animate-pulse-cta {
+  animation: pulse-cta 2s ease-in-out infinite;
+}
+
+.animate-neon-flicker {
+  animation: neon-flicker 4s ease-in-out infinite;
+}
+
+.animate-neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-600 { animation-delay: 0.6s; }
+.animation-delay-800 { animation-delay: 0.8s; }
+
+/* Glass Effect */
+.glass {
+  background: rgba(21, 27, 45, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Neon Glow */
+.neon-glow {
+  box-shadow: 0 0 20px rgba(0, 255, 194, 0.3), 0 0 40px rgba(0, 255, 194, 0.1);
+}
+
+.neon-glow-text {
+  text-shadow: 0 0 10px rgba(0, 255, 194, 0.5), 0 0 20px rgba(0, 255, 194, 0.3);
+}
+
+/* Kinetic Button Gradient */
+.btn-primary {
+  background: linear-gradient(135deg, #00FFC2 0%, #00e1ab 100%);
+  color: #003828;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 30px rgba(0, 255, 194, 0.5), 0 0 60px rgba(0, 255, 194, 0.2);
+}
+
+/* Ghost Border */
+.ghost-border {
+  border: 1px solid rgba(58, 74, 67, 0.2);
+}
+
+.ghost-border:hover {
+  border-color: rgba(0, 255, 194, 0.4);
+}
+
+/* Surface Elevation - No shadows, just tonal shift */
+.elevation-low {
+  background: var(--surface-container-low);
+}
+
+.elevation-medium {
+  background: var(--surface-container);
+}
+
+.elevation-high {
+  background: var(--surface-container-high);
+}
+
+.elevation-highest {
+  background: var(--surface-container-highest);
+}
+
+/* Custom Scrollbar - Diagram (smaller) */
+.custom-scrollbar-diagram::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar-diagram::-webkit-scrollbar-track {
+  background: rgba(0, 255, 194, 0.03);
+}
+
+.custom-scrollbar-diagram::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 194, 0.4);
+  border-radius: 2px;
+}
+
+/* Firefox scrollbar for custom scrollbar class */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #00FFC2 rgba(0, 255, 194, 0.05);
+}
+
+.custom-scrollbar-diagram {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 194, 0.4) rgba(0, 255, 194, 0.03);
+}
+
+/* Grid Texture Background */
+.bg-grid-texture {
+  background-image: 
+    linear-gradient(rgba(0, 255, 194, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 194, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Chat Widget Custom Scrollbar */
+.custom-scrollbar-chat::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar-chat::-webkit-scrollbar-track {
+  background: rgba(0, 255, 194, 0.03);
+  border-radius: 3px;
+}
+
+.custom-scrollbar-chat::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00FFC2 0%, #00e1ab 100%);
+  border-radius: 3px;
+}
+
+.custom-scrollbar-chat::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00FFC2 0%, #00FFC2 100%);
+}
+
+.custom-scrollbar-chat {
+  scrollbar-width: thin;
+  scrollbar-color: #00FFC2 rgba(0, 255, 194, 0.05);
+}
+
+/* Navbar "Sobre Mí" glow animation */
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 8px rgba(0, 255, 194, 0.4), 0 0 16px rgba(0, 255, 194, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 12px rgba(0, 255, 194, 0.6), 0 0 24px rgba(0, 255, 194, 0.4);
+  }
+}
+
+.animate-glow {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Glow border animation for "Sobre Mí" navbar button */
+@keyframes glow-border {
+  0%, 100% {
+    border-color: rgba(0, 255, 194, 0.3);
+    box-shadow: 0 0 8px rgba(0, 255, 194, 0.3), 0 0 16px rgba(0, 255, 194, 0.1);
+  }
+  50% {
+    border-color: rgba(0, 255, 194, 0.7);
+    box-shadow: 0 0 12px rgba(0, 255, 194, 0.5), 0 0 24px rgba(0, 255, 194, 0.3);
+  }
+}
+
+.animate-glow-border {
+  border: 2px solid rgba(0, 255, 194, 0.5);
+  border-radius: 9999px;
+  animation: glow-border 2s ease-in-out infinite;
+  box-shadow: 
+    0 0 8px rgba(0, 255, 194, 0.4),
+    0 0 16px rgba(0, 255, 194, 0.2),
+    inset 0 0 8px rgba(0, 255, 194, 0.1);
+}
+
+/* Glow button animation for Certificados and CV tabs */
+@keyframes glow-button {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 255, 194, 0.3), 0 0 20px rgba(0, 255, 194, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 194, 0.5), 0 0 30px rgba(0, 255, 194, 0.25);
+  }
+}
+
+.animate-glow-button {
+  animation: glow-button 2s ease-in-out infinite;
+}
+
+/* Pixel ring animation - orbiting pixels around button */
+@keyframes pixel-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pixel-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+.animate-pixel-ring {
+  border: 1px solid rgba(0, 255, 194, 0.4);
+  animation: pixel-rotate 3s linear infinite;
+}
+
+.animate-pixel-ring::before,
+.animate-pixel-ring::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #00FFC2;
+  border-radius: 1px;
+  box-shadow: 
+    0 0 6px #00FFC2,
+    0 0 12px rgba(0, 255, 194, 0.5);
+}
+
+.animate-pixel-ring::before {
+  top: -6px;
+  left: 50%;
+  margin-left: -2px;
+  animation: pixel-pulse 1.5s ease-in-out infinite;
+}
+
+.animate-pixel-ring::after {
+  bottom: -6px;
+  left: 50%;
+  margin-left: -2px;
+  animation: pixel-pulse 1.5s ease-in-out infinite 0.75s;
+}
+
+/* Grid pattern background for about page */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(0, 255, 194, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 194, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Flip horizontal utility */
+.flip-x {
+  transform: scaleX(-1);
+}
+
+/* Accessibility - Focus visible styles */
+:focus-visible {
+  outline: 2px solid #00FFC2;
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #00FFC2;
+  outline-offset: 2px;
+}
+
+/* High contrast focus for interactive elements */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+[role="button"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid #00FFC2;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility - Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Keyboard shortcut hint */
+.kbd-shortcut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: ui-monospace, monospace;
+  background: linear-gradient(180deg, #2e3447 0%, #1e2538 100%);
+  border: 1px solid #3a4a43;
+  border-radius: 4px;
+  color: #dce1fb;
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Interactive focus states for cards */
+.group:focus-within {
+  outline: 2px solid #00FFC2;
+  outline-offset: 2px;
+}
+
+/* Ensure focus is visible on hoverable cards */
+.hoverable-card:hover,
+.hoverable-card:focus-within {
+  border-color: rgba(0, 255, 194, 0.4);
+}
+
+/* Focus trap indicator for modals */
+[data-focus-trap] {
+  position: relative;
+}
+
+/* Smooth scroll target highlight */
+:target {
+  scroll-margin-top: 100px;
+}
+
+/* Custom focus ring for primary actions */
+.focus-ring-primary:focus-visible {
+  outline: 2px solid #00FFC2;
+  outline-offset: 3px;
+  box-shadow: 0 0 20px rgba(0, 255, 194, 0.4);
+}
+
+/* Focus visible for form elements */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: #00FFC2 !important;
+  box-shadow: 0 0 0 3px rgba(0, 255, 194, 0.15);
+}
