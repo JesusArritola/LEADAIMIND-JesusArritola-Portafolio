@@ -1,0 +1,15 @@
+# Robots.txt para LeadAIMind
+# https://leadaimind.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://leadaimind.com/sitemap.xml
+
+# Archivos estáticos permitidos
+Allow: /images/
+Allow: /favicon.ico
+
+# Rutas sitemap (cuando existan)
+Allow: /sitemap.xml
