@@ -1,0 +1,322 @@
+{
+  "name": "Agente_Thumbail",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Tumbnail Generator",
+        "formDescription": "Rellene los campos correctamente con la informacion sobre el thumbnail deseado.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Titulo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Breve Descripcion de la imagen",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Que elementos quieres que aparezcan en el Thumbnail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estilo",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -352,
+        0
+      ],
+      "id": "670edf35-ee30-4d20-8a9a-8dfe9c656afe",
+      "name": "On form submission",
+      "webhookId": "d2155cad-560a-438d-94d7-374cba9086a3"
+    },
+    {
+      "parameters": {
+        "name": "={{ $now.format(\"yyyy-MM-dd\")}}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "5090a9f7-f3fa-403a-bd81-e911ad9e986b",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $('AI Agent').item.json.output }}",
+        "options": {
+          "size": "1024x1024"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "5d8b44ac-f50c-4992-9726-0eb1e1a6079a",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Formulario Personalizable o adaptable con Webhook",
+        "height": 256,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -448,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "f27dfa16-bd32-4161-8845-65d28b9c1cc2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con IA para generar un PROMPT",
+        "height": 496,
+        "width": 384,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "83c09468-34f4-4fdf-831e-02550ba55f2e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Escribe un prompt basado en esto:\n\neste es el título del video: {{ $json.Titulo }}\n\nesta es la descripción del video:{{ $json['Breve Descripcion de la imagen'] }}\n\nEstos son los elementos que tiene que incluir el thumbnail: {{ $json['Que elementos quieres que aparezcan en el Thumbnail'] }}\n\nEste es el estilo del thumbnail: {{ $json.Estilo }}\n\nAsegurate de no usar el título entero, pero si algunas palabras asociadas con el título.\nEl thumbnail debe crear curiosidad y tener elementos sobre el video y debe llamar la atencion facilmente\nDevuelve solo el prompt.",
+        "options": {
+          "systemMessage": "=Eres un agente profesional creador de prompts basados en un formulario para generar Thumbnails de videos de youtube atractivos, profesionales y que capten al instante la atencion del usuario.\nAsegurate de centrarte en el tema y los campos recibidos de el Formulario.\nNo te inventes imagenes ni elementos que esten fuera del contexto recibido.\nAsegurate de crear imagenes impactantes y resaltar siempre el producto principal.\nLas palabras que van a salir en la imagen generada deben ser precisas y todas en ingles , sin errores , palabras llamativas solamente."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "88b7fd92-b703-4a95-ad6c-1093e6c6a35b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "0cde1a83-27db-41f5-820a-4f6974e60bae",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Generador de imagen con DALL-E 3",
+        "height": 336,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "6fe28e25-30b6-41dd-9466-e13108a1e8cb",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "886e8e76-301e-40b7-b1e9-d4e62948d71c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales Drive",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1104,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "b8f48478-60c1-4139-bad4-ad05ece4fe8e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Agente Thumbnail : \nDescripcion : \nAgente de inteligencia artificial que genera una imagen para miniatura de videos con solo una breve descripcion del video.\n\nFuncionalidad : \nGenerar imagenes con facilidad con solo una descripcion.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que crea la iamgen con IA.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 384,
+        "width": 512,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "0c3b6525-9e95-4bd1-95e1-f82853782a0d",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas utilizadas : \n-Form Trigger : Usado para ingresar los datos referentes a la imagen deseada.\n-AI Agent : Usado para generar un PROMPT con los datos recibidos del formulario.\n-OpenAI : Usado para generar la imagen.\n-Drive : Usado para guardar la imagen generada.",
+        "height": 304,
+        "width": 480,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -896,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "11d2dea6-f330-4a31-9f7a-a120f4de86c8",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        240
+      ],
+      "id": "45b61e92-d910-4571-9199-08cce9e82233",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ce364d67-357a-453f-96f4-149d7844e9f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "ed8GeCxVsnI2IyyW",
+  "tags": []
+}

@@ -1,0 +1,880 @@
+{
+  "name": "Agente_On_boarding_New_client",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Aquí está la información sobre el cliente\nNombre: {{ $('Edit Fields1').first().json.Nombre }}\nCorreo: {{ $('Edit Fields1').first().json.Correo }}\nEmpresa: {{ $('Edit Fields1').first().json.Empresa }}\nObjetivo: {{ $('Edit Fields1').first().json.Descripcion }}\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un agente OnBoarding especializado en  crear correos electrónicos de bienvenida cálido para un nuevo cliente basado en su información .Queremos que el correo sea conciso y amigable pero también profesional .Debe estar personalizado para ellos según su industria y lo que esperan obtener de nuestra colaboración.\nDebes utilizar saltos de linea cuando lo creas necesario para hacer el correo mas presencial y profesional.\n\nAsegúrate de que siempre se firme el correo electrónico como \"JM\" la empresa es \"DipusAI\"  .No incluyas variables en la firma si la información es desconocida nunca queremos [Tu Nombre] o [Tu Información de Contacto] etc..\n\nPresenta esta información en 3 campos separados\nSubject: El asunto del correo electrónico\nBody: El cuerpo del correo electrónico\nEmail:\n\nAsegurate de adjuntar siempre el enlace de la nueva caperta compartida con el nuevo cliente que es esta : {{ $('Create folder').item.json.mimeType }}\n\nAsegurate de devolverlo en html limpio y profesional para enviar al correo.\nDatos de Ejemplo : \nSubject: Aqui pondras el subject\nBody : Aqui pondras el cuerpo\nEmail : Aqui pondras el correo\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -17984,
+        352
+      ],
+      "id": "f60889eb-311b-4b64-90b9-f507cb742f6d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -18048,
+        624
+      ],
+      "id": "d4de0fa7-eed7-44c4-82c0-e994bf51e184",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').first().json.Correo }}",
+        "subject": "={{ $json.output.Subject }}",
+        "message": "={{ $json.output.Body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -17328,
+        352
+      ],
+      "id": "637df3cf-687e-4e2a-accf-0e647721703f",
+      "name": "Send a message",
+      "webhookId": "36633262-1734-4c9a-88c3-2c8b90d941a8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Información de un cliente : \nName:{{ $json.Nombre }}\nEmpresa:{{ $json.Empresa }}\nObjetivo:{{ $json.Descripcion }}\nCorreo:{{ $json.Correo }}\n\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un agente profesional con mas de 10 años de experiencia realizando perfil de reusmente de cada nuevo cliente una vez completado el formulario de onboarding.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -17968,
+        896
+      ],
+      "id": "e033242c-a530-4592-b4bf-b1aa98a94e23",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -18032,
+        1168
+      ],
+      "id": "45e97687-5830-4d05-9c4e-c97b61a6d2a1",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1odmBqBW2X7ijTvhpFfbMbJAVO12FA88YnAH2fO5HnCE",
+          "mode": "list",
+          "cachedResultName": "ON_Boarding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1odmBqBW2X7ijTvhpFfbMbJAVO12FA88YnAH2fO5HnCE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 730242356,
+          "mode": "list",
+          "cachedResultName": "Clientes_nuevos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1odmBqBW2X7ijTvhpFfbMbJAVO12FA88YnAH2fO5HnCE/edit#gid=730242356"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.output.Nombre }}",
+            "Correo": "={{ $json.output.Email }}",
+            "Resumen": "={{ $json.output.Resumen }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen",
+              "displayName": "Resumen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -17328,
+        896
+      ],
+      "id": "edc04292-ced5-4f1b-9de9-718aae326a07",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "BRIEF CLIENTE",
+        "height": 240,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -19648,
+        816
+      ],
+      "typeVersion": 1,
+      "id": "8c423f0d-0fa2-4e11-9d1c-7ee154f702d3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "On Boarding New Client : \nDescripcion : \nAutomatizacion para realizar un OnBoarding de los nuevos clientes que rellenen el formulario , enviarle un mensaje de bienvenida y almacenar sus datos en un google sheet.\n\nFuncionalidad : \nEnviar correos a los nuevos clientes y guardar sus datos asegurando una calida bienvenida a la comunidad.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que brindado un brief a traves de un formulario permite dar la bienvenida a nuevos clientes haciendo mas facil captar su atencion.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Escalabilidad : Es un sistema completamente escalable segun la empresa y los requisitos requeridos.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 320,
+        "width": 752,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -17008,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "4f481018-56b3-4208-b42a-272f6bd8701a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Resumen PERFIL CLIENTE",
+        "height": 528,
+        "width": 1008,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        784
+      ],
+      "typeVersion": 1,
+      "id": "8c8195b4-fa46-4565-a269-b54aa3419f4c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "CORREO DE BIENVENIDA",
+        "height": 496,
+        "width": 992,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "138f8de3-77ed-4ff9-b30b-5a62596d6d49",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE GOOGLE SHEETS",
+        "height": 224,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -17392,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "967c3fdd-e84c-4b61-82a9-b7f49cc8d510",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE CHAT MODEL",
+        "height": 176,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "f9fe1023-f2ff-425f-ad05-79937f8eabba",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE CHAT MODEL",
+        "height": 176,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "ca1fc784-31ee-484c-82d1-cde6fba55e1e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE GMAIL",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -17376,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "ae449328-38a0-4595-b3d0-7b5fa1c42575",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.Nombre }}_{{ $json.Apellido }}_{{ $json.Correo }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {
+          "folderColorRgb": "#130249"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -19008,
+        352
+      ],
+      "id": "2d5c73cb-b385-48f8-87f8-37f280f971ef",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "owner",
+            "type": "user",
+            "emailAddress": "={{ $('Edit Fields1').first().json.Correo }}"
+          }
+        },
+        "options": {
+          "transferOwnership": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -18672,
+        352
+      ],
+      "id": "22b5fa92-38ba-4d88-9eca-0deb86b00351",
+      "name": "Share folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Flujo iniciado con stripe despues del pago exiotoso",
+        "height": 448,
+        "width": 1344,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18736,
+        -624
+      ],
+      "typeVersion": 1,
+      "id": "6e8f726c-30b6-4850-90cf-5eed33611962",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Pago exitoso ?",
+        "height": 272,
+        "width": 576,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18624,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "f81cd665-c1af-4555-925d-79c387d4cd43",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c5ce1a63-c1ce-409e-9d30-d56e13851a74",
+              "leftValue": "={{ $json.body.data.object.payment_status }}",
+              "rightValue": "paid",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -18224,
+        -400
+      ],
+      "id": "0ca03cbc-94b5-4f14-8a60-5cc810a36f9b",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -18192,
+        -112
+      ],
+      "id": "01337d16-6069-47ed-875d-c0400e78b47d",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "https://buy.stripe.com/test_14A9AS6mmgeP0xGbWfgjC00  URL Stripe prueba",
+        "height": 112,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18624,
+        -592
+      ],
+      "typeVersion": 1,
+      "id": "c9d0aeba-50aa-4e3e-9aa3-7240d7414034",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prueba",
+        "options": {}
+      },
+      "id": "1c6d2a15-fb79-4b05-8101-a4d2d4fb0a98",
+      "name": "Webhook Stripe",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -18592,
+        -400
+      ],
+      "webhookId": "stripe-webhook-dandote",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "URL valida para formulario y enviar correos de Bienvenida",
+        "height": 352,
+        "width": 448,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -17840,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "e89c6bd4-31ff-4593-8706-949d78da9c8d",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Google Drive para crear y compartir la nueva carpeta del usuario.",
+        "height": 368,
+        "width": 736,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -19152,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "1588ce85-78be-4a13-9ef6-1145135e08c7",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Subject\": \" \",\n\t\"Body\": \" \"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -17776,
+        592
+      ],
+      "id": "9b8cad05-c070-49bd-a56b-6b96a683873f",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Nombre\": \"nombre del usuario\",\n\t\"Email\": \"direccion de correo del usuario  \",\n  \"Resumen\" : \"resumen elaborado del usaurio \"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -17760,
+        1104
+      ],
+      "id": "1b4d03d8-fbb7-4ced-8a18-4d0de6bf7e98",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title> Bienvenido a la Comunidad</title>\n</head>\n<body style=\"margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f4f4f4;\">\n  <table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" bgcolor=\"#f4f4f4\">\n    <tr>\n      <td align=\"center\">\n        <table width=\"600\" border=\"0\" cellspacing=\"0\" cellpadding=\"20\" bgcolor=\"#ffffff\" style=\"margin-top:30px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);\">\n          <tr>\n            <td align=\"center\" style=\"font-size:24px; font-weight:bold; color:#333333;\">\n              ¡{{ $json.Nombre }}, Bienvenido a la Comunidad!\n            </td>\n          </tr>\n          <tr>\n            <td style=\"font-size:16px; color:#555555; line-height:1.6;\">\n              Gracias por tu pago exitoso. Ahora formas parte de nuestra comunidad y estamos muy felices de tenerte con nosotros.\n              <br><br>\n              Para completar tu proceso de incorporación, por favor llena el formulario de Onboarding en el siguiente enlace:\n            </td>\n          </tr>\n          <tr>\n            <td align=\"center\">\n              <a href=\"https://forms.gle/11s9jdmcPsJsgnND6\" \n                 style=\"display:inline-block; padding:14px 28px; font-size:16px; font-weight:bold; color:#ffffff; background-color:#007BFF; text-decoration:none; border-radius:6px;\">\n                Completar Formulario de Onboarding\n              </a>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"font-size:14px; color:#999999; text-align:center; padding-top:20px;\">\n              Si tienes alguna duda, no dudes en contactarnos.  \n              <br>¡Gracias por confiar en nosotros!\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -17712,
+        -480
+      ],
+      "id": "13888f84-9416-473e-9034-3f291af03cf2",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('Edit Fields').first().json.Correo }}",
+        "subject": "=Hola {{ $('Edit Fields').first().json.Nombre }} es un placer tenerte aqui.",
+        "html": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -17504,
+        -480
+      ],
+      "id": "8bec973c-4107-47ef-8714-c71ec4cc37a1",
+      "name": "Send email",
+      "webhookId": "0402db2d-33bc-448b-852e-d616ca22e2c7",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ac6dfd49-f293-4b5e-8d25-cb52fadcfaa7",
+              "name": "Nombre",
+              "value": "={{ $json.body.data.object.collected_information.individual_name }}",
+              "type": "string"
+            },
+            {
+              "id": "4e9493c7-9c7a-4ddf-ba69-bc0383b97e6e",
+              "name": "Empresa",
+              "value": "={{ $json.body.data.object.collected_information.business_name }}",
+              "type": "string"
+            },
+            {
+              "id": "bd14c1b9-b892-48d3-acb2-35f0a278a316",
+              "name": "Correo",
+              "value": "={{ $json.body.data.object.customer_details.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -18000,
+        -480
+      ],
+      "id": "8b1e1541-d9cf-45ef-a068-02142be5f039",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e2dd40f5-3b4c-497d-b303-f94fcd108d01",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -19536,
+        896
+      ],
+      "id": "112cad70-112c-4234-b445-08af30e90d1a",
+      "name": "Webhook",
+      "webhookId": "e2dd40f5-3b4c-497d-b303-f94fcd108d01"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e3be19bf-ccb4-4e65-81fe-7bf04129c6e0",
+              "name": "Nombre",
+              "value": "={{ $json.body.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "d1796074-c305-4f33-b040-15155c3cf2d5",
+              "name": "Apellido",
+              "value": "={{ $json.body.Apellido }}",
+              "type": "string"
+            },
+            {
+              "id": "49f2c2d5-ddb1-46b0-ad43-640725cd4418",
+              "name": "Correo",
+              "value": "={{ $json.body.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "1b2fab7a-96f8-498b-9d9b-45a6c715bcd7",
+              "name": "Empresa",
+              "value": "={{ $json.body.Empresa }}",
+              "type": "string"
+            },
+            {
+              "id": "c2dd09d6-6f23-4dd4-aebc-34877fbe9cac",
+              "name": "Descripcion",
+              "value": "={{ $json.body.Descripcion }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -18864,
+        896
+      ],
+      "id": "153f8b42-6c9e-4428-90df-5bc2880e8b75",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "Paso 2 Onboarding",
+        "height": 1408,
+        "width": 2720,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -19760,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "a6ed0647-2bc8-41e8-950d-46373087072c",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Share folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Stripe": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share folder": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a3c8016e-c9db-4df1-ae58-c9b21dd8f98f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "ye9D8DeuT7fSq7LW",
+  "tags": []
+}

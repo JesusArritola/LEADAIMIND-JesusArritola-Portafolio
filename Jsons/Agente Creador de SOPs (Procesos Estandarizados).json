@@ -1,0 +1,706 @@
+{
+  "name": "Agente Creador de SOPs (Procesos Estandarizados)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Nuevo SOP",
+        "formDescription": "Agente Creador de SOPs (Procesos Estandarizados)",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre del Proceso",
+              "fieldType": "textarea",
+              "placeholder": "Escribe el nombre del proceso",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Objetivo del Proceso",
+              "fieldType": "textarea",
+              "placeholder": "¿Cual es el objetivo?",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Herramientas involucradas",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Notion"
+                  },
+                  {
+                    "option": "Canva"
+                  },
+                  {
+                    "option": "Buffer"
+                  },
+                  {
+                    "option": "Slack"
+                  },
+                  {
+                    "option": "Google Drive"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Responsable",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "jesusmiguela546@gmail.com"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nivel de detalle ",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Basico"
+                  },
+                  {
+                    "option": "Standard"
+                  },
+                  {
+                    "option": "Experto"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ejemplos o notas adicionales",
+              "fieldType": "textarea",
+              "placeholder": "Dame ejemplos"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        1776,
+        1456
+      ],
+      "id": "eb7e3bd4-defc-4a00-932f-acc179accf13",
+      "name": "On form submission",
+      "webhookId": "21d436e0-937c-443e-bef8-f8e26abd7f21"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1nNm1kmIPZrvMo6CsL37vOQfKyVEPyuBU3Y6tEpcdVG0",
+          "mode": "list",
+          "cachedResultName": "SOP_Nuevo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nNm1kmIPZrvMo6CsL37vOQfKyVEPyuBU3Y6tEpcdVG0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nNm1kmIPZrvMo6CsL37vOQfKyVEPyuBU3Y6tEpcdVG0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre del Proceso": "={{ $json['Nombre del Proceso'] }}",
+            "Objetivo del Proceso": "={{ $json['Objetivo del Proceso'] }}",
+            "Herramientas involucradas": "={{ $json['Herramientas involucradas'] }}",
+            "Responsable": "={{ $json.Responsable }}",
+            "Nivel de detalle ": "={{ $json['Nivel de detalle '] }}",
+            "Ejemplos o notas adicionales": "={{ $json['Ejemplos o notas adicionales'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre del Proceso",
+              "displayName": "Nombre del Proceso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Objetivo del Proceso",
+              "displayName": "Objetivo del Proceso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Herramientas involucradas",
+              "displayName": "Herramientas involucradas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Responsable",
+              "displayName": "Responsable",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nivel de detalle ",
+              "displayName": "Nivel de detalle ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Ejemplos o notas adicionales",
+              "displayName": "Ejemplos o notas adicionales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "submittedAt",
+              "displayName": "submittedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "formMode",
+              "displayName": "formMode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2160,
+        1456
+      ],
+      "id": "b85a4f6a-c0a2-4491-bcfc-140de2d2bd0d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos usuario : \nNombre Proceso : {{ $json['Nombre del Proceso'] }}\nObjetivo Proceso : {{ $json['Objetivo del Proceso'] }}\nHerramientas involucradas : {{ $json['Herramientas involucradas'] }}\nResponsable : {{ $json.Responsable }}\nNivel de detalle : {{ $json['Nivel de detalle '] }}\nEjemplos o notas adicionales : {{ $json['Ejemplos o notas adicionales'] }}\n\nEn base a esos datos Genera el SOP Deseado.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Actúa como un experto en Operaciones y Calidad. Tu tarea es escribir un Procedimiento Operativo Estándar (SOP) profesional basado en la información proporcionada por el usuario.\n\nDebes seguir ESTRICTAMENTE la siguiente estructura usando Markdown:\n\nTÍTULO DEL SOP\nVersión: v1.0 | Fecha: [Fecha de hoy]\n\n1. Propósito\n[Escribe el propósito basado en el objetivo del usuario]\n\n2. Alcance\n[Define a quién y qué área aplica este proceso]\n\n3. Roles y Responsabilidades\n[Lista los roles necesarios para ejecutar el proceso]\n\n4. Definiciones Clave\n[Explica términos técnicos o jerga interna usada]\n\n5. Materiales y Herramientas Necesarias\n[Lista las herramientas mencionadas por el usuario]\n\n6. Procedimiento Paso a Paso\n[Genera una guía detallada. Usa viñetas o listas numeradas. Sé conciso pero claro.]\n\n7. Checklist Final\n[Crea una lista de verificación rápida con los puntos críticos del paso 6 para asegurar la calidad]\n\n8. Errores Comunes y Soluciones\n[Lista 3 errores típicos que pueden ocurrir y cómo solucionarlos por separado]\n\n9. KPIs del Proceso\n[Sugiere 3 métricas clave para medir el éxito de este proceso]\n\nInstrucciones de Formato JSON:\nPara los campos que sean listas (Roles, Herramientas, KPIs, Procedimiento, Errores), DEBES devolverlos exclusivamente como un Array de Strings JSON.\nNO uses numeración (1., 2.) ni viñetas (-). Usa comillas dobles y comas.\n\nEjemplo de formato CORRECTO:\n'Roles y Responsabilidades': ['Rol 1', 'Rol 2', 'Rol 3']\n\nEjemplo de formato INCORRECTO:\n'Roles y Responsabilidades': '1. Rol 1. 2. Rol 2'\n\nManten el mismo marco de creacion siempre y asegurate de por cada error aportar una solucion tambien.\n\n**Otras Reglas : \n-Para dar la fecha del documento utiliza siempre la fecha actual {{$now.format('yyyy-MM-dd') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2640,
+        1456
+      ],
+      "id": "8b4f72ed-4d8e-4e30-84d5-3f42106acf2b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2528,
+        1760
+      ],
+      "id": "7ba93f71-2d5f-4d04-a679-72cd44ab3507",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "apiKey",
+        "outputFormat": "pdf",
+        "inputBinaryData": false,
+        "inputFileContent": "={{ $json.html }}",
+        "inputFilename": "=html.html"
+      },
+      "type": "@cloudconvert/n8n-nodes-cloudconvert.cloudConvert",
+      "typeVersion": 1,
+      "position": [
+        3632,
+        1488
+      ],
+      "id": "70a88a59-a194-41ad-be22-c6351f9a9c46",
+      "name": "CloudConvert",
+      "credentials": {
+        "cloudConvertApi": {
+          "id": "ejhGXnAUE5bnOOwB",
+          "name": "CloudConvert account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('On form submission').item.json['Nombre del Proceso'] }}-{{ $('On form submission').item.json.Responsable }}-{{ $('AI Agent').item.json.output.Fecha }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1RkFMx_i7hjkyql2pQdNSJBMzhAbFUAsN",
+          "mode": "list",
+          "cachedResultName": "SOP-Estandarizado",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1RkFMx_i7hjkyql2pQdNSJBMzhAbFUAsN"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4320,
+        1488
+      ],
+      "id": "48851f05-55e8-4b64-bcc8-bb782be3d593",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "{{ $json.html }}"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        3184,
+        1488
+      ],
+      "id": "8f7b1a81-c400-48b0-89d3-78046a846e74",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"Nombre_Sop\": { \"type\": \"string\" },\n  \"Proposito\": { \"type\": \"string\" },\n  \"Alcance\": { \"type\": \"string\" },\n  \n  \"Roles y Responsabilidades\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  },\n  \n  \"Definiciones clave\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  },\n  \n  \"Materiales y Herramientas Necesarias\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  },\n\n  \"Procedimiento Paso a Paso\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  },\n\n  \"Checklist Final\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  },\n\n  \"Errores Comunes y Soluciones\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  },\n\n  \"KPI del Proceso\": { \n    \"type\": \"array\", \n    \"items\": { \"type\": \"string\" } \n  }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2880,
+        1744
+      ],
+      "id": "57c8de97-cafd-45d9-a21f-a8c055d7529e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('On form submission').item.json.Responsable }}",
+        "subject": "={{ $('AI Agent').item.json.output['TÍTULO DEL SOP'] }}-{{ $('AI Agent').item.json.output['Versión'] }}-{{ $('AI Agent').item.json.output.Fecha }}",
+        "html": "={{ $('HTML').item.json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        4096,
+        1872
+      ],
+      "id": "5f5d838d-cfc6-456c-b996-29dbf52ed381",
+      "name": "Send email",
+      "webhookId": "22740004-b3b3-4b9a-b562-4ab4de94d787",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- 1. PROTECCIÓN CONTRA EL ERROR 'INPUTDATA IS NOT DEFINED' ---\n\nlet data;\ntry {\n    // Intentamos leer inputData (solo existe si configuraste los inputs en la UI)\n    data = $input.first().json.output;\n} catch (e) {\n    // Si inputData no existe (no configuraste las variables), usamos un objeto vacío\n    // Esto detiene el 'crash' pero los datos saldrán vacíos hasta que hagas el mapeo.\n    data = {};\n}\n\n// --- 2. FUNCIONES DE AYUDA ---\nfunction getSafeArray(val) {\n    if (!val) return [];\n    if (Array.isArray(val)) return val;\n    return [];\n}\n\n// Verificamos si recibimos datos reales o si estamos en modo \"vacío\" por falta de configuración\nconst receivedData = Object.keys(data).length > 0;\n\n// --- 3. EXTRACCIÓN DE DATOS ---\nconst nombreSop =\n  $('On form submission').first().json['Nombre del Proceso']+ '_' +\n  $input.first().json.output['Versión'] + '_' +\n  String($input.first().json.output.Fecha || \"Nombre del Proceso (Pendiente)\");\nconst proposito = $input.first().json.output['1. Propósito'] || \"Sin propósito definido (Revisa el mapeo de Inputs)\";\nconst alcance = $input.first().json.output['2. Alcance'] || \"Sin alcance definido\";\n\nconst roles = getSafeArray($input.first().json.output['3. Roles y Responsabilidades']);\nconst herramientas = getSafeArray($input.first().json.output['5. Materiales y Herramientas Necesarias']);\nconst definiciones = getSafeArray($input.first().json.output['4. Definiciones Clave']);\nconst pasos = getSafeArray($input.first().json.output['6. Procedimiento Paso a Paso']);\nconst checklist = getSafeArray($input.first().json.output['7. Checklist Final']);\nconst errores = getSafeArray($input.first().json.output['8. Errores Comunes y Soluciones']);\nconst kpis = getSafeArray($input.first().json.output['9. KPIs del Proceso']);\n\n// --- 4. LÓGICA DE TRANSFORMACIÓN A HTML ---\n\nlet rolesHTML = roles.map(rol => {\n    const idx = rol.indexOf(':');\n    return idx > -1 \n        ? `<li class=\"role-item\"><span class=\"role-name\">${rol.substring(0, idx).trim()}:</span> ${rol.substring(idx+1).trim()}</li>`\n        : `<li class=\"role-item\">${rol}</li>`;\n}).join('');\n\nlet defHTML = definiciones.map(def => {\n    const idx = def.indexOf(':');\n    return idx > -1 \n        ? `<dt>${def.substring(0, idx).trim()}</dt><dd>${def.substring(idx+1).trim()}</dd>`\n        : `<dt>${def}</dt><dd></dd>`;\n}).join('');\n\nlet erroresHTML = errores.map(err => {\n    const idx = err.indexOf(':');\n    return idx > -1 \n        ? `<tr><td>${err.substring(0, idx).trim()}</td><td class=\"error-solution\">${err.substring(idx+1).trim()}</td></tr>`\n        : `<tr><td>${err}</td><td></td></tr>`;\n}).join('');\n\nlet checklistHTML = checklist.map((item, index) => {\n    return `<div class=\"checklist-item\"><input type=\"checkbox\" id=\"check${index}\"> <label for=\"check${index}\">${item}</label></div>`;\n}).join('');\n\nlet stepsHTML = pasos.map(paso => `<li>${paso}</li>`).join('');\nlet toolsHTML = herramientas.map(h => `<li>${h}</li>`).join('');\nlet kpisHTML = kpis.map(k => `<li>${k}</li>`).join('');\n\n// --- BANNER DE ADVERTENCIA (Solo aparece si faltan datos) ---\nlet warningHTML = !receivedData \n    ? `<div style=\"background:#ffdddd; color:#d8000c; padding:15px; border:1px solid #d8000c; margin-bottom:20px; text-align:center; border-radius:4px;\">\n         <strong>⚠️ ERROR DE CONFIGURACIÓN:</strong> Las variables de entrada no están mapeadas en este nodo Code. \n         <br>Ve a la pestaña \"Input\" de este módulo y configura las variables (proposito, definiciones, etc.) para ver los datos.\n       </div>` \n    : \"\";\n\n// --- 5. GENERACIÓN FINAL HTML ---\n\nconst htmlOutput = `<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>SOP: ${nombreSop}</title>\n    <style>\n        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f0f2f5; color: #333; line-height: 1.6; margin: 0; padding: 40px; }\n        .sop-document { max-width: 850px; margin: 0 auto; background: #ffffff; padding: 50px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }\n        header { border-bottom: 2px solid #eaeaea; padding-bottom: 20px; margin-bottom: 30px; }\n        h1 { font-size: 26px; color: #2c3e50; margin: 0; }\n        .header-meta { font-size: 13px; color: #7f8c8d; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px; }\n        h2 { font-size: 18px; color: #2980b9; border-left: 4px solid #2980b9; padding-left: 12px; margin-top: 35px; margin-bottom: 15px; }\n        p { margin-bottom: 15px; text-align: justify; }\n        ul, ol { padding-left: 20px; margin-bottom: 20px; }\n        li { margin-bottom: 6px; }\n        .role-item { background-color: #f8f9fa; padding: 5px 10px; border-radius: 4px; margin-bottom: 5px; display: block; }\n        .role-name { font-weight: bold; color: #2c3e50; }\n        .def-list dt { font-weight: bold; color: #2c3e50; margin-top: 10px; }\n        .def-list dd { margin-left: 0; margin-bottom: 5px; color: #555; }\n        .error-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n        .error-table th, .error-table td { border: 1px solid #e1e4e8; padding: 12px; text-align: left; }\n        .error-table th { background-color: #f6f8fa; color: #2c3e50; width: 30%; }\n        .error-solution { color: #27ae60; font-weight: 500; }\n        .checklist-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 15px; }\n        .checklist-item input[type=\"checkbox\"] { margin-right: 12px; transform: scale(1.2); accent-color: #2980b9; }\n        .step-list > li { margin-bottom: 15px; }\n        footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #eaeaea; font-size: 12px; color: #999; text-align: center; }\n    </style>\n</head>\n<body>\n    <div class=\"sop-document\">\n        <!-- BANNER DE ERROR (Visible si falta el mapeo) -->\n        ${warningHTML}\n        \n        <header>\n            <div class=\"header-meta\">Standard Operating Procedure</div>\n            <h1>${nombreSop}</h1>\n        </header>\n        <section>\n            <h2>1. Propósito</h2>\n            <p>${proposito}</p>\n        </section>\n        <section>\n            <h2>2. Alcance</h2>\n            <p>${alcance}</p>\n        </section>\n        <section>\n            <h2>3. Roles y Responsabilidades</h2>\n            <ul>${rolesHTML || '<li>Sin roles</li>'}</ul>\n        </section>\n        <section>\n            <h2>4. Definiciones Clave</h2>\n            <dl class=\"def-list\">${defHTML || '<dt>Sin definiciones</dt>'}</dl>\n        </section>\n        <section>\n            <h2>5. Materiales y Herramientas Necesarias</h2>\n            <ul>${toolsHTML || '<li>Sin herramientas</li>'}</ul>\n        </section>\n        <section>\n            <h2>6. Procedimiento Paso a Paso</h2>\n            <ol class=\"step-list\">${stepsHTML || '<li>Sin pasos</li>'}</ol>\n        </section>\n        <section>\n            <h2>7. Checklist Final</h2>\n            ${checklistHTML || '<p>Sin checklist</p>'}\n        </section>\n        <section>\n            <h2>8. Errores Comunes y Soluciones</h2>\n            <table class=\"error-table\">\n                <thead><tr><th>Error</th><th>Solución</th></tr></thead>\n                <tbody>${erroresHTML || '<tr><td colspan=\"2\">Sin errores</td></tr>'}</tbody>\n            </table>\n        </section>\n        <section>\n            <h2>9. KPI del Proceso</h2>\n            <ul>${kpisHTML || '<li>Sin KPIs</li>'}</ul>\n        </section>\n        <footer>Documento generado automáticamente - Uso Interno</footer>\n    </div>\n</body>\n</html>`;\n\nreturn { html: htmlOutput };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3104,
+        1152
+      ],
+      "id": "b2db9e4d-2706-4fab-9c5c-d2470190d025",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- ROBUST PDF RENAMING WITH EXTENSIVE DEBUGGING ---\n\nreturn items.map((item, itemIndex) => {\n  console.log(`\\n=== PROCESSING ITEM ${itemIndex} ===`);\n  console.log('Full item structure:', JSON.stringify(item, null, 2));\n  \n  // Safety check\n  if (!item || !item.binary || !item.json) {\n    console.log('⚠️ Item missing binary or json data');\n    return item;\n  }\n  \n  // Check binary data\n  const binKeys = Object.keys(item.binary);\n  console.log('Binary keys found:', binKeys);\n  if (binKeys.length === 0) {\n    console.log('⚠️ No binary data found');\n    return item;\n  }\n\n  const binName = binKeys[0];\n  const fecha = new Date().toISOString().slice(0, 10);\n  \n  let tituloRaw = null;\n\n  // --- STRATEGY 1: Get title directly from AI Agent node ---\n  console.log('\\n🔍 STRATEGY 1: Checking AI Agent node output...');\n  try {\n    tituloRaw = $('AI Agent').first().json.output['TÍTULO DEL SOP'];\n    if (tituloRaw) {\n      console.log('✅ Found title from AI Agent node:', tituloRaw);\n    }\n  } catch (e) {\n    console.log('⚠️ Could not access AI Agent node:', e.message);\n  }\n\n  // --- STRATEGY 2: Check item.json.output['TÍTULO DEL SOP'] ---\n  if (!tituloRaw) {\n    console.log('\\n🔍 STRATEGY 2: Checking item.json.output...');\n    if (item.json.output && typeof item.json.output === 'object') {\n      console.log('item.json.output exists:', item.json.output);\n      if (item.json.output['TÍTULO DEL SOP']) {\n        tituloRaw = item.json.output['TÍTULO DEL SOP'];\n        console.log('✅ Found title in item.json.output[\"TÍTULO DEL SOP\"]:', tituloRaw);\n      }\n    }\n  }\n\n  // --- STRATEGY 3: Check item.json['TÍTULO DEL SOP'] directly ---\n  if (!tituloRaw) {\n    console.log('\\n🔍 STRATEGY 3: Checking item.json directly...');\n    if (item.json['TÍTULO DEL SOP']) {\n      tituloRaw = item.json['TÍTULO DEL SOP'];\n      console.log('✅ Found title in item.json[\"TÍTULO DEL SOP\"]:', tituloRaw);\n    }\n  }\n\n  // --- STRATEGY 4: Check all items in the array for any title ---\n  if (!tituloRaw && items.length > 1) {\n    console.log('\\n🔍 STRATEGY 4: Checking all items in array...');\n    for (let i = 0; i < items.length; i++) {\n      const otherItem = items[i];\n      if (otherItem.json && otherItem.json.output && otherItem.json.output['TÍTULO DEL SOP']) {\n        tituloRaw = otherItem.json.output['TÍTULO DEL SOP'];\n        console.log(`✅ Found title in items[${i}].json.output:`, tituloRaw);\n        break;\n      }\n      if (otherItem.json && otherItem.json['TÍTULO DEL SOP']) {\n        tituloRaw = otherItem.json['TÍTULO DEL SOP'];\n        console.log(`✅ Found title in items[${i}].json:`, tituloRaw);\n        break;\n      }\n    }\n  }\n\n  // --- FALLBACK: Use default if no title found ---\n  if (!tituloRaw) {\n    tituloRaw = 'Proceso_Sin_Titulo';\n    console.log('⚠️ No title found anywhere, using fallback:', tituloRaw);\n  }\n\n  // --- CLEAN TITLE FOR FILENAME ---\n  console.log('\\n🧹 Cleaning title for filename...');\n  const tituloLimpio = String(tituloRaw)\n    .normalize(\"NFD\")\n    .replace(/[\\u0300-\\u036f]/g, \"\") // Remove accents\n    .replace(/[^a-zA-Z0-9\\s]/g, \"_\") // Replace special chars with underscore\n    .replace(/\\s+/g, \"_\") // Replace spaces with underscore\n    .replace(/_+/g, \"_\") // Remove duplicate underscores\n    .substring(0, 50) // Limit length\n    .replace(/^_+|_+$/g, \"\"); // Trim underscores from start/end\n\n  console.log('Cleaned title:', tituloLimpio);\n\n  // --- ASSIGN NEW FILENAME ---\n  const nuevoNombre = `SOP_${fecha}_${tituloLimpio}.pdf`;\n  console.log('\\n📄 New filename:', nuevoNombre);\n\n  if (item.binary[binName]) {\n    item.binary[binName].fileName = nuevoNombre;\n    console.log('✅ Filename assigned successfully');\n  } else {\n    console.log('⚠️ Binary data not found at key:', binName);\n  }\n\n  return item;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3968,
+        1488
+      ],
+      "id": "2e434ca7-f7ee-4711-80a4-1dc779250697",
+      "name": "Cambiar nombre"
+    },
+    {
+      "parameters": {
+        "content": "Brief Cliente",
+        "height": 288,
+        "width": 336,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1664,
+        1392
+      ],
+      "typeVersion": 1,
+      "id": "a2784e3d-f2dc-46c7-83b4-051239c20bc5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Sheets para almacenar datos del usuario",
+        "height": 224,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2032,
+        1408
+      ],
+      "typeVersion": 1,
+      "id": "e0648277-167e-4932-8cb0-1700116266f8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model",
+        "height": 176,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2448,
+        1712
+      ],
+      "typeVersion": 1,
+      "id": "266854c5-e11c-4784-9601-8ecb23ab1e10",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA Agente Creador de SOP.",
+        "height": 672,
+        "width": 640,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2448,
+        1344
+      ],
+      "typeVersion": 1,
+      "id": "e666b135-85e9-4536-8ad2-a795f4ad2f13",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Plain text to HTML",
+        "height": 192,
+        "width": 272,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3024,
+        1120
+      ],
+      "typeVersion": 1,
+      "id": "f11cb41f-2109-4ea3-9adf-0340968442d5",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Plantilla HTML Standard para los SOP.",
+        "height": 272,
+        "width": 336,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3120,
+        1392
+      ],
+      "typeVersion": 1,
+      "id": "a668a26a-7869-44c0-99fb-1e9828697cea",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de CloudConvert (gratis 30 conversiones) para convertir HTML to PDF y guardarlo.",
+        "height": 304,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3520,
+        1376
+      ],
+      "typeVersion": 1,
+      "id": "269fc30a-2b27-4c12-b732-eeffbfabaaf4",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Cambiar nombre a PDF",
+        "height": 192,
+        "width": 272,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3872,
+        1440
+      ],
+      "typeVersion": 1,
+      "id": "5bffad2d-6224-498c-a830-5b46d5487dd9",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectaer credenciales de Google Drive para almacenar los SOP en PDF de los clientes.",
+        "height": 240,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4176,
+        1408
+      ],
+      "typeVersion": 1,
+      "id": "eeb7d418-b25a-43c7-a748-2d25e4718bc6",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Email.\nEjemplo Gmail (Tienes que tener una contraseña de aplicacion en tu cuenta de GOOGLE) :\nSMTP Host : smtp.gmail.com\nPort : 465 (SSL) o 587 (TLS)\nUser : Tu correo\nPassword : Contraseña de aplicacion\nSecure : Yes(SSL/TLS)",
+        "height": 256,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4000,
+        1776
+      ],
+      "typeVersion": 1,
+      "id": "b7e0909a-0d13-4df8-a537-aa4a6fe9d60d",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "📘 Descripción del Workflow – Agente Automático de Creación de SOPs\n\nEste workflow automatiza completamente la creación de Procedimientos Operativos Estándar (SOPs) profesionales a partir de un formulario estructurado. Su objetivo es transformar información básica proporcionada por el usuario en un documento operativo claro, estandarizado y listo para usar, sin necesidad de redacción manual ni conocimientos técnicos. El flujo combina formularios, almacenamiento en Google Sheets, un agente de IA especializado en operaciones, generación de documentos en HTML, conversión a PDF, almacenamiento en Google Drive y envío automático por correo electrónico.\n\nEl usuario solo debe completar un formulario con datos clave como el nombre del proceso, su objetivo, las herramientas utilizadas, el responsable y el nivel de detalle deseado. A partir de ahí, el sistema se encarga de todo el proceso de creación, validación, formateo y entrega del SOP.\n\n🎯 Importancia del Workflow\n\nLa correcta documentación de procesos es crítica para cualquier empresa que quiera crecer, delegar tareas o mantener consistencia operativa. Sin embargo, la creación de SOPs suele ser lenta, manual y poco estandarizada. Este workflow elimina esas fricciones y permite:\n\nCrear SOPs de forma rápida y consistente\n\nMantener un estándar de calidad en toda la documentación\n\nReducir dependencia del conocimiento individual\n\nFacilitar el onboarding de nuevos empleados\n\nAcelerar la escalabilidad del negocio\n\nProfesionalizar la operación interna\n\nAl automatizar este proceso, la empresa puede documentar más procesos en menos tiempo y con mayor calidad.\n\n🚨 Problema que Resuelve\n\nMuchas organizaciones enfrentan problemas como:\n\nProcesos no documentados o mal explicados\n\nSOPs inconsistentes entre áreas\n\nDocumentación obsoleta o difícil de actualizar\n\nDependencia excesiva de personas clave\n\nPérdida de tiempo redactando procesos manualmente\n\nEste workflow resuelve estos problemas generando SOPs estructurados, claros y reutilizables, reduciendo errores operativos y mejorando la eficiencia del equipo.\n\n🧠 Nodos Utilizados y Función\n\nEl flujo utiliza los siguientes nodos, cada uno con un rol específico dentro del sistema:\n\nForm Trigger: recoge la información del usuario mediante un formulario estructurado.\n\nGoogle Sheets (Append Row): guarda los datos enviados como registro y trazabilidad del proceso.\n\nAI Agent (LangChain): actúa como un experto en operaciones y calidad, generando el SOP siguiendo una estructura estricta y profesional.\n\nOpenAI Chat Model: provee el modelo de lenguaje utilizado por el agente.\n\nStructured Output Parser: valida que la salida del agente cumpla con el esquema esperado (listas, textos, KPIs, etc.).\n\nCode (JavaScript – HTML Generator): transforma el contenido estructurado en una plantilla HTML profesional.\n\nHTML Node: prepara el contenido para su conversión.\n\nCloudConvert: convierte el documento HTML en un archivo PDF.\n\nCode (JavaScript – Rename PDF): limpia y normaliza el nombre del archivo PDF generado.\n\nGoogle Drive (Upload File): almacena el SOP en una carpeta específica del Drive.\n\nSend Email: envía el SOP en PDF al responsable indicado en el formulario.",
+        "height": 1344,
+        "width": 1520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        912
+      ],
+      "typeVersion": 1,
+      "id": "e2990850-126e-4a97-a3a5-9ac4c8378f87",
+      "name": "Sticky Note10"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CloudConvert": {
+      "main": [
+        [
+          {
+            "node": "Cambiar nombre",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cambiar nombre": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "5164d1dd-b25e-4685-a77b-c2c1bb7cd589",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "83n1-dMhAg-n0iT5-QUaa",
+  "tags": []
+}

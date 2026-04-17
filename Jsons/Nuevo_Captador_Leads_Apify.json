@@ -1,0 +1,515 @@
+{
+  "name": "Nuevo_Captador_Leads_Apify",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Escrapea tus negocios ",
+        "formDescription": "Completa el formulario y recive informaicon valiosa de tus posibles clientes ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Localizacion",
+              "placeholder": "Escribe la ubicacion de tus leads",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tipo de Negocio",
+              "placeholder": "Escribe el tipo de negocio que deseas escrapear",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -176,
+        -288
+      ],
+      "id": "df4b5064-aaf9-4a70-a795-00098d632622",
+      "name": "On form submission",
+      "webhookId": "a0ab1546-8cdd-4205-b868-4c86819ff7fb"
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "nwua9Gu5YrADL7ZDj",
+          "mode": "id"
+        },
+        "customBody": "={\n    \"includeWebResults\": true,\n    \"language\": \"es\",\n    \"locationQuery\": \"{{ $json.Localizacion }}\",\n    \"maxCrawledPlacesPerSearch\": 5,\n    \"maxImages\": 0,\n    \"maximumLeadsEnrichmentRecords\": 0,\n    \"scrapeContacts\": false,\n    \"scrapeDirectories\": true,\n    \"scrapeImageAuthors\": false,\n    \"scrapePlaceDetailPage\": true,\n    \"scrapeReviewsPersonalData\": true,\n    \"scrapeSocialMediaProfiles\": {\n        \"facebooks\": false,\n        \"instagrams\": false,\n        \"tiktoks\": false,\n        \"twitters\": false,\n        \"youtubes\": false\n    },\n    \"scrapeTableReservationProvider\": false,\n    \"searchMatching\": \"all\",\n    \"searchStringsArray\": [\n        \"{{ $json[\"Tipo de Negocio\"] }}\"\n    ],\n    \"skipClosedPlaces\": false,\n    \"website\": \"allPlaces\"\n} ",
+        "timeout": "=360"
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -320
+      ],
+      "id": "6305ba89-ea33-406f-bb26-385da96407d1",
+      "name": "Run an Actor and get dataset",
+      "retryOnFail": true,
+      "credentials": {
+        "apifyApi": {
+          "id": "dCRqoBZlZMCfDWbI",
+          "name": "jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst allWebsites = [];\nconst regex = /https?:\\/\\/[^\\/\\s\"'>]+/g;\n\nfor (const item of items) {\n  const jsonString = JSON.stringify(item.json);\n  const matches = jsonString.match(regex);\n  if (matches) {\n    matches.forEach(website => {\n      allWebsites.push({ json: { website } });\n    });\n  }\n}\n\nreturn allWebsites.length > 0 ? allWebsites : [{ json: { website: '' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        -288
+      ],
+      "id": "39bcbd23-50bc-401a-b9cb-3c7ed4c01f51",
+      "name": "Limpiar URLS"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        944,
+        -288
+      ],
+      "id": "1ded2373-f682-4ebf-b278-bed4afd1fa3f",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bd755598-67ac-41c2-b7d3-9b95e85974a2",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "schema",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "76dfd4fc-9e29-446e-8197-963bb2b59e40",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "gg",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "7c4fe47d-e09e-4fae-80e9-b03174ae1ae8",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "gstatic",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "991ce2e9-122f-4bd8-8c1d-4f0dde06d426",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "google",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": false
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        688,
+        -288
+      ],
+      "id": "d70116b8-dbc1-489d-bb3a-23c998a9e6c0",
+      "name": "filtrar_correctos"
+    },
+    {
+      "parameters": {
+        "resource": "Datasets",
+        "datasetId": "={{ $json.storageIds.datasets.default }}",
+        "offset": 0,
+        "limit": 500
+      },
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -304
+      ],
+      "id": "dae7217c-885b-46a4-8257-14d2fc6267e2",
+      "name": "Get dataset items",
+      "retryOnFail": true,
+      "credentials": {
+        "apifyApi": {
+          "id": "dCRqoBZlZMCfDWbI",
+          "name": "jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -192,
+        64
+      ],
+      "id": "0159d6a9-1cf8-4591-b183-86b2f303bbbd",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        384,
+        192
+      ],
+      "id": "d4e24637-472b-4d0e-8e8c-eefc29184bc9",
+      "name": "Wait",
+      "webhookId": "17aacc35-4ffe-47c8-8def-10e32e028c8b",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json.data\nconst regex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(?!jpeg|jpg|png|gif|webp|svg)[a-zA-Z]{2,}/g\nconst emails = input.match(regex)\nreturn {json: {emails:emails}}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        192
+      ],
+      "id": "86eaa793-cdc4-4c37-ae0b-e587b864fe39",
+      "name": "Limpiar correos",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "95019add-ed5b-4276-8a59-6ca4a1dbf5c8",
+              "leftValue": "={{ $json.emails }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        112,
+        -48
+      ],
+      "id": "3ff076e7-0271-4f59-a9a3-1da7397c7ca1",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        544,
+        -48
+      ],
+      "id": "70e2acb9-ef8a-4e01-95c1-4c9f289d6eb4",
+      "name": "Remove Duplicates1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1NUUPu_RABM8afjetW9410RdaCp8uhyEFNPbjD-5F47c",
+          "mode": "list",
+          "cachedResultName": "Nuevo_Captador_Leads_Apify",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NUUPu_RABM8afjetW9410RdaCp8uhyEFNPbjD-5F47c/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NUUPu_RABM8afjetW9410RdaCp8uhyEFNPbjD-5F47c/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        912,
+        -48
+      ],
+      "id": "f81bb17f-69b0-41b0-a565-5b87945e4f1e",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.website }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        128,
+        192
+      ],
+      "id": "8dc84360-8cfd-4d79-b7a2-66d01ea8a498",
+      "name": "HTTP Request",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "emails",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -48
+      ],
+      "id": "94d3de77-a2ee-4cc9-a216-5840200195e0",
+      "name": "Split Out"
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Localizacion": "España",
+          "Tipo de Negocio": "Clinicas",
+          "submittedAt": "2026-03-27T11:50:53.615-04:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Run an Actor and get dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run an Actor and get dataset": {
+      "main": [
+        [
+          {
+            "node": "Get dataset items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar URLS": {
+      "main": [
+        [
+          {
+            "node": "filtrar_correctos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtrar_correctos": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get dataset items": {
+      "main": [
+        [
+          {
+            "node": "Limpiar URLS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Limpiar correos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar correos": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c09e0453-bc0f-4cf1-929b-a107b8b83ec8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "bvF82gu9Na4hE4AG",
+  "tags": []
+}

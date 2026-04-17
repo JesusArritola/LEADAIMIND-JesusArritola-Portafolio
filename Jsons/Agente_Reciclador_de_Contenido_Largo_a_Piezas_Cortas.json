@@ -1,0 +1,760 @@
+{
+  "name": "Agente_Reciclador_de_Contenido_Largo_a_Piezas_Cortas",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Reciclador de Contenido",
+        "formDescription": "Ingresa el link del video",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "URL del video",
+              "placeholder": "https://youtube.com/watch?v=XXXX",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5b9c763c-c3c3-449b-9aae-3bedabc2917c",
+      "name": "Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -2160,
+        2352
+      ],
+      "webhookId": "8aaa5a28-d769-4a17-aa4b-1dee05435a9b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f25eabc3-9aba-440a-9fbc-b78ad74f9731",
+              "name": "link_youtube",
+              "value": "={{ $json['URL del video'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1824,
+        2352
+      ],
+      "id": "c8b15e1e-b165-45e7-959b-61a612f215be",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "//obtener la URL desde los datos entrantes\nconst url = $json.link_youtube;\n\n// Función para extraer el ID del video de YouTube function \nfunction getYouTubeVideoID(url) {\n     const regex = /[?&]v=([a-zA-Z0-9_-]{11})/;\n     const match = url.match(regex);\n     return match ? match[1] : null;\n}\n\n// Extraer el ID del video\nconst videoID = getYouTubeVideoID(url);\n\n// Devolver el ID como resultado\nreturn { videoID };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1552,
+        2352
+      ],
+      "id": "0653f6fb-aa03-4234-aef3-fcd12cc98a53",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "content": "Rapidapi con Youtube Video Summarizer GPT AI .\nSubscribirse al plan gratuito de Rapidai .",
+        "height": 464,
+        "width": 368,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1360,
+        2160
+      ],
+      "typeVersion": 1,
+      "id": "54e42f40-ac80-49e7-9aa5-34eca1a68b35",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "url": "https://youtube-video-summarizer-gpt-ai.p.rapidapi.com/api/v1/get-transcript-v2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "video_id",
+              "value": "={{ $json.videoID }}"
+            },
+            {
+              "name": "platform",
+              "value": "youtube"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "youtube-video-summarizer-gpt-ai.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "df3bda8840mshfbdb8f3d62f13b2p1f5782jsn14ab5c584a41"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1216,
+        2352
+      ],
+      "id": "32bef1ea-57e5-4501-a1f2-da7b5c91a6c2",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ Object.keys($json.data_transcripts).includes(\"en_auto\") }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "9c792fd3-effe-4bbb-93e1-5952f79d15be"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ingles"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f2fc4031-a694-48c7-9f1a-e6930e892ad3",
+                    "leftValue": "={{ Object.keys($json.data_transcripts).includes(\"es_auto\") }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Español"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -448,
+        2352
+      ],
+      "id": "7ac50c89-0198-4b0c-95a5-85ebf75c6a35",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "448e4c05-1bf4-45d5-8119-9a9efea9f71b",
+              "name": "data_transcripts",
+              "value": "={{ $json.data.transcripts }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -816,
+        2352
+      ],
+      "id": "08b149c1-e98d-4c0b-bc51-254806e70278",
+      "name": "Tomar_Transcripcion"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all(); const transcripts = items[0].json.data_transcripts.es_auto; const textos = transcripts.auto.map(segment => segment.text); const transcripcion_completa = textos.join(' ').trim(); return [{ json: { transcripcion_completa: transcripcion_completa, total_segmentos: textos.length } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        2448
+      ],
+      "id": "84b8fda8-c938-41a1-a775-6a82bde8b816",
+      "name": "unir_español"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all(); const transcripts = items[0].json.data_transcripts['en-US']; const textos = transcripts.auto.map(segment => segment.text); const transcripcion_completa = textos.join(' ').trim(); return [{ json: { transcripcion_completa: transcripcion_completa, total_segmentos: textos.length } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        2256
+      ],
+      "id": "fb967c1d-c6b2-4941-8356-e93f6d4c3c59",
+      "name": "unir_ingles"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Transcripcion Completa : {{ $json.transcript_Total }}"
+            },
+            {
+              "role": "system",
+              "content": "=Eres un analista experto en contenido, storytelling y creación de piezas cortas para redes sociales. \nTu tarea es analizar una transcripción completa de un video y extraer los momentos más valiosos para convertirlos en contenido reutilizable.\n\nINSTRUCCIONES:\n\n1. Analiza la transcripción proporcionada.\n2. Identifica entre 2 y 5 momentos clave que tengan potencial para convertirse en clips cortos.\n3. Para cada momento detectado, genera:\n\n   - \"timestamp\": Un tiempo aproximado en formato HH:MM:SS donde ocurre el momento.\n   - \"titulo\": Un título atractivo, claro y llamativo.\n   - \"hook\": Una frase de enganche que capture la atención en los primeros segundos.\n   - \"posts\": Una lista de 3 ideas de posts derivados del momento.\n   - \"guion_reel\": Un guion breve (máximo 60 segundos) para un reel/short, con tono dinámico y directo.\n\n4. El resultado debe ser **EXCLUSIVAMENTE** un JSON válido con la siguiente estructura:\n\n{\n  \"clips\": [\n    {\n      \"timestamp\": \"00:05:32\",\n      \"titulo\": \"Cómo automatizar tu primer proceso\",\n      \"hook\": \"¿Sabías que puedes ahorrar 10 horas al mes?\",\n      \"posts\": [\"Idea 1\", \"Idea 2\", \"Idea 3\"],\n      \"guion_reel\": \"Texto breve para reel\"\n    }\n  ]\n}\n\nNo incluyas explicaciones, comentarios, texto adicional ni conclusiones fuera del JSON.\n\nVas a utilizar la herramienta \"Get row(s) in sheet in Google Sheets\" para guardar los datos extraidos en cada columna y cambiar el Status a pendiente.\nVas a utilizar la herramienta \"Gmail\" para enviar un correo y notificar que esta listo el nuevo material analizado y diciendo que revisen la hoja de google sheet en la que se encuantra la informacion (Reciclador_Contenido)"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        832,
+        2336
+      ],
+      "id": "0de6e412-8349-4430-84ce-f17a238a8002",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        2656
+      ],
+      "id": "b261f750-a4cf-43a5-93ef-7adaf08ba26a",
+      "name": "Send a message in Gmail",
+      "webhookId": "926495a0-3da9-4efd-a793-0425ad484736",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9d7e264-dfcb-489d-b02b-609f868fb373",
+              "name": "transcript_Total",
+              "value": "={{ $json.transcripcion_completa }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        2352
+      ],
+      "id": "c5b1c9bf-2f1c-4ce0-8fcb-e8e77dbdb956",
+      "name": "Transcripcion_Total"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18OPNEiWsmrCXBUpRBFf69SKW6KgZsjd8CbFrizoeDFs",
+          "mode": "list",
+          "cachedResultName": "Reciclador_Contenido ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18OPNEiWsmrCXBUpRBFf69SKW6KgZsjd8CbFrizoeDFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18OPNEiWsmrCXBUpRBFf69SKW6KgZsjd8CbFrizoeDFs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Video origen": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Video_origen', ``, 'string') }}",
+            "Timestamp": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Timestamp', ``, 'string') }}",
+            "Titulo + hook": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Titulo___hook', ``, 'string') }}",
+            "Ideas de posts": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Ideas_de_posts', ``, 'string') }}",
+            "Guion de reel": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guion_de_reel', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Video origen",
+              "displayName": "Video origen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Titulo + hook",
+              "displayName": "Titulo + hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Ideas de posts",
+              "displayName": "Ideas de posts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Guion de reel",
+              "displayName": "Guion de reel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        2688
+      ],
+      "id": "9d888e90-2891-472f-9eb1-0059ea7cce73",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Form Trigger para tomar url video",
+        "height": 240,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2256,
+        2272
+      ],
+      "typeVersion": 1,
+      "id": "a97d03b9-c63e-44aa-93f6-14f5b5d6cd74",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Setear los datos ",
+        "height": 384,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1888,
+        2208
+      ],
+      "typeVersion": 1,
+      "id": "4b51db24-6d60-4f5f-83b4-5cb77506a1fd",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Extraer ID",
+        "height": 256,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1632,
+        2272
+      ],
+      "typeVersion": 1,
+      "id": "623ffaf5-6c3c-4a0d-80c4-f6ea03c27454",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Setear los datos ",
+        "height": 384,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        2208
+      ],
+      "typeVersion": 1,
+      "id": "97085561-2d12-4c6d-a005-05c3fc4a143a",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Unir Transcripciones en ambos idiomas",
+        "height": 576,
+        "width": 384,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        2128
+      ],
+      "typeVersion": 1,
+      "id": "a37c33af-0762-4c4e-8bcf-ae42a33b1605",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Setear los datos ",
+        "height": 384,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        2192
+      ],
+      "typeVersion": 1,
+      "id": "893518b7-1b25-4720-aa0d-ae3aa590ed27",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 720,
+        "width": 672,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        656,
+        2112
+      ],
+      "typeVersion": 1,
+      "id": "a6eec85b-5bf9-486b-9003-f39bd9b70951",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 288,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        2224
+      ],
+      "typeVersion": 1,
+      "id": "360d5a27-aa62-4466-8a7d-73a6edfa9fb2",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        656,
+        2624
+      ],
+      "typeVersion": 1,
+      "id": "a1cf9d3f-5600-4410-836b-d08415c7c833",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1072,
+        2624
+      ],
+      "typeVersion": 1,
+      "id": "80eea11a-ba24-4b9c-9f01-e6f884fa4b9d",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "📌 Descripción del Workflow: Reciclador_Largo_to_Corto_Rapidapi_Youtube\n¿Qué hace?  \nEste workflow automatiza el proceso de reciclaje de contenido de videos largos de YouTube en piezas cortas y reutilizables para redes sociales.\n\nEl usuario ingresa la URL de un video en un formulario.\n\nSe extrae el ID del video y se obtiene la transcripción completa mediante la API de RapidAPI (YouTube Video Summarizer GPT AI).\n\nSe procesan las transcripciones en inglés o español, unificándolas en un solo texto.\n\nLa transcripción se envía a OpenAI GPT para identificar momentos clave y generar clips cortos con título, hook, ideas de posts y guion de reel.\n\nLos resultados se guardan automáticamente en Google Sheets y se notifica por Gmail que el material está listo.\n\n¿Para qué sirve?\n\nConvierte videos largos en contenido breve y atractivo para redes sociales.\n\nFacilita la creación de reels, shorts y posts sin necesidad de revisar manualmente todo el video.\n\nCentraliza la información en una hoja de cálculo para gestión y seguimiento.\n\n¿Qué resuelve?\n\nElimina el trabajo manual de transcribir y analizar videos.\n\nAhorra tiempo en la detección de momentos clave.\n\nAutomatiza la entrega de resultados a través de correo y almacenamiento en Google Sheets.\n\nImportancia y utilidad\n\nIdeal para marketing digital, creadores de contenido y equipos de social media.\n\nPermite escalar la producción de clips cortos a partir de videos largos.\n\nMejora la eficiencia y asegura consistencia en la creación de materiales reutilizables.\n\nHerramientas utilizadas\n\nForm Trigger → Captura la URL del video.\n\nCode (JavaScript) → Extrae el ID del video y une transcripciones.\n\nHTTP Request (RapidAPI) → Obtiene transcripción del video.\n\nSwitch → Detecta idioma disponible (es/en).\n\nOpenAI GPT → Analiza transcripción y genera clips en JSON estructurado.\n\nGoogle Sheets Tool → Guarda resultados en la hoja Reciclador_Contenido.\n\nGmail Tool → Envía notificación automática al usuario.\n\nSticky Notes → Documentación visual del flujo.",
+        "height": 1088,
+        "width": 1056,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1520,
+        1824
+      ],
+      "typeVersion": 1,
+      "id": "5eeed74e-f54f-4556-a279-0ff1278151a8",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Form Trigger": [
+      {
+        "json": {
+          "URL del video": "https://www.youtube.com/watch?v=Vh2uXv-WPao",
+          "submittedAt": "2026-01-09T11:56:06.365-05:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Tomar_Transcripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tomar_Transcripcion": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "unir_ingles",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "unir_español",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "unir_español": {
+      "main": [
+        [
+          {
+            "node": "Transcripcion_Total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "unir_ingles": {
+      "main": [
+        [
+          {
+            "node": "Transcripcion_Total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcripcion_Total": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5e05ba18-a128-4248-a33d-11791bfab148",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "ey5PLfT4635x0pO5",
+  "tags": []
+}

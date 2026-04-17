@@ -1,0 +1,1576 @@
+{
+  "name": "Agente_IA_Asistente_Personal_CEO",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos Usuario : \n\n{{ $json.Texto }}\n\n{{ $json.Transcripcion }}",
+        "options": {
+          "systemMessage": "=Eres el Asistente Inteligente de jesus\nResponsabilidades:\nGestionar tareas relacionadas con Gmail y Calendario de manera precisa y eficiente utilizando las herramientas disponibles.\n\n📧 Tareas de Gmail:\nPara cualquier solicitud relacionada con Gmail de jesusmiguela546@gmail.com, utiliza las herramientas de Gmail: Enviar, Responder, Etiquetar, Eliminar y Obtener varios.\n\nSi jesus proporciona solo un nombre sin dirección de correo electrónico, pide la dirección de correo antes de continuar.\n\nCompleta automáticamente cualquier información faltante (ej. enlaces, respuestas, resúmenes) al redactar o responder correos.\n\n📅 Tareas de Calendario:\nSi jesus solicita una cita, utiliza la herramienta de Calendario para programarla en el horario preferido.\n\nAntes de agendar, verifica si hay conflictos en ese horario.\n\nSi ya existe una reunión, no crees la cita. En su lugar, notifica a jesus sobre el conflicto.\n\nUsa la herramienta de Fecha y Hora para interpretar correctamente las fechas y horarios.\n\n⚠️ Reglas estrictas: \n-Bajo ningún concepto podrás agendar citas en sábado ni domingo. NUNCA lo hagas. Si jesus lo solicita, debes explicarle claramente que no es posible.\n-Siempre que pidan disponibilidad deberas usar \"Get Many2\" para extaer todas la citas y reuniones guardadas y si coicnide alguna con el horario pedido por el usuario deberas decirle claramente que en ese horario no hay disponibilidad , que seleccione otro .\n-Cuando extraigas los correos existentes debes asegurarte de formatear los datos y devolverlos limpio mediante el nodo de telegram.\n\n\n👥 Manejo de Contactos:\nSi jesus proporciona solo un nombre para enviar un correo, primero revisa la Hoja de Google para encontrar su dirección de correo.\n\nSi no se encuentra, pide a jesus] que la proporcione.\n\nUna vez recibida, utiliza ese correo para enviar el mensaje y actualiza la Hoja de Google agregando el nuevo correo junto al nombre de la persona.\n\n⚡ Comportamiento:\nMantente siempre eficiente, preciso y servicial en todas las tareas e interacciones.\n\nPrioriza la claridad y rapidez en la ejecución de las solicitudes.\n\nDevuelve la informacion en texto plano,claro y legible sin signos ni nada .\n\nUtiliza la herramienta \"Gmail\" para notificar al CEO de que tiene una reunion agendada, un nuevo contacto agregado a google sheet, que tiene un nuevo evento en el calendario.\n\nIMPORTANTE: Cuando devuelvas información al usuario, formatea el texto de manera simple y clara. Evita usar caracteres especiales como <, >, @, # que puedan causar problemas de formato. Presenta la información en texto plano con saltos de línea para mejor legibilidad.\n\n***Regla Critica : \nSiempre deberas saber que hoy es {{ $now.format('yyyy-MM-dd') }} utiliza siempre esa fecha para saber cuando agendar."
+        }
+      },
+      "id": "36ae1dd5-4a93-429f-876d-034acfc1580c",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        8272,
+        6384
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "36d2db36-b8cf-46f5-8662-f7c0877ec256",
+      "name": "Send",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        7552,
+        7072
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "d45a56d9-e854-4c5c-8a43-f1d4d7cf5e26",
+      "name": "Reply",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        7776,
+        7072
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}"
+      },
+      "id": "9cf3718b-ef15-4f1d-b9ea-a55b2ff80f93",
+      "name": "Delete",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        7888,
+        7072
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}",
+        "filters": {
+          "readStatus": "unread",
+          "receivedAfter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Received_After', ``, 'string') }}"
+        },
+        "options": {}
+      },
+      "id": "72b91586-7751-4933-afd1-6de1b882f067",
+      "name": "Get Many",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        7664,
+        7072
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0c4da191-7793-4b06-a8f6-9f99c1bb91a3",
+      "name": "Gemini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        7232,
+        7056
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "5a3d512d-2959-4ecd-a170-56ef9f9a21ea",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        7008,
+        6416
+      ],
+      "webhookId": "4b8ff4f7-2f08-4460-a355-6aa965c9d919",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}  ",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true
+        }
+      },
+      "id": "c4643523-d5cb-4f3d-9ef2-a46c1d3e06e2",
+      "name": "Send a text message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        9328,
+        6384
+      ],
+      "webhookId": "cc70e557-35b5-4a79-a9fd-8e01bb80882c",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "id": "0c4bad96-a97d-4186-8095-5348b27dbc9b",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "position": [
+        7152,
+        5520
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', ``, 'string') }}"
+          ],
+          "conferenceDataUi": {},
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "id": "1e023617-0aad-4fd1-b6f0-81b94c7e8c43",
+      "name": "Create Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        8576,
+        7072
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "96bd7d33-bd21-41c1-a602-c5922096fbd1",
+      "name": "Get Many2",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        8704,
+        7072
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "7ea90308-ffd3-45fb-a0cb-083febe25f56",
+      "name": "Delete2",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        8432,
+        7072
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "6258929244",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "c08f61c5-af43-4644-bf89-369bf86a581f",
+      "name": "Send a text message1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        8080,
+        5344
+      ],
+      "webhookId": "cc70e557-35b5-4a79-a9fd-8e01bb80882c",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "8cc6db1c-bb33-4411-9c5e-401c845ed491",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.labels[0].id }}",
+              "rightValue": "INBOX"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "806c0481-c14a-46f1-8d90-98b354ce7832",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        7360,
+        5424
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {},
+      "id": "cbd81583-9533-40d1-942f-02a297f5843b",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        7360,
+        5824
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "includeTime": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Include_Current_Time', ``, 'boolean') }}",
+        "outputFieldName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Output_Field_Name', ``, 'string') }}",
+        "options": {
+          "timezone": "={{$now.format('yyyy-MM-dd')}}"
+        }
+      },
+      "id": "904f5954-00aa-4f18-afb1-d81162a88902",
+      "name": "Date & Time",
+      "type": "n8n-nodes-base.dateTimeTool",
+      "position": [
+        9568,
+        7056
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=From: {{ $json.From }}\nMail: {{ $json.snippet }}\nTime: {{ $now}}\n\nCuando recibas un correo, muéstrame el correo completo y en la parte superior indica el tipo de correo, la hora y también quién lo envió. \nNo necesito la respuesta.",
+        "batching": {}
+      },
+      "id": "70fcf48c-90d0-4109-8f97-27e146c6c800",
+      "name": "Basic LLM Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        7664,
+        5344
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $('Gmail Trigger').item.json.snippet }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Client",
+              "description": "=“Correos de personas interesadas en contratarme o trabajar conmigo.”"
+            },
+            {
+              "category": "Sponsorship Request",
+              "description": "=“Correos sobre colaboración u ofertas de promoción de productos o herramientas.”"
+            },
+            {
+              "category": "Not Business",
+              "description": "“Correos personales, de spam o no relacionados con el trabajo.”"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "29c1dffc-b7e1-4c0d-8c6c-80c51615e497",
+      "name": "Text Classifier",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "position": [
+        8032,
+        5664
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "updateFields": {}
+      },
+      "id": "b028dc31-59bb-44b6-b0ad-b9bb0e542cde",
+      "name": "Update",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        8272,
+        7072
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "=Hola\n\n¡Gracias por comunicarte! He recibido tu mensaje y pronto te responderé con más detalles.\n\nEspero poder conectar contigo muy pronto.\n\nSaludos,\nJesus.",
+        "options": {}
+      },
+      "id": "9fda6df5-8aed-4e19-b83c-67c9575a74f1",
+      "name": "Reply to a message",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        9168,
+        5472
+      ],
+      "webhookId": "97406586-9622-485f-a96e-bd7f81918b91",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "CATEGORY_SOCIAL"
+        ]
+      },
+      "id": "d9d3c084-4d52-4d08-8edb-2f780c4a2376",
+      "name": "Not Business",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        8640,
+        5840
+      ],
+      "webhookId": "fd229089-ffb7-46fe-808f-5a797a1b05b9",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "=Hola,\n\n¡Gracias por tu interés en colaborar!\n\nMi tarifa por promocionar un producto en un video de 6 a 8 minutos es de $400.\n\nSi te parece bien, házmelo saber y podemos discutir los siguientes pasos.\n\nSaludos cordiales,\nJesus Miguel.",
+        "options": {}
+      },
+      "id": "4368392d-cf02-4294-9520-4b11cfd282f7",
+      "name": "Reply to a message1",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        9168,
+        5664
+      ],
+      "webhookId": "97406586-9622-485f-a96e-bd7f81918b91",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1EF_QcpDAneppH6sgkGCaTCfRDQYJKSTIw0Gtm49V1Yg",
+          "mode": "list",
+          "cachedResultName": "All_inOne",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EF_QcpDAneppH6sgkGCaTCfRDQYJKSTIw0Gtm49V1Yg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1707479935,
+          "mode": "list",
+          "cachedResultName": "contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EF_QcpDAneppH6sgkGCaTCfRDQYJKSTIw0Gtm49V1Yg/edit#gid=1707479935"
+        },
+        "options": {}
+      },
+      "id": "619439d8-b783-473d-9273-02d75df91996",
+      "name": "Get Contacts",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        9072,
+        7056
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1EF_QcpDAneppH6sgkGCaTCfRDQYJKSTIw0Gtm49V1Yg",
+          "mode": "list",
+          "cachedResultName": "All_inOne",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EF_QcpDAneppH6sgkGCaTCfRDQYJKSTIw0Gtm49V1Yg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1707479935,
+          "mode": "list",
+          "cachedResultName": "contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1EF_QcpDAneppH6sgkGCaTCfRDQYJKSTIw0Gtm49V1Yg/edit#gid=1707479935"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}",
+            "correo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('correo', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "9bbb7f8c-b7ad-42e4-be88-ae2bacaf026a",
+      "name": "Add Contacts",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        8944,
+        7056
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "CATEGORY_PERSONAL"
+        ]
+      },
+      "id": "2301d9a2-64c5-468c-88e8-c4959f0ad8de",
+      "name": "Client",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        8640,
+        5456
+      ],
+      "webhookId": "fd229089-ffb7-46fe-808f-5a797a1b05b9",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_2193129142911154595"
+        ]
+      },
+      "id": "d2cc6029-fa03-46ed-a773-c53652cdf02b",
+      "name": "Sponsorship Request",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        8640,
+        5664
+      ],
+      "webhookId": "fd229089-ffb7-46fe-808f-5a797a1b05b9",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "id": "47119263-6944-4285-be97-e190153fd254",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        9680,
+        7056
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "95193095-47b0-495f-9938-87049bcfe7e6",
+      "name": "Gemini1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        7680,
+        5712
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "🛠️ Guía de Configuración\n🔌 Pasos para Conectar:\n***Configuración de Gmail y Calendar OAuth2\n\nCrea credenciales Gmail OAuth2 y Google Calendar OAuth2 en n8n.\n\nAutoriza el acceso para ambos servicios y aplícalos a sus respectivos nodos (Enviar, Responder, Herramientas de Calendario).\n\nClave API de Google Gemini\n\nGenera una clave API desde Google AI Studio.\n\nAñádela a la credencial Google Gemini (PaLM) API en n8n y vincúlala a los nodos Gemini.\n\nIntegración con Google Sheets\n\nConfigura Google Sheets OAuth2 y conéctalo a tu hoja de cálculo.\n\nAsegúrate de que existan columnas para Nombre y Dirección de Correo Electrónico en Sheet1.\n\n***Configuración del Bot de Telegram\n\nVincula tu cuenta de Telegram mediante credenciales de Telegram API.\n\nEl nodo Telegram Trigger escuchará comandos (ejemplo: redacción de correos, programación de calendario).\n\nPersonalización del Agente de IA\n\nEdita el mensaje del sistema del nodo AI Agent para reflejar tus preferencias (ejemplo: nombre del asistente, reglas de tareas).\n\nPre-crea etiquetas de Gmail (ejemplo: Cliente, Solicitud de Patrocinio) para la categorización automática.\n\n***Pruebas\n\nActiva correos/eventos de calendario de prueba para verificar los flujos de trabajo.\n\nUsa Telegram para enviar comandos como:\n\"Programa una reunión con Alex el viernes a las 2 PM\" o \"Envía un correo a John sobre el proyecto.\"\n\n",
+        "height": 840,
+        "width": 900,
+        "color": 3
+      },
+      "id": "747ddafe-7bb0-40c0-aa22-18dc1e8d24b4",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6016,
+        5456
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        7200,
+        6112
+      ],
+      "id": "41b48044-0c77-4ae7-8bfc-240a1799800f",
+      "name": "Send a chat action",
+      "webhookId": "94e432f2-b6e2-47d1-9d9b-ea71f4a31b1d",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        9456,
+        7056
+      ],
+      "id": "fc19d8c7-7e82-4c1a-b33d-7a0d6fc525d2",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets para manipular la informacion",
+        "height": 224,
+        "width": 416,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8896,
+        6976
+      ],
+      "typeVersion": 1,
+      "id": "216636f1-308a-4b8c-bbd5-2024afebc530",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail para agrupar en etiquetas",
+        "height": 752,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8560,
+        5312
+      ],
+      "typeVersion": 1,
+      "id": "9ff3e7a4-94ea-432a-81b4-18361dd0d7ca",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Calendar para agendar citas",
+        "height": 208,
+        "width": 624,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8224,
+        7008
+      ],
+      "typeVersion": 1,
+      "id": "5d64951f-cd49-4ccc-be47-a687f2748ad4",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail para Gestionar los correos",
+        "height": 208,
+        "width": 592,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7536,
+        6992
+      ],
+      "typeVersion": 1,
+      "id": "49fe1fd1-3909-4e7d-ae38-5382055c5757",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail para dar respuesta a los gmails",
+        "height": 624,
+        "width": 384,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9008,
+        5328
+      ],
+      "typeVersion": 1,
+      "id": "fc2e3031-26fe-4df5-94ac-72b26fd409fb",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Gmail Trigger",
+        "height": 288,
+        "width": 352,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7008,
+        5392
+      ],
+      "typeVersion": 1,
+      "id": "2e86806b-41c7-4260-bbbd-21d9a4e8a11b",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Send Telegram Action",
+        "height": 208,
+        "width": 272,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7120,
+        6064
+      ],
+      "typeVersion": 1,
+      "id": "f6f3e9c7-e4cf-4633-9289-ebfb450ca585",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "height": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7600,
+        5632
+      ],
+      "typeVersion": 1,
+      "id": "26f6b54d-7df3-4731-aa73-d8786e3c8d70",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Clasificador de Gmails",
+        "height": 272,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7920,
+        5584
+      ],
+      "typeVersion": 1,
+      "id": "3a955fec-e27b-4a1e-a7e5-4d989409ff76",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9248,
+        6336
+      ],
+      "typeVersion": 1,
+      "id": "558e43c0-14bf-46e1-a37a-39193e04a8bd",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Analisis de Gmail",
+        "height": 304,
+        "width": 304,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7632,
+        5232
+      ],
+      "typeVersion": 1,
+      "id": "ea3b15f8-86eb-4887-a558-8fe1ae47339e",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "Agente Principal",
+        "height": 320,
+        "width": 496,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8128,
+        6272
+      ],
+      "typeVersion": 1,
+      "id": "5c2f98c2-1c1d-43c3-8080-34436bc373f0",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7072,
+        5472
+      ],
+      "typeVersion": 1,
+      "id": "c97747af-40cb-4008-8d43-5a533bea5007",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "height": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7168,
+        6960
+      ],
+      "typeVersion": 1,
+      "id": "f204b512-d113-4f99-b1f8-1e337712b347",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 240,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6912,
+        6368
+      ],
+      "typeVersion": 1,
+      "id": "b4c1129a-95d4-46dd-809c-0663eaec0233",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 240,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8000,
+        5296
+      ],
+      "typeVersion": 1,
+      "id": "85e381a3-7512-4b06-a9ae-8b23d7a62d0c",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        8000,
+        7072
+      ],
+      "id": "084412cf-7083-4ddf-9e20-9fc1b3177432",
+      "name": "Notificar",
+      "webhookId": "0caf3e52-239b-460c-9b7a-73c7c581700a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Tools IA",
+        "height": 176,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9424,
+        7008
+      ],
+      "typeVersion": 1,
+      "id": "5421639d-11e4-4ddb-8b44-dc140ab05af4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "268ecc5b-51a8-41d9-976a-87b84f2fc407",
+              "leftValue": "={{ $json.message.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        7280,
+        6416
+      ],
+      "id": "c0dc9f27-0471-45be-a487-7bbc0c6a792c",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "=data",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        7728,
+        6272
+      ],
+      "id": "416a630a-42d9-47b5-9011-c0d5884d976e",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        7472,
+        6272
+      ],
+      "id": "52e58ea4-edef-40b3-86b9-47238c9ca5fb",
+      "name": "Get a file",
+      "webhookId": "33c6a80a-aee6-4514-86c9-af62e33eca63",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3409c1e7-a923-4a02-8de5-a2999c08b120",
+              "name": "Texto",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "81eb9c1d-db84-4480-baaa-c614c8780ccc",
+              "name": "Transcripcion",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "dcb53560-fa85-4720-bf0a-3d8a9833eac0",
+              "name": "q",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7984,
+        6432
+      ],
+      "id": "0e5708cc-12f5-44a6-912c-cca0c0cad3c0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "🤖 Workflow: Asistente Personal Ejecutivo IA : \nEste flujo de trabajo es un sistema de inteligencia artificial omnicanal que actúa como un secretario personal ejecutivo para Jesus. Se compone de dos grandes bloques funcionales:\n\nGestión de Entrada Automática (Gmail): Clasifica, etiqueta y responde correos entrantes automáticamente (Clientes, Patrocinios, Spam).\nAgente Interactivo (Telegram): Permite a Jesus controlar Gmail, Calendario y Contactos a través de comandos de texto o notas de voz, con capacidades de razonamiento para verificar disponibilidad y gestionar conflictos.\n✨ Importancia y Valor\n🧠 Centralización de Comandos: Permite gestionar todo el ecosistema de Google (Gmail, Calendar, Sheets) desde una única interfaz de chat (Telegram), reduciendo el cambio de contexto.\n🗣️ Transcripción de Voz: Integra Whisper de OpenAI para convertir notas de voz de Telegram en texto, permitiendo dictar correos o agendar reuniones \"manos libres\".\n🛡️ Protección de Agendas: El Agente IA tiene reglas estrictas (programadas en el System Prompt) para nunca agendar reuniones en fin de semana y usa la herramienta Get Many2 para verificar conflictos de horario en tiempo real.\n📨 Automatización de Respuestas: Clasifica correos de patrocinio y responde automáticamente con la tarifa estándar ($400), liberando tiempo de trabajo manual.\n📂 Gestión de CRM: Busca y actualiza automáticamente una hoja de Google Sheets con nuevos contactos si solo se proporciona un nombre.\n🛠️ Problema que Resuelve\nSobrecarga de Inbox: Clasifica automáticamente emails importantes de clientes frente a spam o promociones, etiquetándolos en Gmail para su posterior revisión.\nConflictos de Agenda: Evita la doble reserva de citas y respeta los días libres, notificando al usuario si el horario solicitado no está disponible.\nBarreras de Entrada: Permite realizar acciones complejas (enviar correos, crear eventos) mediante lenguaje natural simple en Telegram, sin necesidad de abrir las apps correspondientes.\nPérdida de Leads: Automatiza la respuesta inicial a interesados en colaboraciones (Sponsorships) con un mensaje predefinido y profesional.\n🧩 Nodos Clave Utilizados\n🤖 AI Agent: El cerebro del sistema (conectado a Gemini) que interpreta la intención del usuario y elige qué herramienta usar.\n📬 Gmail Trigger & Tools (Send, Reply, Get Many): Detectan nuevos correos y ejecutan acciones de email.\n📅 Google Calendar Tools (Create, Get Many2, Update, Delete): Gestionan la agenda, verifican disponibilidad y evitan solapamientos.\n📊 Google Sheets Tools (Get Contacts, Add Contacts): Funcionan como base de datos para buscar correos de contactos existentes.\n🎤 Transcribe a recording (OpenAI): Convierte audios de Telegram a texto para que el agente pueda procesarlos.\n🏷️ Text Classifier: Clasifica los correos entrantes en \"Client\", \"Sponsorship Request\" o \"Not Business\".\n⏰ Date & Time: Ayuda al agente a interpretar fechas relativas (\"mañana a las 10\") y convertirlas a formato de calendario.\n🔗 Paso a Paso: Conexión del Flujo\n📩 RAMA 1: Automatización de Gmail (Pasiva)\nInicia con \"Gmail Trigger\" conectado al nodo \"If\" (para verificar si es Inbox).\nDesde \"If\", conecta la salida True a \"Basic LLM Chain\" (para analizar el contenido del correo).\nConecta \"Basic LLM Chain\" a \"Text Classifier\" (para categorizar).\nConecta las salidas de \"Text Classifier\" a sus respectivas acciones:\nClient -> \"Client\" (Etiqueta) -> \"Reply to a message\" (Respuesta genérica).\nSponsorship Request -> \"Sponsorship Request\" (Etiqueta) -> \"Remove label from message\" -> \"Reply to a message1\" (Respuesta con precio $400).\nNot Business -> \"Not Business\" (Etiqueta).\n💬 RAMA 2: Asistente Interactivo por Telegram (Activa)\nEl flujo inicia implícitamente en \"Telegram Trigger\" (entrada de usuario).\nConecta el trigger a \"If1\" (para comprobar si viene con audio $json.message.voice).\nSi hay audio: Conecta a \"Get a file\" -> \"Transcribe a recording\" -> \"Edit Fields\".\nSi es texto: Conecta directamente a \"Edit Fields\".\nDesde \"Edit Fields\" (donde se unifica texto y transcripción), conecta al nodo central \"AI Agent\".\n🧠 RAMA 3: Configuración del Cerebro (AI Agent y Herramientas)\nConecta el modelo LLM \"Gemini\" al puerto ai_languageModel del \"AI Agent\".\nConecta \"Simple Memory\" al puerto ai_memory del \"AI Agent\" para recordar el contexto de la conversación.\nConexión de Herramientas (Tools): Debes conectar los siguientes nodos al puerto ai_tool del \"AI Agent\" para que pueda usarlos:\nGmail: Send, Reply, Delete, Get Many, Notificar (para alertar al CEO).\nCalendar: Create Event, Get Many2 (vital para verificar conflictos), Update, Delete2.\nSheets: Get Contacts, Add Contacts.\nUtils: Date & Time, Think (para razonamiento).\nFinalmente, conecta la salida main del \"AI Agent\" a \"Send a text message\" (para devolver la respuesta al usuario en Telegram).",
+        "height": 960,
+        "width": 1760,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9904,
+        5056
+      ],
+      "typeVersion": 1,
+      "id": "6d0adaa9-c41a-464a-98b9-7d090e0d0086",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 208,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7648,
+        6192
+      ],
+      "typeVersion": 1,
+      "id": "20d8225c-1d9a-4eec-823d-b345b0a78e83",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Client": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Many": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Many2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Client",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sponsorship Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a chat action",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sponsorship Request": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not Business": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "608b21d2-497b-429c-9b17-47bbae791143",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "47BkRnsBLPaBsIkM",
+  "tags": []
+}

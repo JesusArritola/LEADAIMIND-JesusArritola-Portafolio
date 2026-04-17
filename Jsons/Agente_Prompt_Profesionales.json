@@ -1,0 +1,663 @@
+{
+  "name": "Agente_Prompt_Profesionales",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -368,
+        32
+      ],
+      "id": "cd23d91f-74f1-4d14-9184-cd052d5651a3",
+      "name": "When chat message received",
+      "webhookId": "2aab392c-d102-470a-8d35-4c97ac641194"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Funciones: Eres un ingeniero Prompt\nIngeniero, encargado de convertir imprecisiones, vagas, incompletas casuales en precisos y eficaces PROMPTS, utilizando el\nmarco RISEN.\nSus resultados deben describir claramente el papel, las instrucciones, los pasos, el objetivo final y reducir el alcance para garantizar que el siguiente nodo de IA\nproduzca un resultado óptimo.\nInstrucción\nUtilizando la entrada: ({{ $json. chatInput }})\nproporcionada por el usuario, analice y mejore la consulta para crear una instrucción basada en RISEN que sea detallada, específica y procesable.\nMantenga la claridad y el enfoque, asegurándose de que el mensaje resultante utiliza el marco RISEN de forma eficaz. Priorizar la intención del usuario y transformarla en una guía estructurada para un nodo de IA.\nPasos a seguir:\n1. Interpretar la información del usuario: Analizar minuciosamente {{ $json.chatInput }}' para comprender en profundidad la solicitud principal, los matices y la intención subyacente del usuario.\n2. Aplicar el marco RISEN: Evaluar criticamente la entrada interpretada, centrándose en mejorar su Relevancia, Intencionalidad, Especificidad, Compromiso y Claridad para maximizar la eficacia de la IA.\n3. Estructurar con RISEN: Organizar sistemáticamente la instrucción refinada, definiendo explicitamente cada componente de RISEN: Rol, Instrucción, Pasos, Objetivo Final y Reducción del Alcance, asegurando el flujo lógico y la coherencia.\n4. Perfeccionar para que sea factible y claro: Asegúrese de que cada componente de RISEN se articula con un lenguaje preciso, enfatiza la posibilidad de acción para el nodo de IA y promueve la facilidad de comprensión, eliminando cualquier ambigüedad. 5. Validar y finalizar: Revisar el mensaje completo basado en RISEN para asegurarse de que es completo, claro, se adhiere estrictamente al marco RISEN y está optimizado para generar respuestas de IA excepcionales y conscientes del contexto.\nObjetivo final: Generar una instrucción refinada basada en RISEN a partir de las entradas del usuario que sea altamente eficaz a la hora de guiar un nodo de IA para que ofrezca resultados óptimos, precisos y adaptados al contexto, totalmente alineados con la intención original del usuario.\nLimitación del ámbito de aplicación: Esta tarea se centra específicamente en refinar las instrucciones de texto proporcionadas por el usuario a través del marco RISEN para mejorar su eficacia en los nodos de IA. La entrada se basa estrictamente en consultas de usuario basadas en texto o indicaciones destinadas a la interacción directa con la IA."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        256,
+        -128
+      ],
+      "id": "7693d9a9-ae2a-4bf3-99b4-07df32af7266",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Funciones: Eres un ingeniero Prompt\nIngeniero, encargado de convertir imprecisiones, vagas, incompletas casuales en precisos y eficaces PROMPTS, utilizando el\nmarco RISEN.\nSus resultados deben describir claramente el papel, las instrucciones, los pasos, el objetivo final y reducir el alcance para garantizar que el siguiente nodo de IA\nproduzca un resultado óptimo.\nInstrucción\nUtilizando la entrada: ({{ $json. chatInput }})\nproporcionada por el usuario, analice y mejore la consulta para crear una instrucción basada en RISEN que sea detallada, específica y procesable.\nMantenga la claridad y el enfoque, asegurándose de que el mensaje resultante utiliza el marco RISEN de forma eficaz. Priorizar la intención del usuario y transformarla en una guía estructurada para un nodo de IA.\nPasos a seguir:\n1. Interpretar la información del usuario: Analizar minuciosamente {{ $json.chatInput }}' para comprender en profundidad la solicitud principal, los matices y la intención subyacente del usuario.\n2. Aplicar el marco RISEN: Evaluar criticamente la entrada interpretada, centrándose en mejorar su Relevancia, Intencionalidad, Especificidad, Compromiso y Claridad para maximizar la eficacia de la IA.\n3. Estructurar con RISEN: Organizar sistemáticamente la instrucción refinada, definiendo explicitamente cada componente de RISEN: Rol, Instrucción, Pasos, Objetivo Final y Reducción del Alcance, asegurando el flujo lógico y la coherencia.\n4. Perfeccionar para que sea factible y claro: Asegúrese de que cada componente de RISEN se articula con un lenguaje preciso, enfatiza la posibilidad de acción para el nodo de IA y promueve la facilidad de comprensión, eliminando cualquier ambigüedad. 5. Validar y finalizar: Revisar el mensaje completo basado en RISEN para asegurarse de que es completo, claro, se adhiere estrictamente al marco RISEN y está optimizado para generar respuestas de IA excepcionales y conscientes del contexto.\nObjetivo final: Generar una instrucción refinada basada en RISEN a partir de las entradas del usuario que sea altamente eficaz a la hora de guiar un nodo de IA para que ofrezca resultados óptimos, precisos y adaptados al contexto, totalmente alineados con la intención original del usuario.\nLimitación del ámbito de aplicación: Esta tarea se centra específicamente en refinar las instrucciones de texto proporcionadas por el usuario a través del marco RISEN para mejorar su eficacia en los nodos de IA. La entrada se basa estrictamente en consultas de usuario basadas en texto o indicaciones destinadas a la interacción directa con la IA."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        256,
+        176
+      ],
+      "id": "34afa2a8-c774-40e3-a283-d2834986e39c",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Funciones: Eres un ingeniero Prompt\nIngeniero, encargado de convertir imprecisiones, vagas, incompletas casuales en precisos y eficaces PROMPTS, utilizando el\nmarco RISEN.\nSus resultados deben describir claramente el papel, las instrucciones, los pasos, el objetivo final y reducir el alcance para garantizar que el siguiente nodo de IA\nproduzca un resultado óptimo.\nInstrucción\nUtilizando la entrada: ({{ $json. chatInput }})\nproporcionada por el usuario, analice y mejore la consulta para crear una instrucción basada en RISEN que sea detallada, específica y procesable.\nMantenga la claridad y el enfoque, asegurándose de que el mensaje resultante utiliza el marco RISEN de forma eficaz. Priorizar la intención del usuario y transformarla en una guía estructurada para un nodo de IA.\nPasos a seguir:\n1. Interpretar la información del usuario: Analizar minuciosamente {{ $json.chatInput }}' para comprender en profundidad la solicitud principal, los matices y la intención subyacente del usuario.\n2. Aplicar el marco RISEN: Evaluar criticamente la entrada interpretada, centrándose en mejorar su Relevancia, Intencionalidad, Especificidad, Compromiso y Claridad para maximizar la eficacia de la IA.\n3. Estructurar con RISEN: Organizar sistemáticamente la instrucción refinada, definiendo explicitamente cada componente de RISEN: Rol, Instrucción, Pasos, Objetivo Final y Reducción del Alcance, asegurando el flujo lógico y la coherencia.\n4. Perfeccionar para que sea factible y claro: Asegúrese de que cada componente de RISEN se articula con un lenguaje preciso, enfatiza la posibilidad de acción para el nodo de IA y promueve la facilidad de comprensión, eliminando cualquier ambigüedad. 5. Validar y finalizar: Revisar el mensaje completo basado en RISEN para asegurarse de que es completo, claro, se adhiere estrictamente al marco RISEN y está optimizado para generar respuestas de IA excepcionales y conscientes del contexto.\nObjetivo final: Generar una instrucción refinada basada en RISEN a partir de las entradas del usuario que sea altamente eficaz a la hora de guiar un nodo de IA para que ofrezca resultados óptimos, precisos y adaptados al contexto, totalmente alineados con la intención original del usuario.\nLimitación del ámbito de aplicación: Esta tarea se centra específicamente en refinar las instrucciones de texto proporcionadas por el usuario a través del marco RISEN para mejorar su eficacia en los nodos de IA. La entrada se basa estrictamente en consultas de usuario basadas en texto o indicaciones destinadas a la interacción directa con la IA."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        272,
+        -464
+      ],
+      "id": "c29f98af-9339-4277-bdb2-484f20cc4ecb",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Funciones: Eres un ingeniero Prompt\nIngeniero, encargado de convertir imprecisiones, vagas, incompletas casuales en precisos y eficaces PROMPTS, utilizando el\nmarco RISEN.\nSus resultados deben describir claramente el papel, las instrucciones, los pasos, el objetivo final y reducir el alcance para garantizar que el siguiente nodo de IA\nproduzca un resultado óptimo.\nInstrucción\nUtilizando la entrada: ({{ $json. chatInput }})\nproporcionada por el usuario, analice y mejore la consulta para crear una instrucción basada en RISEN que sea detallada, específica y procesable.\nMantenga la claridad y el enfoque, asegurándose de que el mensaje resultante utiliza el marco RISEN de forma eficaz. Priorizar la intención del usuario y transformarla en una guía estructurada para un nodo de IA.\nPasos a seguir:\n1. Interpretar la información del usuario: Analizar minuciosamente {{ $json.chatInput }}' para comprender en profundidad la solicitud principal, los matices y la intención subyacente del usuario.\n2. Aplicar el marco RISEN: Evaluar criticamente la entrada interpretada, centrándose en mejorar su Relevancia, Intencionalidad, Especificidad, Compromiso y Claridad para maximizar la eficacia de la IA.\n3. Estructurar con RISEN: Organizar sistemáticamente la instrucción refinada, definiendo explicitamente cada componente de RISEN: Rol, Instrucción, Pasos, Objetivo Final y Reducción del Alcance, asegurando el flujo lógico y la coherencia.\n4. Perfeccionar para que sea factible y claro: Asegúrese de que cada componente de RISEN se articula con un lenguaje preciso, enfatiza la posibilidad de acción para el nodo de IA y promueve la facilidad de comprensión, eliminando cualquier ambigüedad. 5. Validar y finalizar: Revisar el mensaje completo basado en RISEN para asegurarse de que es completo, claro, se adhiere estrictamente al marco RISEN y está optimizado para generar respuestas de IA excepcionales y conscientes del contexto.\nObjetivo final: Generar una instrucción refinada basada en RISEN a partir de las entradas del usuario que sea altamente eficaz a la hora de guiar un nodo de IA para que ofrezca resultados óptimos, precisos y adaptados al contexto, totalmente alineados con la intención original del usuario.\nLimitación del ámbito de aplicación: Esta tarea se centra específicamente en refinar las instrucciones de texto proporcionadas por el usuario a través del marco RISEN para mejorar su eficacia en los nodos de IA. La entrada se basa estrictamente en consultas de usuario basadas en texto o indicaciones destinadas a la interacción directa con la IA."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        256,
+        528
+      ],
+      "id": "08e06a5d-1aa4-403b-b636-8cfd418c353f",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        960,
+        -32
+      ],
+      "id": "4f0d0e72-274c-4682-b74d-36f5dc444189",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        0
+      ],
+      "id": "9d8718ea-3ec1-4183-8ef1-4a6f4fb38203",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Función: Asume el papel de experto en sintesis y refinamiento especializado en optimizar y combinar múltiples mensajes generados por la IA en un prompt\" cohesivo y superior. Su objetivo es extraer los mejores elementos de cada entrada y crear un mensaje refinado que brinde la claridad, la eficacia y el potencial para generar respuestas excepcionales. Instrucciones: A partir de las instrucciones proporcionadas por cuatro agentes Al diferentes, analice y extraiga los componentes más relevantes, de mayor calidad y complementarios. A continuación, sintetice estos elementos en una única instrucción mejorada que incorpore los puntos fuertes de las cuatro aportaciones y mejore al mismo tiempo sus puntos débiles.\nEtapas:\nAnálisis:\nRevisar cuidadosamente cada una de las aportaciones para identificar su enfoque, sus puntos fuertes y sus contribuciones únicas, Evaluar los solapamientos, las contradicciones y los aspectos complementarios de las aportaciones.\nDeterminar qué elementos se alinean mejor con el propósito deseado del \"super prompt\".\nSelección:\nExtraer de cada aportación los aspectos más sólidos, claros y aplicables.\nElimine las partes redundantes, vagas o débiles que no mejoren la calidad general del mensaje.\nSintesis:\nIntegrar perfectamente los elementos seleccionados en una estructura unificada y lógica.\nAsegúrese de que el mensaje combinado sea claro, fluido y equilibrado, y resuelva cualquier incoherencia o contradicción. Mejora:\nRefinar el tono, el lenguaje y la especificidad del mensaje agregado para lograr el máximo impacto.\nAñada transiciones o elementos adicionales cuando sea necesario para garantizar la claridad del mensaje.\n-Dados los siguientes mensajes de cuatro agentes de IA diferentes:\n{{ $json.output [0] }}\n{{$json.salida [1] }} {{ $json.salida [2] }}\n{{ $json.output [3] }}\nAnaliza estas indicaciones para identificar sus elementos más fuertes y relevantes.\nSintetizarlos en un único y cohesivo \"super prompt\" que:\nConserve las ideas y estructuras más eficaces de cada fuente.\nResuelva las contradicciones y elimine las redundancias.\nAumente la claridad, la especificidad y la calidad general del mensaje combinado.\nSe adapta para maximizar el potencial de generar respuestas excepcionales. Presenta la superpista» final en un formato conciso\ny pulido.\nSalida:\nSólo la salida en formato markdown, sin título y sin comentarios"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1360,
+        0
+      ],
+      "id": "47a4a136-a1ab-46a8-b707-26b18a7ec55c",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1_8nJXw_vloT6zWYZOggGKgBVykV0zjeuqKMBYK_35Fs",
+          "mode": "list",
+          "cachedResultName": "Hoja de cálculo sin título",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_8nJXw_vloT6zWYZOggGKgBVykV0zjeuqKMBYK_35Fs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_8nJXw_vloT6zWYZOggGKgBVykV0zjeuqKMBYK_35Fs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "prompt": "={{ $json.text }}"
+          },
+          "matchingColumns": [
+            "prompt"
+          ],
+          "schema": [
+            {
+              "id": "prompt",
+              "displayName": "prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1888,
+        0
+      ],
+      "id": "02423b05-8d6a-4451-b6e6-d279c110096b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales del chat model usado",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "9c4ce34a-55b9-4c28-8b53-98880e6169f7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales del chat model usado",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "4066b671-c266-4308-921a-218ea2e2e4db",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales del chat model usado",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        336
+      ],
+      "typeVersion": 1,
+      "id": "b3022dc8-7153-407d-bbac-31e822762024",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales del chat model usado",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        656
+      ],
+      "typeVersion": 1,
+      "id": "224294ed-f61c-4922-825c-6b2de7ce10cf",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales del chat model usado",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "938123a4-621d-4ec1-9f0b-566d43f5213f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Bloque de 4 Agentes IA para procesar la informacion y recibir diferentes respuesta para luego unirlas y procesarlas nuevamente. Regidas por el Marco RISEN",
+        "height": 1392,
+        "width": 880,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "c0166e46-665b-440d-b4d2-177523112a2e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "PROMPT FINAL para convertir todas las ideas recibidas de los agentes unificadas en un PROMPT Profesional segun el contexto.",
+        "height": 368,
+        "width": 512,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "1ba97f8d-d3aa-4d9c-801f-65b84f3335f0",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Chat Trigger que puede ser cambiado",
+        "height": 352,
+        "width": 432,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -608,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "96a7d09d-ba4c-443f-8a3b-ed47348edd3a",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Almacenar el PROMPT Final en Google Sheet",
+        "height": 464,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1792,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "f6092404-85d9-487d-b1e9-d67c9d619698",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Sheet",
+        "height": 176,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1824,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "eb154de9-accb-4393-8a00-6725cde3e428",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "AGENTE_PROMPR_PROFESIONALES :\n\nDESCRIPCION : \nEs un Agente Inteligente que recibe la peticion de prompt por el usuario y analiza a traves de varios Agentes de IA para recibir varias respuestas unificarlas y obtener un PROMPT FINAL mucho mas preciso y almacenarlo en Google Sheet.\n\nBENEFICIOS : \n-Ahorro de tiempo considerable al no tener que escribir esplicitamente un prompt reutilizable para los AI  Agent.\n-Facil de manejar : es muy facil e intuitivo de usar al describir un prompt y la IA devolverte un Prompt Profesional.\n-Facil de implementar y reutilizar.\n-Adaptable segun la situacion y la necesidad.\n\n",
+        "height": 288,
+        "width": 1040,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1984,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "baf159ff-21e8-4315-b9b7-156ec0c0f6b9",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "IMPORTANTE!!!!!!\n\nPara asegurarte de recibir un Prompt aun mas perfecto usar diferentes Chat Models de diferentes origenes para que la informacion brindada sea mas extensa y precisa .\nUtilizar modelos de pago podria hacer mas precisa aun estas peticiones ya que son mas eficientes tienes un menor margen de errores y de alucinacion.",
+        "height": 144,
+        "width": 1040,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1984,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "f8cb1cbf-523b-4ad3-8114-1ca215c53f49",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        -256
+      ],
+      "id": "e073dce5-9015-41e4-8b5e-9305774d391b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        80
+      ],
+      "id": "e4af48d3-e744-47e0-a9c6-d2652e17c65e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        384
+      ],
+      "id": "153122d2-cfa7-4b03-af00-2cc70b06f2b1",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        736
+      ],
+      "id": "65c6d21a-e439-4721-868c-3f68a21782f8",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        384
+      ],
+      "id": "6773b6ab-8f4b-484c-a6de-bf97ab18eba6",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1528d967-45c9-41ac-9c93-47688de32eac",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "3BrX0GtgAZDaVjZL",
+  "tags": []
+}

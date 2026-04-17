@@ -1,0 +1,519 @@
+{
+  "name": "Nano Banana/Gemini",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Ehanced Photo AI",
+        "formDescription": "Completa los campos solicitados correctamente.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "imagen",
+              "fieldType": "file"
+            },
+            {
+              "fieldLabel": "descripcion",
+              "fieldType": "textarea",
+              "placeholder": "Plantea un descripcion sobre como quiere que sea el video ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estilo",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "realista"
+                  },
+                  {
+                    "option": "animado"
+                  },
+                  {
+                    "option": "futurista"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1296,
+        -16
+      ],
+      "id": "1590b2b1-0df5-4d3d-bcaa-874427fa100c",
+      "name": "On form submission",
+      "webhookId": "f493d638-8998-41ba-ba4c-06d7e300056b"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e476a5fb-7338-47f1-aed4-67a0280c3abc",
+              "name": "descripcion",
+              "value": "={{ $('On form submission').item.json.descripcion }}",
+              "type": "string"
+            },
+            {
+              "id": "73253314-f3d6-462c-a6be-976763e7fe6e",
+              "name": "estilo",
+              "value": "={{ $('On form submission').item.json.Estilo }}",
+              "type": "string"
+            },
+            {
+              "id": "e5190523-36fe-47d0-ac71-524c0308e7ce",
+              "name": "descripcion imagen",
+              "value": "={{ $('Analyze an image').item.json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -656,
+        -16
+      ],
+      "id": "a957b98c-c866-4c31-8c08-a7aa489611db",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        336
+      ],
+      "id": "01da9544-831c-4137-9679-b5edba41f08c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        352
+      ],
+      "id": "aa6dbea4-4220-4e7b-b9b6-be989d6d5d06",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1024,
+        -16
+      ],
+      "id": "4b52f937-de34-4059-baf0-13e1f7bcb25a",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Form Trigger",
+        "height": 192,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1392,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "02717a07-d8c2-49f8-b1af-e2c30e3a68bc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "height": 208,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        288
+      ],
+      "typeVersion": 1,
+      "id": "9f64d086-9034-467e-a09c-ebe7db3caa7e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Generar Imagen con el Prompt y la Descripcion de la imagen .",
+        "height": 240,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "755ca6dd-5d1f-434c-acfd-bf72bb741378",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive",
+        "height": 240,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "0543372f-ac34-4e22-8b42-b3b8f96a6a9f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Procesamieto con la IA : Generar el Prompt para el video.",
+        "height": 640,
+        "width": 560,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "60fc7b72-1df1-4ae6-adca-37f417e8045e",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Estos son los datos brindados por el usuario : \nDescripcion del video pedido : {{ $('Edit Fields').item.json.descripcion }}\nEstilo : {{ $('Edit Fields').item.json.estilo }}\nDescripcion de la imagen enviada : {{ $json['descripcion imagen'] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un profesional en la creacion de prompts para crear videos cortos listos para ser subidos a las redes sociales deberas guiarte por los datos brindados por el usuario : {{ $('Edit Fields').item.json.descripcion }} y este sera el estilo que debera tener el nuevo video que vas a generar : {{ $json.estilo }}\n\nDeberas apoyarte de la descripcion de la imagen : {{ $json['descripcion imagen'] }} para asegurarte de mantener la linea y utilizar el mismo producto mostrado en el video que vamos a generar.\n\nDeberas usar un tono sumamente profesional y asegurarte de que el prompt sea el mejor para devolver un video que cumpla todas las expectativas y sea lo mejor posible.\n\nAsegurate de mejorar mucho mas los datos brindados por el usuario y hacer el video altamente visible y llamativo para utilizarlo como campaña de ads.\n\nEncargate de centrar y que el producto al que se le quiere hacer promocion siempre este enfocado y llamando la atencion.\n\nEn caso de ser necesario apoyate del modelo de fallback."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -224,
+        -16
+      ],
+      "id": "50deacf6-7058-4c6f-8c2f-d633589a7d91",
+      "name": "Prompt_video"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-fast-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-fast-generate-001"
+        },
+        "prompt": "=Vas a mantener la misma linea de la imagen ingresada con esta descripcion : {{ $json['Datos imagen'] }} y te vas a guiar por los siguientes elementos para perfeccionar y hacer los mejores videos de tipo shorts : {{ $json.Prompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        704,
+        -16
+      ],
+      "id": "9c8030ee-c634-40ad-a9a4-26833eb713ae",
+      "name": "Generate a video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=Seran imagenes de las cuales debes extraer todos los detalles para ser usados posteriormente para generar un video promocional listo para usarse como campaña de ads en las redes sociales.\n\nDebes extraer siempre el objeto principal de la foto (\"en este caso los zapatos nike\") ya que ese producto es el que va a ser promocionado posteriormente.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -976,
+        -16
+      ],
+      "id": "fcea4670-1858-4264-9ede-3b0ccaf9be7c",
+      "name": "Analyze an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Seleccion de Datos",
+        "height": 256,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "5fbd82af-9e4b-4ceb-b398-1d09615a3226",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Obtener Descripcion imagen",
+        "height": 256,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "92f55045-3224-4397-854a-fc62cffef4a6",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "49aaac22-7e2a-475c-8814-48db2060a43d",
+              "name": "Prompt",
+              "value": "={{ $('Prompt_video').item.json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "7cfd9249-593c-4f45-91db-4f0c08b1940e",
+              "name": "Datos imagen",
+              "value": "={{ $('Edit Fields').item.json['descripcion imagen'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        -16
+      ],
+      "id": "a843e43b-548f-4445-a4b1-f17fe752b8d4",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "Seleccion de Datos",
+        "height": 256,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "082becef-de04-4744-8a0b-e35897d57cba",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Utilizadas :\n-Form Triffer : Usado para enviar la informacion del usuario.\n-Set : Usado para tomar los datos necesarios.\n-AI Agent : Usado para procesar los datos del usuario.\n-Analyze Image : Usado para extraer la informacion de la imagen enviada.\n-Generate Image : Usado para generar la nueva imagen de la campaña de ads.\n-Google Drive : Usado para guardar la imagen generada.",
+        "height": 528,
+        "width": 608,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2224,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "bdf74340-6797-48a8-bd9e-f1e85de4c984",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "NANO BANANA/GEMINI : \n\nDescripcion : \nAutomatizacion para analizar foto y mejorarlas para ser usadas como campaña de ads.\n\nFuncionalidad : \nRecibir imagenes y una descripcion y a partir de esto devolver una imagen mejorada y llamativa para captar la atencion.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que brindado un brief a traves de un formulario permite analizar y recrear nuevas imagenes para campañas de ads .\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Escalabilidad : Es un sistema completamente escalable segun la empresa y los requisitos requeridos.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 528,
+        "width": 576,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1536,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "480ae32b-77ae-440b-857b-ce31a070e65a",
+      "name": "Sticky Note9"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Prompt_video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Prompt_video",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Prompt_video",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prompt_video": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a video": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Generate a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "381e41ff-5b5f-4dc2-90d4-44b03e24ed7e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "5sa6tpO3WfZf4Kzm",
+  "tags": []
+}

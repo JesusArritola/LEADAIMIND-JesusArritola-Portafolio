@@ -1,0 +1,964 @@
+{
+  "name": "Agente IA Contratos (Abogado)",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript)\nconst items = $input.all();\n\nreturn items.map(item => {\n  // 1) Tomamos la salida del extractor\n  let raw = item.json.output ?? \"\";\n\n  // 2) Aseguramos que sea string\n  if (typeof raw !== \"string\") {\n    try { raw = JSON.stringify(raw); } catch (e) { raw = String(raw ?? \"\"); }\n  }\n\n  // 3) Extraer el contenido entre ```json ... ``` o ``` ... ```\n  let body = raw;\n  const fencedJson = raw.match(/```(?:json)?\\s*([\\s\\S]*?)```/i);\n  if (fencedJson && fencedJson[1]) {\n    body = fencedJson[1].trim();\n  }\n\n  // 4) Intentar parsear el JSON\n  let data = {};\n  try {\n    data = JSON.parse(body);\n  } catch (e) {\n    // Fallback: buscar el primer {...} dentro del string por si vino con texto extra\n    const objMatch = body.match(/\\{[\\s\\S]*\\}/);\n    if (objMatch) {\n      try { data = JSON.parse(objMatch[0]); } catch (e2) {}\n    }\n  }\n\n  // 5) Devolver integrando los campos parseados (sin tocar otras propiedades del item)\n  return {\n    json: {\n      ...item.json,\n      contratante_nombre: data.contratante_nombre ?? null,\n      contratante_id: data.contratante_id ?? null,\n      contratista_nombre: data.contratista_nombre ?? null,\n      contratista_id: data.contratista_id ?? null,\n      servicio_descripcion: data.servicio_descripcion ?? null,\n      plazo_inicio: data.plazo_inicio ?? null,\n      plazo_fin: data.plazo_fin ?? null,\n      duracion_meses: data.duracion_meses ?? null,\n      duracion_dias: data.duracion_dias ?? null,\n      precio_monto: data.precio_monto ?? null,\n      precio_moneda: data.precio_moneda ?? null,\n      ciudad: data.ciudad ?? null,\n      pais: data.pais ?? null,\n      texto_usuario: item.json.texto_usuario ?? null,\n    }\n  };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1680,
+        160
+      ],
+      "id": "7d948fc4-6d8d-4770-b368-ee9f9d8a1e95",
+      "name": "Parsear salida del extractor"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "649ae17e-152a-4449-aa22-fc4e359fed6b",
+              "leftValue": "={{$json.ok}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1328,
+        176
+      ],
+      "id": "2df8ac89-82ef-498b-8587-268634515d25",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = items[0].json || {};\n\nfunction toNumber(x) {\n  if (x === null || x === undefined) return null;\n  if (typeof x === 'number') return x;\n  const n = String(x).replace(/[.,](?=\\d{3}\\b)/g, '').replace(',', '.');\n  const val = Number(n);\n  return Number.isFinite(val) ? val : null;\n}\n\nconst datos = {\n  contratante_nombre: d.contratante_nombre ?? null,\n  contratante_id: d.contratante_id ?? null,\n  contratista_nombre: d.contratista_nombre ?? null,\n  contratista_id: d.contratista_id ?? null,\n  servicio_descripcion: d.servicio_descripcion ?? null,\n  plazo_inicio: d.plazo_inicio ?? null,\n  plazo_fin: d.plazo_fin ?? null,\n  duracion_meses: d.duracion_meses ?? null, // NUEVO\n  duracion_dias: d.duracion_dias ?? null,   // opcional\n  precio_monto: toNumber(d.precio_monto),\n  precio_moneda: d.precio_moneda ?? null,\n  ciudad: d.ciudad ?? null,\n  pais: d.pais ?? null\n};\n\n// Reglas de mínimo\nconst baseOblig = [\n  'contratante_nombre','contratante_id',\n  'contratista_nombre','contratista_id',\n  'servicio_descripcion','precio_monto','precio_moneda','pais'\n];\n\nconst faltantes = [];\nfor (const k of baseOblig) {\n  const v = datos[k];\n  if (k === 'precio_monto') {\n    if (!(typeof v === 'number' && Number.isFinite(v))) faltantes.push(k);\n  } else if (v === null || (typeof v === 'string' && v.trim() === '')) {\n    faltantes.push(k);\n  }\n}\n\n// Fecha: aceptar \"plazo_fin\" O \"duración\"\nconst tieneFin = datos.plazo_fin && String(datos.plazo_fin).trim() !== '';\nconst tieneDuracion = (datos.duracion_meses && Number(datos.duracion_meses) > 0) || \n                      (datos.duracion_dias && Number(datos.duracion_dias) > 0);\nif (!tieneFin && !tieneDuracion) {\n  faltantes.push('plazo_fin (o duracion)');\n}\n\nreturn [{ json: { ok: faltantes.length === 0, faltantes, datos } }];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1520,
+        160
+      ],
+      "id": "115dca38-fe35-4899-be05-801a1ba1e3f3",
+      "name": "Validador"
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = items[0].json.datos || items[0].json;\n\nfunction addMonths(date, months) {\n  const dt = new Date(date.getTime());\n  const day = dt.getDate();\n  dt.setMonth(dt.getMonth() + months);\n  if (dt.getDate() < day) dt.setDate(0);\n  return dt;\n}\nfunction addDays(date, days) { const dt = new Date(date.getTime()); dt.setDate(dt.getDate()+days); return dt; }\nfunction iso(x){ return x.toISOString().slice(0,10); }\n\nlet inicio = d.plazo_inicio ? new Date(d.plazo_inicio) : new Date(); // hoy\nlet fin = d.plazo_fin ? new Date(d.plazo_fin) : null;\n\nconst meses = Number(d.duracion_meses || 0);\nconst dias = Number(d.duracion_dias || 0);\n\nif (!fin && (meses>0 || dias>0)) {\n  let tmp = new Date(inicio.getTime());\n  if (meses>0) tmp = addMonths(tmp, meses);\n  if (dias>0)  tmp = addDays(tmp, dias);\n  fin = tmp;\n}\n\nreturn [{\n  json: {\n    ...d,\n    plazo_inicio: iso(inicio),\n    plazo_fin: iso(fin ?? inicio),  // por seguridad\n    // útil para el contrato:\n    duracion_texto: meses ? `${meses} meses` : (dias ? `${dias} días` : '')\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1072,
+        160
+      ],
+      "id": "ab9c1b34-f9e1-4e37-90ec-2570ff134d75",
+      "name": "Derivar fechas"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b1063d-70e1-42f2-85df-ae0641cc9553",
+              "name": "normativas",
+              "value": "=[\n  {\n    \"country\": \"Estados Unidos\",\n    \"topic\": \"proteccion_datos\",\n    \"law_name\": \"Federal Trade Commission Act (FTC Act, 15 U.S.C. §§ 41-58)\",\n    \"summary\": \"Establece que las prácticas desleales o engañosas en el manejo de datos personales son ilegales. Obliga a las partes a implementar medidas de seguridad razonables, garantizar transparencia en el uso de datos y cumplir con notificaciones de brechas según leyes estatales. Puede complementarse con leyes sectoriales como HIPAA, GLBA o la CCPA/CPRA si aplica.\",\n    \"sources\": [\n      \"https://www.ftc.gov/legal-library/browse/statutes/federal-trade-commission-act\",\n      \"https://oag.ca.gov/privacy/ccpa\",\n      \"https://www.hhs.gov/hipaa/for-professionals/index.html\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Estados Unidos\",\n    \"topic\": \"firma_electronica\",\n    \"law_name\": \"Electronic Signatures in Global and National Commerce Act (ESIGN Act, 2000)\",\n    \"summary\": \"Otorga validez jurídica y probatoria a las firmas electrónicas en transacciones comerciales y contratos interestatales. Una firma electrónica es válida si existe intención de firmar, consentimiento y capacidad de conservar el registro de forma íntegra.\",\n    \"sources\": [\n      \"https://www.fdic.gov/resources/supervision-and-examinations/consumer-compliance-examination-manual/documents/iv-1-1.pdf\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Estados Unidos\",\n    \"topic\": \"firma_electronica\",\n    \"law_name\": \"Uniform Electronic Transactions Act (UETA)\",\n    \"summary\": \"Ley adoptada por 49 estados que reconoce que los registros electrónicos y firmas electrónicas tienen la misma equivalencia legal que los documentos escritos y firmas manuscritas. Regula transacciones electrónicas a nivel estatal.\",\n    \"sources\": [\n      \"https://www.uniformlaws.org/committees/community-home?CommunityKey=2c04b76c-2b7d-4399-b1e2-e1030f7feafb\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Estados Unidos\",\n    \"topic\": \"impuestos\",\n    \"law_name\": \"Internal Revenue Code (IRC) – Independent Contractor Tax Rules\",\n    \"summary\": \"Los contratistas independientes deben asumir el pago de impuestos federales, estatales y locales, incluido el self-employment tax. Los clientes deben emitir el Formulario 1099-NEC si los pagos superan los $600 anuales. No se aplican retenciones salvo que proceda la backup withholding.\",\n    \"sources\": [\n      \"https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-defined\",\n      \"https://www.irs.gov/forms-pubs/about-form-1099-nec\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Estados Unidos\",\n    \"topic\": \"jurisdiccion\",\n    \"law_name\": \"State Contract Law & Federal Arbitration Act (FAA)\",\n    \"summary\": \"Permite a las partes elegir la ley estatal aplicable al contrato (governing law) y el foro para resolver controversias (forum selection). Las disputas pueden resolverse mediante tribunales estatales o arbitraje conforme a la FAA, que valida cláusulas arbitrales en contratos comerciales.\",\n    \"sources\": [\n      \"https://www.law.cornell.edu/uscode/text/9\",\n      \"https://www.law.cornell.edu/wex/choice_of_law\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Estados Unidos\",\n    \"topic\": \"independencia_laboral\",\n    \"law_name\": \"IRS Common Law Rules – Independent Contractor Classification\",\n    \"summary\": \"Establece que la relación entre cliente y contratista es de naturaleza comercial, no laboral, siempre que el contratista mantenga control sobre cómo realiza el trabajo, asuma riesgos propios y actúe con autonomía administrativa. Evita la creación de obligaciones laborales como beneficios, salario mínimo o seguridad social del empleador.\",\n    \"sources\": [\n      \"https://www.irs.gov/businesses/small-businesses-self-employed/independent-contractor-self-employed-or-employee\",\n      \"https://www.dol.gov/agencies/whd/flsa\"\n    ],\n    \"status\": \"vigente\"\n  }\n]\n",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -816,
+        -288
+      ],
+      "id": "3df30c58-f524-4140-b6fc-71a7ca62f8c1",
+      "name": "Normativas (Colombia)"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -752,
+        144
+      ],
+      "id": "70b543c0-e224-42c5-931c-341028f9a57d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const normativas = $json.normativas;\n\nconst clausulaLegal = normativas.map((n) => {\n  return `• *${n.law_name}* (${n.topic}): ${n.summary} [Fuente](${n.sources[0]})`;\n}).join(\"\\n\\n\");\n\nconst clausulaFirma = `✍️ *Firma Electrónica*\\n\\nDe acuerdo con la *Ley 527 de 1999* y el *Decreto 2364 de 2012* de Estados Unidos, este contrato puede ser firmado electrónicamente y tiene plena validez jurídica y probatoria. Las partes reconocen que el uso de medios electrónicos constituye manifestación de voluntad y acuerdo entre ellas.`;\n\nreturn [\n  {\n    json: {\n      ...$json,\n      clausula_legal: `📘 *Normativa Aplicable*\\n\\n${clausulaLegal}`,\n      clausula_firma: clausulaFirma,\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -544,
+        144
+      ],
+      "id": "70e00b6d-51c3-430c-becb-4c89a33dbe8a",
+      "name": "Construir cláusulas"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        112,
+        128
+      ],
+      "id": "b3834526-e9d7-4d98-8ef0-5a4eeffcbda0",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2800,
+        160
+      ],
+      "id": "e5d5301c-6669-4a80-a6f5-ab817158d033",
+      "name": "Envío Audio",
+      "webhookId": "6c6b1439-6220-48a8-8da1-a0fb7b61a77e",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2544,
+        160
+      ],
+      "id": "7e620305-33b6-494a-ba0e-ba4011c9eeb5",
+      "name": "Obtener Archivo",
+      "webhookId": "fd552859-d017-40b3-87ba-6fb386cbbe7b",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Envío Audio').item.json.message.chat.id }}",
+        "text": "=📑 Por favor dame esta información para poder entregarte el contrato:\n\n{{ $json.faltantes.map(f => '👉 ' + f).join('\\n') }}\n\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1040,
+        592
+      ],
+      "id": "1ce40aca-c9a1-46d2-a0c7-2de87e4ac92d",
+      "name": "Envío Mensaje Faltan Datos",
+      "webhookId": "e0effadf-df42-44ca-b96f-d85938452ceb",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Envío Audio').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        128
+      ],
+      "id": "d38c0286-9705-4c67-959d-5c41bf07f375",
+      "name": "Envío Contrato",
+      "webhookId": "7ae58f1d-0b4b-4795-9f02-6ee6e5927d88",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "674e86a2-18cf-454b-946a-30b6d0967870",
+              "name": "contratante_nombre",
+              "value": "={{ $json.contratante_nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "ad65f898-dc58-4aab-9e6d-b475f38843d3",
+              "name": "contratante_id",
+              "value": "={{ $json.contratante_id }}",
+              "type": "string"
+            },
+            {
+              "id": "94008213-345f-4fda-bb11-dc98c920c815",
+              "name": "contratista_nombre",
+              "value": "={{ $json.contratista_nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "4462d182-1714-436a-9b2b-cd61b19d28cf",
+              "name": "contratista_id",
+              "value": "={{ $json.contratista_id }}",
+              "type": "string"
+            },
+            {
+              "id": "62443fe6-5260-414a-9e38-4f8edfd8e46d",
+              "name": "servicio_descripcion",
+              "value": "={{ $json.servicio_descripcion }}",
+              "type": "string"
+            },
+            {
+              "id": "0b402d01-5906-491f-b1df-9adb8d0c76bd",
+              "name": "plazo_inicio",
+              "value": "={{ $json.plazo_inicio }}",
+              "type": "string"
+            },
+            {
+              "id": "39c41b27-75b4-4826-9bc2-1e6f0aa40944",
+              "name": "plazo_fin",
+              "value": "={{ $json.plazo_fin }}",
+              "type": "string"
+            },
+            {
+              "id": "e944a8fc-e2f1-4260-b376-9d2f1e2cf6ae",
+              "name": "duracion_meses",
+              "value": "={{ $json.duracion_meses }}",
+              "type": "string"
+            },
+            {
+              "id": "a7a85468-a2e0-40b6-8395-748324fdee8e",
+              "name": "precio_monto",
+              "value": "={{ $json.precio_monto }}",
+              "type": "string"
+            },
+            {
+              "id": "ee0d76b1-9d8f-4a94-9e2c-0fed25eafddf",
+              "name": "precio_moneda",
+              "value": "={{ $json.precio_moneda }}",
+              "type": "string"
+            },
+            {
+              "id": "c157e2f7-4d38-4caf-b16f-360d2836d937",
+              "name": "ciudad",
+              "value": "={{ $json.ciudad }}",
+              "type": "string"
+            },
+            {
+              "id": "63ed5902-eae5-47ba-a366-cd4733362a68",
+              "name": "pais",
+              "value": "={{ $json.pais }}",
+              "type": "string"
+            },
+            {
+              "id": "822f27fa-09bf-471b-b312-56a3994969d4",
+              "name": "clausula_legal",
+              "value": "={{ $json.clausula_legal }}",
+              "type": "string"
+            },
+            {
+              "id": "a3aeca4e-a106-4a92-8036-9b796290a23c",
+              "name": "clausula_firma",
+              "value": "={{ $json.clausula_firma }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -304,
+        144
+      ],
+      "id": "7f1a98e7-10ea-4bb0-8412-fe7564887d97",
+      "name": "Preparar datos para contrato"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\" />\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n<title>Contrato de Prestación de Servicios Profesionales</title>\n<style>\n  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');\n  * { margin:0; padding:0; box-sizing:border-box; }\n  body { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size:11px; color:#111827; line-height:1.75; background:#f8fafc; min-height:100vh; }\n  .page { max-width:210mm; margin:0 auto; background:#ffffff; position:relative; box-shadow:0 25px 50px -12px rgba(0,0,0,.25); }\n  .content { padding:07mm 12mm 25mm 12mm; position:relative; z-index:2; }\n  .document-header { text-align:center; margin:40px 0 20px; position:relative; }\n  .doc-title { font-size:24px; font-weight:700; color:#0f172a; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; position:relative; }\n  .doc-title::after { content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:80px; height:3px; background:linear-gradient(90deg, transparent, #3b82f6, transparent); }\n  .contract-info { display:grid; grid-template-columns:1fr 1fr; gap:30px; padding:20px; background:linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%); border:1px solid #e2e8f0; border-radius:12px; margin:30px 0 10px; }\n  .contract-detail { text-align:center; }\n  .contract-detail strong { color:#0f172a; font-size:12px; display:block; margin-bottom:5px; }\n  .contract-detail span { background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:#fff; padding:8px 16px; border-radius:25px; font-size:11px; font-weight:600; display:inline-block; box-shadow:0 4px 12px rgba(59,130,246,.3); }\n  .intro-text { background:linear-gradient(135deg,#fff 0%,#f8fafc 100%); border:1px solid #e2e8f0; border-radius:12px; padding:25px; margin:30px 0; text-align:justify; font-size:12px; line-height:1.8; box-shadow:0 4px 6px -1px rgba(0,0,0,.1); }\n  .section-title { font-size:15px; font-weight:700; color:#0f172a; margin:30px 0 20px 0; padding:15px 0 15px 60px; background:linear-gradient(135deg, rgba(59,130,246,.08) 0%, transparent 100%); border-left:5px solid #3b82f6; border-radius:0 8px 8px 0; position:relative; counter-increment:section; }\n  .section-title::before { content:counter(section, decimal-leading-zero); position:absolute; left:-3px; top:50%; transform:translateY(-50%); width:35px; height:35px; background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; box-shadow:0 6px 12px rgba(59,130,246,.4); border:3px solid #fff; }\n  body { counter-reset:section; }\n  .parties-grid { display:grid; grid-template-columns:1fr 1fr; gap:25px; margin:25px 0; }\n  .party-card { background:linear-gradient(135deg,#fff 0%,#f8fafc 100%); border:1px solid #e2e8f0; border-radius:16px; padding:25px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,.05); position:relative; }\n  .party-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,#3b82f6,#8b5cf6,#3b82f6); }\n  .party-role { background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff; font-size:11px; font-weight:600; padding:8px 20px; border-radius:20px; display:inline-block; margin-bottom:15px; letter-spacing:.5px; text-transform:uppercase; }\n  .party-name { font-size:16px; font-weight:700; color:#0f172a; margin-bottom:8px; }\n  .party-id { font-size:11px; color:#64748b; font-weight:500; }\n  .content-section { margin:25px 0; }\n  .content-section p { text-align:justify; margin-bottom:15px; }\n  .highlight-simple { font-weight:700; color:#0f172a; text-decoration:underline; text-decoration-color:#3b82f6; text-underline-offset:2px; }\n  .obligations-list { background:#fafafa; border-radius:12px; padding:20px; margin:15px 0; border-left:4px solid #3b82f6; }\n  .obligations-title { font-weight:600; color:#0f172a; margin-bottom:12px; font-size:12px; }\n  ul { list-style:none; padding:0; }\n  li { position:relative; padding-left:25px; margin:10px 0; line-height:1.6; text-align:justify; }\n  li::before { content:'▶'; position:absolute; left:0; color:#3b82f6; font-size:10px; top:2px; }\n  .legal-box { background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%); border:1px solid #bae6fd; border-left:6px solid #0ea5e9; border-radius:12px; padding:20px; margin:15px 0; box-shadow:0 4px 6px rgba(14,165,233,.1); }\n  .legal-title { font-weight:700; color:#0c4a6e; font-size:12px; margin-bottom:8px; }\n  .legal-description { font-size:11px; line-height:1.6; color:#164e63; margin-bottom:8px; text-align:justify; }\n  .signature-section { margin-top:40px; padding-top:30px; border-top:3px solid #e5e7eb; position:relative; }\n  .signature-section::before { content:''; position:absolute; top:-1.5px; left:50%; transform:translateX(-50%); width:100px; height:3px; background:linear-gradient(90deg, transparent, #3b82f6, transparent); }\n  .signature-date { text-align:center; background:linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%); border:1px solid #e2e8f0; border-radius:12px; padding:20px; margin:25px 0; font-weight:600; color:#374151; font-size:12px; }\n  .signatures-grid { display:grid; grid-template-columns:1fr 1fr; gap:50px; margin-top:40px; }\n  .signature-box { background:linear-gradient(135deg,#fff 0%,#f8fafc 100%); border:2px solid #e2e8f0; border-radius:16px; padding:30px 20px; text-align:center; position:relative; min-height:150px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 8px 25px rgba(0,0,0,.08); }\n  .signature-box::before { content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; background:linear-gradient(45deg,#3b82f6,#8b5cf6,#3b82f6); border-radius:18px; z-index:-1; opacity:.1; }\n  .signature-line { border-top:2px solid #374151; margin:30px 0 15px; position:relative; }\n  .signature-line::before { content:'✓'; position:absolute; right:0; top:-12px; background:#10b981; color:#fff; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; }\n  .signer-name { font-size:14px; font-weight:700; color:#0f172a; margin-bottom:8px; }\n  .signer-role { font-size:11px; color:#64748b; line-height:1.4; }\n  .electronic-notice { background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%); border:1px solid #bbf7d0; border-left:6px solid #10b981; border-radius:12px; padding:25px; margin-top:30px; text-align:center; box-shadow:0 4px 6px rgba(16,185,129,.1); }\n  .electronic-notice p { color:#166534; font-size:12px; font-weight:500; margin:0; line-height:1.6; text-align:justify; }\n  @media print {\n    body { background:#fff; }\n    .page { box-shadow:none; margin:0; }\n    .content { padding:07mm 12mm 20mm 12mm; }\n    .section-title { margin:25px 0 15px 0; }\n    .content-section, .obligations-list, .legal-box, p { orphans:2; widows:2; }\n    .legal-box { margin:10px 0; }\n    .signature-section { margin-top:30px; padding-top:20px; }\n  }\n</style>\n</head>\n<body>\n<div class=\"page\">\n  <div class=\"content\">\n    <div class=\"document-header\">\n      <h1 class=\"doc-title\">Contrato de Prestación de Servicios</h1>\n      <div class=\"contract-info\">\n        <div class=\"contract-detail\">\n          <strong>Número de Contrato</strong>\n          <span>{{ $json[\"numero_contrato\"] || ('CT-' + new Date().toISOString().slice(0,10).replace(/-/g,'')) }}</span>\n        </div>\n        <div class=\"contract-detail\">\n          <strong>Fecha de Emisión</strong>\n          <span>{{ $json[\"fecha_emision\"] || new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}) }}</span>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"intro-text\">\n      Entre los suscritos, a saber, <strong>{{$json[\"contratante_nombre\"]}}</strong>, identificado con documento número <strong>{{$json[\"contratante_id\"]}}</strong>, en adelante denominado <em>\"El Contratante\"</em>, y <strong>{{$json[\"contratista_nombre\"]}}</strong>, identificado con documento número <strong>{{$json[\"contratista_id\"]}}</strong>, en adelante denominado <em>\"El Contratista\"</em>, quienes conjuntamente se denominarán <em>\"Las Partes\"</em>, hemos convenido en celebrar el presente contrato de prestación de servicios profesionales, de conformidad con las siguientes cláusulas y condiciones:\n    </div>\n\n    <h2 class=\"section-title\">Identificación de las Partes Contratantes</h2>\n    <div class=\"parties-grid\">\n      <div class=\"party-card\">\n        <div class=\"party-role\">Contratante</div>\n        <div class=\"party-name\">{{$json[\"contratante_nombre\"]}}</div>\n        <div class=\"party-id\">Doc. No. {{$json[\"contratante_id\"]}}</div>\n      </div>\n      <div class=\"party-card\">\n        <div class=\"party-role\">Contratista</div>\n        <div class=\"party-name\">{{$json[\"contratista_nombre\"]}}</div>\n        <div class=\"party-id\">Doc. No. {{$json[\"contratista_id\"]}}</div>\n      </div>\n    </div>\n\n    <h2 class=\"section-title\">Objeto y Alcance del Contrato</h2>\n    <div class=\"content-section\">\n      <p>El presente contrato tiene por objeto la prestación por parte del Contratista al Contratante del siguiente servicio:\n        <span class=\"highlight-simple\">{{$json[\"servicio_descripcion\"]}}</span>, conforme a los términos, condiciones y especificaciones técnicas establecidas en este documento contractual.\n      </p>\n    </div>\n\n    <h2 class=\"section-title\">Plazo de Ejecución y Vigencia</h2>\n    <div class=\"content-section\">\n      <p>El plazo de duración y vigencia del presente contrato será de\n        <span class=\"highlight-simple\">{{$json[\"duracion_meses\"]}}</span> meses calendario, iniciando el día\n        <strong>{{$json[\"plazo_inicio\"]}}</strong> y concluyendo el día <strong>{{$json[\"plazo_fin\"]}}</strong>, pudiendo ser\n        prorrogado por mutuo acuerdo escrito entre las partes contratantes.\n      </p>\n    </div>\n\n    <h2 class=\"section-title\">Valor Contractual y Modalidad de Pago</h2>\n    <div class=\"content-section\">\n      <p>El valor total a cancelar por los servicios objeto de este contrato asciende a la suma de\n        <span class=\"highlight-simple\">{{ Number($json[\"precio_monto\"] || 0).toLocaleString('es-CO') }} {{$json[\"precio_moneda\"] || 'dólares'}}</span>.\n      </p>\n      <p>El Contratante se compromete a cancelar la totalidad del precio acordado al Contratista mediante transferencia bancaria o el mecanismo de pago que las partes acuerden por escrito.</p>\n    </div>\n\n    <h2 class=\"section-title\">Obligaciones y Responsabilidades</h2>\n    <div class=\"obligations-list\">\n      <div class=\"obligations-title\">Obligaciones del Contratista:</div>\n      <ul>\n        <li>Prestar los servicios objeto de este contrato con la máxima diligencia profesional, manteniendo autonomía técnica y administrativa completa.</li>\n        <li>Desarrollar todas sus actividades profesionales sin generar vínculo laboral alguno con el Contratante.</li>\n        <li>Entregar oportunamente los resultados, productos y entregables derivados del servicio en los términos, calidad y plazos previamente convenidos.</li>\n        <li>Mantener absoluta confidencialidad sobre la información privilegiada a la que tenga acceso durante la ejecución contractual.</li>\n      </ul>\n    </div>\n    <div class=\"obligations-list\">\n      <div class=\"obligations-title\">Obligaciones del Contratante:</div>\n      <ul>\n        <li>Realizar oportunamente el pago acordado por los servicios prestados, conforme al cronograma establecido.</li>\n        <li>Suministrar toda la información, documentación y recursos necesarios para la correcta prestación del servicio.</li>\n        <li>Respetar íntegramente la autonomía técnica, profesional y administrativa del Contratista.</li>\n        <li>Brindar el soporte y colaboración requeridos para el cumplimiento exitoso del objeto contractual.</li>\n      </ul>\n    </div>\n\n    <h2 class=\"section-title\">Protección de Datos Personales</h2>\n    <div class=\"content-section\">\n      <p>En estricto cumplimiento de la <strong>Ley 1581 de 2012</strong> sobre protección de datos personales y demás normativa aplicable, las Partes se obligan a:</p>\n      <ul style=\"margin-top: 12px;\">\n        <li>Obtener la autorización expresa e inequívoca para el tratamiento de datos personales recolectados durante la ejecución contractual, informando finalidades y derechos del titular.</li>\n        <li>Garantizar los derechos de los titulares (acceso, rectificación, actualización y supresión) y habilitar canales efectivos para su ejercicio.</li>\n        <li>Implementar medidas técnicas, administrativas y jurídicas para asegurar la confidencialidad, integridad y disponibilidad de la información.</li>\n        <li>Notificar y gestionar incidentes de seguridad de acuerdo con la regulación aplicable y las mejores prácticas.</li>\n      </ul>\n    </div>\n\n    <h2 class=\"section-title\">Marco Normativo y Legal Aplicable</h2>\n    <div class=\"legal-box\">\n      <div class=\"legal-title\">Ley 1581 de 2012 — Protección de Datos Personales</div>\n      <div class=\"legal-description\">Régimen general del tratamiento de datos personales: autorización, finalidades, derechos del titular y medidas de seguridad.</div>\n    </div>\n    <div class=\"legal-box\">\n      <div class=\"legal-title\">Ley 527 de 1999 — Comercio Electrónico y Firmas Digitales</div>\n      <div class=\"legal-description\">Reconoce validez jurídica y fuerza probatoria a mensajes de datos y firmas digitales; permite contratos por medios electrónicos.</div>\n    </div>\n    <div class=\"legal-box\">\n      <div class=\"legal-title\">Decreto 2364 de 2012 — Firma Electrónica</div>\n      <div class=\"legal-description\">Reglamenta la firma electrónica como mecanismo de autenticación y su equivalencia con la firma manuscrita.</div>\n    </div>\n    <div class=\"legal-box\">\n      <div class=\"legal-title\">Estatuto Tributario (arts. 367, 368, 383) — Retención en la Fuente</div>\n      <div class=\"legal-description\">Los servicios profesionales pueden estar sujetos a retención; el Contratante practica las retenciones y el Contratista asume los tributos a su cargo (incluido IVA, si aplica).</div>\n    </div>\n\n    <h2 class=\"section-title\">Validez de Firma Electrónica</h2>\n    <div class=\"content-section\">\n      <p>De conformidad con la <strong>Ley 527 de 1999</strong> y el <strong>Decreto 2364 de 2012</strong>, el presente contrato puede suscribirse mediante firma electrónica, con plena validez jurídica y fuerza probatoria ante cualquier autoridad.</p>\n      <p>Las Partes aceptan que la utilización de medios electrónicos para manifestar su consentimiento y aceptación produce los mismos efectos legales que la firma manuscrita.</p>\n    </div>\n\n    <div class=\"signature-section\">\n      <h2 class=\"section-title\">Lugar de Suscripción y Firmas</h2>\n      <div class=\"signature-date\">\n        <strong>📍 LUGAR:</strong> {{$json[\"ciudad\"] || 'New Jersey'}}, {{$json[\"pais\"] || 'Estados Unidos'}}<br>\n        <strong>📅 FECHA:</strong> {{ $json[\"fecha_emision\"] || new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}) }}\n      </div>\n\n      <div class=\"signatures-grid\">\n        <div class=\"signature-box\">\n          <div>\n            <div class=\"signature-line\"></div>\n            <div class=\"signer-name\">{{$json[\"contratante_nombre\"]}}</div>\n            <div class=\"signer-role\">EL CONTRATANTE<br>Doc. No. {{$json[\"contratante_id\"]}}</div>\n          </div>\n        </div>\n        <div class=\"signature-box\">\n          <div>\n            <div class=\"signature-line\"></div>\n            <div class=\"signer-name\">{{$json[\"contratista_nombre\"]}}</div>\n            <div class=\"signer-role\">EL CONTRATISTA<br>Doc. No. {{$json[\"contratista_id\"]}}</div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"electronic-notice\">\n        <p><strong>CERTIFICACIÓN DE FIRMA ELECTRÓNICA</strong><br>\n        Este documento ha sido firmado electrónicamente conforme a la Ley 527 de 1999 de Colombia, con plena validez jurídica y fuerza probatoria.</p>\n      </div>\n    </div>\n\n  </div>\n</div>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        128
+      ],
+      "id": "5652b312-334d-4626-9d66-4ea99df4b0ee",
+      "name": "Plantilla HTML contrato"
+    },
+    {
+      "parameters": {
+        "content": "Prompt para adaptar a las normativas de cada pais y cambiar el nodo Normativas de tipo set:\nAplica las normativas legales vigentes de [pasi solicitado] para un contrato de prestación de servicios profesionales, incluyendo protección de datos, firma electrónica, impuestos, jurisdicción y naturaleza del contrato.Tienes que devolverme un json como el de abajo pero siendo de Estados Unidos \n[\n  {\n    \"country\": \"Colombia\", \n    \"topic\": \"proteccion_datos\",\n    \"law_name\": \"Ley 1581 de 2012 (Protección de Datos Personales)\",\n    \"summary\": \"Establece el régimen general de protección de datos personales. Obliga a obtener autorización del titular, informar finalidades, garantizar derechos de acceso, corrección y supresión, y aplicar medidas de seguridad.\",\n    \"sources\": [\n      \"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981\",\n      \"https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1684507\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Colombia\",\n    \"topic\": \"firma_electronica\",\n    \"law_name\": \"Ley 527 de 1999 (Comercio Electrónico y Firmas Digitales)\",\n    \"summary\": \"Reconoce validez jurídica y probatoria a los mensajes de datos y a la firma digital. Permite que contratos celebrados por medios electrónicos tengan efectos legales.\",\n    \"sources\": [\n      \"https://www.secretariasenado.gov.co/senado/basedoc/ley_0527_1999.html\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Colombia\",\n    \"topic\": \"firma_electronica\",\n    \"law_name\": \"Decreto 2364 de 2012 (Firma Electrónica)\",\n    \"summary\": \"Reglamenta la firma electrónica como mecanismo de autenticación. Establece criterios de confiabilidad y equivalencia con la firma manuscrita.\",\n    \"sources\": [\n      \"https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=50583\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Colombia\",\n    \"topic\": \"impuestos\",\n    \"law_name\": \"Estatuto Tributario (Retención en la Fuente, artículos 367, 368, 383)\",\n    \"summary\": \"La prestación de servicios está sujeta a retención en la fuente cuando la ley lo exige. El contratante debe practicarla y el contratista asume los impuestos a su cargo (incluyendo IVA si aplica).\",\n    \"sources\": [\n      \"https://estatuto.co/367\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Colombia\",\n    \"topic\": \"jurisdiccion\",\n    \"law_name\": \"Código General del Proceso – Ley 1564 de 2012\",\n    \"summary\": \"Norma procesal que regula la competencia judicial y la posibilidad de pactar la jurisdicción aplicable a controversias contractuales.\",\n    \"sources\": [\n      \"https://www.secretariasenado.gov.co/senado/basedoc/ley_1564_2012.html\"\n    ],\n    \"status\": \"vigente\"\n  },\n  {\n    \"country\": \"Colombia\",\n    \"topic\": \"independencia_laboral\",\n    \"law_name\": \"Jurisprudencia sobre contratos de prestación de servicios\",\n    \"summary\": \"Reitera que el contrato de prestación de servicios es de naturaleza civil/comercial y no genera vínculo laboral. El contratista actúa con autonomía técnica y administrativa, sin subordinación.\",\n    \"sources\": [\n      \"https://www.corteconstitucional.gov.co/relatoria/\"\n    ],\n    \"status\": \"vigente\"\n  }\n]",
+        "height": 576,
+        "width": 816,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1360,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "832e1865-21e3-4247-823d-8d8fda2a44a9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Convertir el htm a pdf a traves de API de CloudConvert con su version gratuita(30 conversiones diarias).",
+        "height": 384,
+        "width": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        544,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "c32610fc-08ae-4b7f-ac11-5e49c009aa92",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Renombrar el archivo .pdf antes de enviarlo por Telegram\n\nreturn items.map(item => {\n  const binKeys = Object.keys(item.binary);\n  if (binKeys.length === 0) return item; // no hay binarios\n\n  const binName = binKeys[0]; // suele ser \"data\"\n  \n  // Nuevo nombre dinámico opcional\n  const nuevoNombre = `Contrato_${new Date().toISOString().slice(0,10)}.pdf`;\n\n  item.binary[binName].fileName = nuevoNombre;\n\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        128
+      ],
+      "id": "74cc1479-b89a-4332-80d2-adaebab3af8c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credneciales del bot de Telegram",
+        "height": 208,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "704239b1-2a2a-4063-b420-345299b709a5",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credneciales del bot de Telegram",
+        "height": 192,
+        "width": 464,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2832,
+        112
+      ],
+      "typeVersion": 1,
+      "id": "40c2e23d-73c0-4af0-b76e-2dac284dfe84",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credneciales del bot de Telegram",
+        "height": 208,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1344,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "0dfc8d4a-f5f3-4398-b013-10934133219c",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Renombrar PDF",
+        "height": 272,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1008,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "91a79e98-5659-4f5b-8f0e-429b18ebf82f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Plantilla Html customizable para el contrato",
+        "height": 288,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        256,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "0f4436ca-935d-4ecf-8f67-41c3b25de20a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar IA deseada para transcribir y conectar credenciales",
+        "height": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2288,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "a58aef56-f11a-4586-ad8f-93a953df25a5",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2112,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "b25c0f3b-d252-4829-9ff2-fcb669b78e00",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "bfb3aec7-e218-4794-87e4-fa72a39e1890",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Validacion de datos extraidos del Agente",
+        "height": 304,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "5a00b06e-ac24-480b-a5a0-81b15e44bfc4",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Derivar Fechas segun duracion del contrato",
+        "height": 208,
+        "width": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "d2cbf6e4-1996-4f73-852f-f0c6c0eda25d",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Constructor de clausulas para contrato",
+        "height": 208,
+        "width": 224,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -608,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "3535f60b-6e78-4265-8162-0edc2572f196",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Nodos Utilizadas:\n-Telegram : Usada para recibir el audio del contrato , en caso de faltar elementos notificar y mandarte el contrato.pdf.\n\n-Gemini : como Chat Model de los agentes de IA y para transcribir el audio recibido por telegram.\n\n-AI Agent : Usado para procesar la informacion proveniente del usuario respecto al contrato.\n\n-Code : Usado en varias ocaciones para parsear , validar y modificar informacion en multiples caso .\n\n-Merge : Usaddo para unir infomacion proveniente de 2 nodos.\n\n-Set : Usado para tomar valores y modificarlos.\n\n-IF : Usado para comprobar que el audio nos brinda toda la informacion necesaria para redactar el contrato.\n\n-Html : Usado para almacenear la plantilla y formato del contrato redactado.\n\n-Http Request : Usado para subir el archivo html y luego descargarlo en formato pdf a traves de pdf.co",
+        "height": 400,
+        "width": 800,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2736,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "2207a0dd-2f21-4f25-9b61-94210057e0c3",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## Agente de IA para crear Contratos en formato pdf con firma digital dentro de los marcos legales.\n\n### Descripción\n\nEste agente de IA es un bot de Telegram diseñado para recibir un audio detallando los datos del contrato para luego procesarlos y crear el contrato en formato pdf dentro de la vigencia de los marcos legales y el pais determinado con firma digital.La forma mas eficiente para crear tus contratos con solo un audio via Telegram.\n\n\n### Beneficios\n\n- **Ahorro de Tiempo**: Automatiza la gestion de contratos a clientes de forma adaptable segun situacion geografica.\n- **Accesibilidad**: Permite a los usuarios crear un contrato con solo enviar un audio desde cualquier parte sin complicaciones.\n\n### Recomendaciones\n\n- Asegúrate de manejar los datos de los usuarios de manera segura y cumplir con las regulaciones de privacidad.\n- Realiza actualizaciones periódicas para mejorar la funcionalidad y la seguridad del bot.\n- Considera la posibilidad de añadir soporte para múltiples idiomas para ampliar la accesibilidad.\n",
+        "height": 544,
+        "width": 1072,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1840,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "a0bf4e70-f511-49bd-9635-c754f27e83d7",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -2224,
+        160
+      ],
+      "id": "d8cbec58-6811-4cc1-a9f8-dd9a1bd9354e",
+      "name": "Transcribe a recording1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2032,
+        560
+      ],
+      "id": "e51de96e-0095-4630-8596-b68e893b80e8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Texto del usuario:\n{{ $json.text }}\n\nEsquema esperado (devuelve exactamente estas claves):\n{\n  \"contratante_nombre\": \"string|null\",\n  \"contratante_id\": \"string|null\",\n  \"contratista_nombre\": \"string|null\",\n  \"contratista_id\": \"string|null\",\n  \"servicio_descripcion\": \"string|null\",\n  \"plazo_inicio\": \"YYYY-MM-DD|null\",\n  \"plazo_fin\": \"YYYY-MM-DD|null\",\n  \"duracion_meses\": \"number|null\",\n  \"duracion_dias\": \"number|null\",\n  \"precio_monto\": \"number|null\",\n  \"precio_moneda\": \"string|null\",\n  \"ciudad\": \"string|null\",\n  \"pais\": \"string|null\"\n}\n\nReglas:\n- Si el texto menciona duración (ej: “9 meses” o “nueve meses”), pon ese valor en \"duracion_meses\".\n- Si hay precio en palabras (ej: “10 mil”), conviértelo a número (10000).\n- No infieras país/ciudad si no aparecen.\nDevuelve solo el JSON.\n",
+        "options": {
+          "systemMessage": "=Eres un extractor estricto. Devuelves ÚNICAMENTE un JSON válido con los campos del esquema.\n\nReglas adicionales:\n- El campo \"contratista_nombre\" SIEMPRE será \"Jesus Miguel\".\n- El campo \"contratista_id\" SIEMPRE será \"1.110.494441\".\n- Estos valores no deben cambiar aunque el texto del usuario mencione otros datos.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -2016,
+        160
+      ],
+      "id": "77277644-40bb-4301-91a8-cfc2e3ce719f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -464,
+        -128
+      ],
+      "id": "4eff8d20-1ccc-4057-94d5-4c2e83d3cc54",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Construye un contrato profesional de prestación de servicios con formato HTML, redactado en lenguaje jurídico. Incluye las siguientes secciones:\n\n1. Título y preámbulo\n2. Identificación de las partes\n3. Objeto del contrato\n4. Plazo y duración\n5. Valor y forma de pago\n6. Obligaciones de las partes\n7. Cláusula de tratamiento de datos personales\n8. Normativa legal aplicable\n9. Cláusula de firma electrónica\n10. Lugar y firma\n\nAquí tienes los datos:\n\nAquí tienes los datos:\n{{ JSON.stringify($json, null, 2) }}\n\n",
+        "options": {
+          "systemMessage": "=Eres un abogado experto en contratos, especializado en derecho laboral, civil y digital. Redactas contratos de prestación de servicios profesionales en lenguaje jurídico claro y riguroso, incluyendo cláusulas de firma electrónica y normativas locales. Tu objetivo es construir un contrato completo, jurídicamente válido y con formato HTML limpio.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        -240
+      ],
+      "id": "0321c91b-d7c1-4c67-af3b-9c68d1758b9e",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "authentication": "apiKey",
+        "outputFormat": "pdf",
+        "inputBinaryData": false,
+        "inputFileContent": "={{ $json.html }}",
+        "inputFilename": "html.html"
+      },
+      "type": "@cloudconvert/n8n-nodes-cloudconvert.cloudConvert",
+      "typeVersion": 1,
+      "position": [
+        688,
+        128
+      ],
+      "id": "eeac3609-9272-42ff-ab0c-95c0c8a271c3",
+      "name": "CloudConvert",
+      "credentials": {
+        "cloudConvertApi": {
+          "id": "ejhGXnAUE5bnOOwB",
+          "name": "CloudConvert account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Parsear salida del extractor": {
+      "main": [
+        [
+          {
+            "node": "Validador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Derivar fechas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Envío Mensaje Faltan Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validador": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Derivar fechas": {
+      "main": [
+        [
+          {
+            "node": "Normativas (Colombia)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Normativas (Colombia)": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Construir cláusulas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir cláusulas": {
+      "main": [
+        [
+          {
+            "node": "Preparar datos para contrato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Plantilla HTML contrato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envío Audio": {
+      "main": [
+        [
+          {
+            "node": "Obtener Archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Archivo": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar datos para contrato": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plantilla HTML contrato": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Envío Contrato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Parsear salida del extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CloudConvert": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "69a1a5fd-150a-4f1b-8e4a-988d02014bc5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "79t7IF9QjdEtaZ0u",
+  "tags": []
+}

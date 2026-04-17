@@ -1,0 +1,960 @@
+{
+  "name": "Paso2_Embeddable_Form_LeadAIMind",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9b5a1aa4-af3a-4d12-9c7b-c5ff68a2242e",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -288,
+        48
+      ],
+      "id": "f9341af6-7b8e-4e57-9f82-0ca8c18ec03c",
+      "name": "Webhook",
+      "webhookId": "9b5a1aa4-af3a-4d12-9c7b-c5ff68a2242e"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cfc85cf7-b9e5-47a0-a61f-68546d4ecabe",
+              "name": "Correo",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "261cfeeb-bdbf-4956-9121-31a74ef73479",
+              "name": "Nombre Completo",
+              "value": "={{ $json.Nombre_Completo }}",
+              "type": "string"
+            },
+            {
+              "id": "7160917b-3fab-4c90-af76-ca309a4c2d72",
+              "name": "¿Quién decide la implementación?",
+              "value": "={{ $json['¿Quién decide la implementación?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4c8f7215-0a9b-4c8c-acea-f9bc9cd0c222",
+              "name": "¿Necesitas resultados en?",
+              "value": "={{ $json['¿Necesitas resultados en?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c39dba22-52e4-47e7-b632-fe03aed536f2",
+              "name": "¿Qué te falta saber para decidirte?",
+              "value": "={{ $json['¿Qué te falta saber para decidirte?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "787224dc-b454-4399-a61f-c262d07f9e5d",
+              "name": "¿Cuánto crees que te cuesta mensualmente ese tiempo perdido?",
+              "value": "={{ $json.Gasto_Mensual }}",
+              "type": "string"
+            },
+            {
+              "id": "9a4ddcd1-1fb3-46e0-b9ba-58cc23f23652",
+              "name": "¿Cuántas horas semanales pierdes en eso?",
+              "value": "={{ $json['¿Cuántas horas semanales pierdes en eso?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "42b4898e-d12e-408b-b46b-15fd7a19ceaf",
+              "name": "Tipo de Negocio",
+              "value": "={{ $json['Tipo de Negocio'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c03989ce-e06f-4ade-94d8-e41a71645914",
+              "name": "Diagnostico Gratis",
+              "value": "={{ $json.Diagnostico }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        336
+      ],
+      "id": "0220d838-99f8-4fad-9123-e18d5dd936c9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "height": 832,
+        "width": 2096
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -336,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "35ba03c9-4e62-429f-a774-3c77d8436e56",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k",
+          "mode": "list",
+          "cachedResultName": "Form_Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Edit Fields').item.json.Correo }}",
+            "Estado": "Agendado",
+            "Propuesta final ": "=Sujeto: {{ $('AI Agent').item.json.output.subject }}\nCuerpo: {{ $('AI Agent').item.json.output.body }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Nombre_Completo",
+              "displayName": "Nombre_Completo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Numero_telefono",
+              "displayName": "Numero_telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tipo de Negocio",
+              "displayName": "Tipo de Negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Qué te consume más tiempo semanalmente? ",
+              "displayName": "¿Qué te consume más tiempo semanalmente? ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Diagnostico",
+              "displayName": "Diagnostico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Cuántas horas semanales pierdes en eso?",
+              "displayName": "¿Cuántas horas semanales pierdes en eso?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Quién decide la implementación?",
+              "displayName": "¿Quién decide la implementación?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Necesitas resultados en?",
+              "displayName": "¿Necesitas resultados en?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Qué te falta saber para decidirte?",
+              "displayName": "¿Qué te falta saber para decidirte?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Gasto_Mensual",
+              "displayName": "Gasto_Mensual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Propuesta final ",
+              "displayName": "Propuesta final ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1568,
+        -32
+      ],
+      "id": "b3dae7c4-8b01-4ccf-bd22-87c42c59c390",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos del Usuario : \nNombre Completo : {{ $json['Nombre Completo'] }}\nCorreo : {{ $json.Correo }}\nCuántas horas semanales pierdes en eso : {{ $json['¿Cuántas horas semanales pierdes en eso?'] }}\nQuien decide la implementacion : {{ $json['¿Quién decide la implementación?'] }}\nNecesita resultado en x tiempo o investigando : {{ $json['¿Necesitas resultados en?'] }}\nQue te falta saber para decidirte : {{ $json['¿Qué te falta saber para decidirte?'] }}\nDiagnostico gratuito : {{ $json['Diagnostico Gratis'] }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un Agente Experto Senior en Automatización con IA de LeadAIMind, con más de 15 años de experiencia creando propuestas personalizadas que resuelven problemas reales de negocios. Tu misión: generar correos HTML profesionales que destaquen beneficios concretos y generen conversión inmediata.\n\nREGLAS ABSOLUTAS:\n- Devuelve ÚNICAMENTE código HTML limpio y profesional.\n- NUNCA incluyas texto plano, explicaciones, comentarios ni metadatos.\n- NUNCA uses etiquetas <html>, <head> ni <body>.\n- Todo el contenido debe estar en tablas con estilos inline.\n- Fuente obligatoria: Arial, Helvetica, sans-serif.\n\nESTRUCTURA EXACTA DEL CORREO (orden inmutable):\n\n1. TABLA CONTENEDORA CENTRADA (max-width: 600px, align=\"center\")\n\n2. SALUDO PERSONALIZADO:\n   - Formato: \"Estimado/a [Nombre completo]\"\n   - Línea de cortesía: \"Espero que este correo le/la encuentre muy bien.\"\n\n3. PÁRRAFO DE CONTEXTO:\n   - Mencionar la empresa [Tipo de Negocio] y el sector [Sector].\n   - Establecer el objetivo: impulsar eficiencia operativa en área específica.\n\n4. PÁRRAFO DE EMPATÍA/PROBLEMA:\n   - Identificar el dolor principal: gestión manual de [Proceso_Clave].\n   - Mencionar consecuencias: cuellos de botella, errores, pérdida de tiempo.\n\n5. PÁRRAFO DE PROPUESTA DE VALOR:\n   - Iniciar con \"✨ Nuestra propuesta está diseñada para...\"\n   - Describir la solución de automatización específica con detalles y procedimiento de como seria.\n   - Incluir beneficio inmediato: operaciones fluidas y predecibles.\n    --Obligatoriamente en este parrafo siempre deberas decirle al usuario que puedes hacer por el ,proponerle una solucion de valor optima para su dolor critico o proceso necesitado(evita usar whatsapp en las propuestas).Elabora la propuesta mas beneficiosa para cada caso de uso.\nEjemplo : Atencion al cliente : La propuesta seria : \"Para su caso de atencion al cliente podemos implementar un chatbot(o a decidir por usted) que atienda al personal 24-7 sin descanso evitando fugas y perdida de capital en su negocio , con CRM para agendarlos y llevar constancia de estos\".Eso es solo un ejemplo hazlo mas profesional.\nEste parrafo puede ser un poco mas extenso, para explicarle al usuario como seria exactamente esta propuesta para su dolor critico.\n\n6. SECCIÓN DE BENEFICIOS CLAVE:\n   - Encabezado: \"Queremos recordarle los beneficios clave...\"\n   - Lista con emojis y separador \"│\":\n     ✅ │ [Beneficio 1: ahorro tiempo/recursos]\n     ⚙️ │ [Beneficio 2: reducción errores/precisión]\n     📊 │ [Beneficio 3: visibilidad/control]\n     🚀 │ [Beneficio 4: agilidad/eficiencia global]\n\n7. LLAMADA A LA ACCIÓN:\n   - Emoji 📅  ¿Listo para dar el primer paso? Continuenmos hablando sobre su problema y descubre cómo puedo ayudarte a alcanzar tus objetivos. Sin compromisos, solo soluciones.(Siempre deberas usar ese texto sin ninguna excusa).\nContactáme Ahora Mismo (botón estilizado igual para todos los correos azul , con redireccion a mi whatsapp con mi numero de telefono +53 56686432).\n   - Línea divisoria: \"────────────────────────────\"\n\n8. FIRMA CORPORATIVA ( alineación izquierda obligatoria):\nLogo y firma (estructura exacta):\n<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n  <tr>\n    <td style=\"padding:0 20px;\">\n      <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n        <tr>\n          <td style=\"padding-right:15px; vertical-align:middle;\">\n            <a href=\"https://ibb.co/60vYXfyM\"><img src=\"https://i.ibb.co/60vYXfyM/LOGO-Lead-AIMind.png\" alt=\"LOGO-Lead-AIMind\" border=\"0\" style=\"display:block; border-radius:12px; width:80px;\"></a>\n          </td>\n          <td style=\"vertical-align:middle;\">\n            <p style=\"margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; font-weight:bold;\">\n              Estrategia con Inteligencia Resultados con Precision.\n            </p>\n          </td>\n        </tr>\n      </table>\n      <p style=\"margin:8px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333;\">\n        JesusMiguel │ Especialista en Automatización │ Listo para ayudarte 🚀\n      </p>\n    </td>\n  </tr>\n</table>\n\nRESTRICCIONES DE FORMATO:\n- Máximo 4-5 párrafos principales + sección de beneficios.\n- Usar emojis estratégicamente (✨, ✅, ⚙️, 📊, 🚀, 📅).\n- Separador \"│\" entre emoji y texto en lista de beneficios.\n- Texto alineado a la izquierda, contenedor centrado.\n- Colores: texto principal #333333, acentos en negro.\n-Siempre desplazar a la izquierda el bloque 8:Firma CORPORATIVA.\n\nDATOS DINÁMICOS A COMPLETAR (nunca inventar, usar genérico si falta):\n- [Nombre Completo]:{{ $json.Correo }}\n- [Tipo de Negocio]:{{ $json['Tipo de Negocio'] }}\n- [Sector]:Decidido por la IA segun el tipo de negocio.\n- [Proceso_Clave](el problema específico a automatizar):{{ $json['¿Cuántas horas semanales pierdes en eso?'] }}\n- [Área_Específica](departamento o función):{{ $('Get row(s) in sheet').item.json['¿Qué te consume más tiempo semanalmente? '] }}\n\nEJEMPLO DE TONO Y ESTILO:\n\"Estimada Andrea Serrano\n\nEspero que este correo la encuentre muy bien. Le escribo en referencia a la propuesta que le enviamos anteriormente para impulsar la eficiencia operativa en MAHLE, específicamente en la optimización de procesos automotrices.\n\nEntendemos que, como Administrativa de Tráfico en un líder del sector automotriz como MAHLE, la gestión manual de la logística y el seguimiento de envíos puede generar cuellos de botella y errores significativos.\n\n✨ Nuestra propuesta está diseñada para transformar estos desafíos...\"\n\nOUTPUT ESPERADO:\nFragmento HTML listo para copiar y pegar, comenzando directamente con la tabla contenedora, sin preámbulos ni texto adicional.\n\n**Reglas Criticas : \n-Analiza el diagnostico gratis({{ $json['Diagnostico Gratis'] }}) para llegar a una propuesta mas aceptada y precisa y no salirte del hilo de la conversacion.\n-Siempre devuelve un formato claro y limpio respetando todo el contenido.\n-Para el punto 8:FIRMA CORPORATIVA  obligatoriamente debes ponerlo en la parte izquierda del correo siempre.\n-Ejemplo exacto del texto para todos los usuarios(solo el contenido diferente pero todo el formato igual):\n\n<!-- Plantilla completa (copia y pega todo). Firma y logo <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width:600px; font-family:Arial, Helvetica, sans-serif; color:#333333; margin:0 auto;\" align=\"center\">\n  <tr>\n    <td style=\"padding:20px;\">\n      \n      <!-- Saludo -->\n      <p style=\"margin:0 0 15px 0; font-size:16px; line-height:1.5;\">\n        Estimado/a [Nombre Completo]\n      </p>\n      \n      <p style=\"margin:0 0 20px 0; font-size:16px; line-height:1.5;\">\n        Espero que este correo le/la encuentre muy bien.\n      </p>\n      \n      <!-- Contexto -->\n      <p style=\"margin:0 0 20px 0; font-size:16px; line-height:1.5;\">\n        Le escribo en referencia a la propuesta que le enviamos anteriormente para impulsar la eficiencia operativa en [Tipo de Negocio], específicamente en la gestión de [Área_Específica].\n      </p>\n      \n      <!-- Problema -->\n      <p style=\"margin:0 0 20px 0; font-size:16px; line-height:1.5;\">\n        Entendemos que, como responsable de la implementación, la gestión manual de [Proceso_Clave] puede generar cuellos de botella y pérdidas significativas de tiempo, estimando más de 20 horas semanales en este proceso, lo que puede impactar en la productividad general.\n      </p>\n      \n      <!-- Propuesta de Valor -->\n      <p style=\"margin:0 0 20px 0; font-size:16px; line-height:1.5;\">\n        ✨ Nuestra propuesta está diseñada para transformar estos desafíos mediante una solución de automatización que optimiza la gestión de [Proceso_Clave]. Esto se traduce en operaciones más fluidas y predecibles, permitiéndole enfocarse en tareas de mayor valor.\n      </p>\n      \n      <!-- Beneficios -->\n      <p style=\"margin:0 0 10px 0; font-size:16px; font-weight:bold; line-height:1.5;\">\n        Queremos recordarle los beneficios clave:\n      </p>\n      \n      <p style=\"margin:0 0 8px 0; font-size:16px; line-height:1.5;\">\n        ✅ │ Ahorro de tiempo y recursos\n      </p>\n      <p style=\"margin:0 0 8px 0; font-size:16px; line-height:1.5;\">\n        ⚙️ │ Reducción de errores y mayor precisión\n      </p>\n      <p style=\"margin:0 0 8px 0; font-size:16px; line-height:1.5;\">\n        📊 │ Visibilidad y control de procesos\n      </p>\n      <p style=\"margin:0 0 25px 0; font-size:16px; line-height:1.5;\">\n        🚀 │ Agilidad y eficiencia global\n      </p>\n      \n      <!-- Llamada a la Acción -->\n      <p style=\"margin:0 0 15px 0; font-size:16px; line-height:1.5;\">\n        📅 ¿Listo para dar el primer paso? Agenda tu consulta gratuita y descubre cómo puedo ayudarte a alcanzar tus objetivos. Sin compromisos, solo soluciones.\n      </p>\n      \n      <!-- Botón Consulta Gratis -->\n      <p style=\"margin:0 0 20px 0;\">\n        <a href=\"https://wa.me/5356686432?text=Hola%2C%20me%20interesa%20la%20consulta%20gratuita%20que%20ofreces.%20%C2%BFPodemos%20agendar%3F\" style=\"display:inline-block; background-color:#007bff; color:#ffffff; text-decoration:none; padding:12px 30px; border-radius:5px; font-size:16px; font-weight:bold; font-family:Arial, Helvetica, sans-serif;\">Consulta Gratis</a>\n      </p>\n      \n      <!-- Línea divisoria -->\n      <p style=\"margin:0 0 20px 0; font-size:16px; line-height:1.5; color:#999999;\">\n        ────────────────────────────\n<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n  <tr>\n    <td style=\"padding:0; text-align:left;\">\n      <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\">\n        <tr>\n          <td style=\"padding-right:15px; vertical-align:middle;\">\n            <a href=\"https://ibb.co/60vYXfyM\"><img src=\"https://i.ibb.co/60vYXfyM/LOGO-Lead-AIMind.png\" alt=\"LOGO-Lead-AIMind\" border=\"0\" style=\"display:block; border-radius:12px; width:80px;\"></a>\n          </td>\n          <td style=\"vertical-align:middle;\">\n            <p style=\"margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; font-weight:bold; text-align:left;\">\n              Estrategia con Inteligencia Resultados con Precision.\n            </p>\n          </td>\n        </tr>\n      </table>\n      <p style=\"margin:8px 0 0 0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; text-align:left;\">\n        JesusMiguel │ Especialista en Automatización │ Listo para ayudarte 🚀\n      </p>\n    </td>\n  </tr>\n</table>\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        576,
+        0
+      ],
+      "id": "90116bdd-4614-4278-8d88-2b3fbc0d257f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        224
+      ],
+      "id": "4387e90f-386f-4c36-986c-b573db3eb9fd",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"subject\": \"\",\n\t\"body\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        816,
+        256
+      ],
+      "id": "0026cd91-3399-41ba-bb80-d2cb0d51baaf",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        576,
+        320
+      ],
+      "id": "c36543c0-d63b-4d46-85ef-23ea000b817d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k",
+          "mode": "list",
+          "cachedResultName": "Form_Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email",
+              "lookupValue": "={{ $('Webhook').item.json.body.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -144,
+        336
+      ],
+      "id": "5e0319c1-117f-447f-8026-d663b919e894",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Obtener datos del cliente",
+        "height": 240,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "0a9ea5a0-21bd-4a3d-9e96-f5e8454a3052",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Cambiar estado Agendado",
+        "height": 192,
+        "width": 256,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1472,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "5de9f25b-2343-4404-b22d-b78788ba9831",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "fromEmail": "=jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('Edit Fields').item.json.Correo }}",
+        "subject": "={{ $json.output.subject }}",
+        "html": "={{ $json.output.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1184,
+        -32
+      ],
+      "id": "ac164908-0b7d-4f69-9aac-0977a89bf79d",
+      "name": "Send email",
+      "webhookId": "a855dab0-bd2f-4db3-90c8-b1d97fc9d879",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "ajustar parametros y datos de los usuarios\n",
+        "height": 416,
+        "width": 720,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "48896c3b-2f24-4c67-b084-1045452e96f6",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmalonsoarritola@gmail.com",
+        "toEmail": "jesusmiguela546@gmail.com",
+        "subject": "Posible Cliente para automatizacion cumplió todo los pasos del OnBoarding",
+        "html": "=Querido CEO Jesus Miguel \nEl usuario :{{ $('Edit Fields').item.json['Nombre Completo'] }} con correo :  {{ $('Edit Fields').item.json.Correo }} acaba de completar todos los pasos del OnBoarding.\nSi verdaderamente esta interesado le contactará por Whatsapp.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1856,
+        -32
+      ],
+      "id": "5c1c9242-84ac-4e65-a843-4097f8ba113b",
+      "name": "Send email1",
+      "webhookId": "509c8b61-0662-4a1c-ae7f-eaa43c20d8c8",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k",
+          "mode": "list",
+          "cachedResultName": "Form_Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oxzOlhd5Emb9-2kcpNJ8VOpWE1VlV4uWkFBPWSyn45k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.body.email }}",
+            "¿Cuántas horas semanales pierdes en eso?": "={{ $json.body.weeklyHours }}",
+            "¿Quién decide la implementación?": "={{ $json.body.decisionMaker }}",
+            "¿Necesitas resultados en?": "={{ $json.body.timeline }}",
+            "Gasto_Mensual": "={{ $json.body.monthlyCost }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Nombre_Completo",
+              "displayName": "Nombre_Completo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Numero_telefono",
+              "displayName": "Numero_telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tipo de Negocio",
+              "displayName": "Tipo de Negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Qué te consume más tiempo semanalmente? ",
+              "displayName": "¿Qué te consume más tiempo semanalmente? ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Diagnostico",
+              "displayName": "Diagnostico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "¿Cuántas horas semanales pierdes en eso?",
+              "displayName": "¿Cuántas horas semanales pierdes en eso?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Quién decide la implementación?",
+              "displayName": "¿Quién decide la implementación?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Necesitas resultados en?",
+              "displayName": "¿Necesitas resultados en?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "¿Qué te falta saber para decidirte?",
+              "displayName": "¿Qué te falta saber para decidirte?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Gasto_Mensual",
+              "displayName": "Gasto_Mensual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Propuesta final ",
+              "displayName": "Propuesta final ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        16,
+        48
+      ],
+      "id": "877fd2f6-a4c9-4f9e-a0a9-06479a149baf",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Notifcame una vez realice todos los pasos",
+        "height": 208,
+        "width": 256,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1776,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "618758af-a9c8-44a4-846a-2f2d1dd3a1be",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "radomzadr d tiempo aleatorio.",
+        "height": 208,
+        "width": 304,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "cc8c3e8e-af63-4883-9844-02935545fc0b",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "amount": "={{ Math.floor(Math.random() * 51) + 10 }}\n"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        944,
+        -176
+      ],
+      "id": "6ccea1b2-8791-41ed-a387-8519c64c2478",
+      "name": "Wait",
+      "webhookId": "a5bfe0fb-1602-4c85-9abd-4380d15b9bd2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        304,
+        16
+      ],
+      "id": "fee05947-1a97-450b-bdea-285a2d1a2fde",
+      "name": "Limit"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dipus.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0",
+            "content-length": "134",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "en-US,en;q=0.9,es;q=0.8,fr;q=0.7,ru;q=0.6,it;q=0.5,th;q=0.4",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "152.206.172.43",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "CU",
+            "cf-ray": "9cf757aa97186bad-DFW",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "origin": "https://embeddable.live",
+            "priority": "u=1, i",
+            "referer": "https://embeddable.live/embed/YBHFEzEseZ",
+            "sec-ch-ua": "\"Chromium\";v=\"142\", \"Opera\";v=\"126\", \"Not_A Brand\";v=\"99\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "152.206.172.43, 198.41.227.87",
+            "x-forwarded-host": "dipus.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-59-5786bcf55-r562x",
+            "x-is-trusted": "yes",
+            "x-real-ip": "152.206.172.43"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "email": "jesusmiguela546@gmail.com",
+            "weeklyHours": ">20h",
+            "decisionMaker": "Yo",
+            "timeline": "<1 mes (crítico)",
+            "monthlyCost": ">$2,000"
+          },
+          "webhookUrl": "https://dipus.app.n8n.cloud/webhook/9b5a1aa4-af3a-4d12-9c7b-c5ff68a2242e",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "8db1daa5-8e03-4dce-894b-182528528b60",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "HPLP1_yHWRNTiJtO_SggH",
+  "tags": []
+}

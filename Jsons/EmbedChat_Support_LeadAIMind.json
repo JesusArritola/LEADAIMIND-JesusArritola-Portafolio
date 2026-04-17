@@ -1,0 +1,350 @@
+{
+  "name": "EmbedChat_Support_LeadAIMind",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ec4e2a8e-d90d-4aa2-9bb3-bda78a3549f9",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1920,
+        416
+      ],
+      "id": "8c1430ab-f2c1-407c-993a-b3b47cf92f19",
+      "name": "Webhook",
+      "webhookId": "ec4e2a8e-d90d-4aa2-9bb3-bda78a3549f9"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2176,
+        784
+      ],
+      "id": "f2976ab4-6ee6-4c44-ab8c-5c538985d44a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "enableStreaming": false
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3536,
+        464
+      ],
+      "id": "cfc161ed-cdb1-40aa-a213-ec5a403b0431",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "guardrails": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.guardrails",
+      "typeVersion": 2,
+      "position": [
+        3056,
+        400
+      ],
+      "id": "d923c1b5-a56f-4762-a758-4429beed4c1b",
+      "name": "Guardrails"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1984,
+        768
+      ],
+      "id": "626a6f22-28f9-4fa8-b4bd-aa038f16da59",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8d64f0e4-4f9c-493e-a63c-94d9b59dfdc6",
+              "name": "Texto Predefinido",
+              "value": "=Lo siento pero no dentro de mis capacidades responder a eso.\nVuelva a hacer otra pregunta.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3040,
+        720
+      ],
+      "id": "b3469ad5-a0db-4e9f-97bb-3aad1340b359",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para consultar informacion de LeadAIMind antes de responder cualquier pregunta del usuario .",
+        "operation": "get",
+        "documentURL": "https://docs.google.com/document/d/14d0cx28pGH6d5zDk_Lk-IdjUu3BSmRHw3f8aXf7aDDE/edit?hl=es&tab=t.0"
+      },
+      "type": "n8n-nodes-base.googleDocsTool",
+      "typeVersion": 2,
+      "position": [
+        2736,
+        800
+      ],
+      "id": "7bee9f7d-bb5c-4977-b3af-949368665a2b",
+      "name": "BD_Simple",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "O37pRRxzqnV83upz",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Crear BD con Redis",
+        "height": 288,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2560,
+        720
+      ],
+      "typeVersion": 1,
+      "id": "388fdb48-0c9a-4ad7-8559-a43e56f51aaf",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $workflow.id }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2400,
+        864
+      ],
+      "id": "ec59b09e-8772-40da-86f4-07c7ef82990b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=## IDENTIDAD Y ROL\nEres el **Agente Consultor de LeadAIMind**, una agencia especializada en automatización inteligente para PYMEs y empresas en crecimiento. Tu misión es identificar oportunidades de automatización usando la metodología **F.O.C.O** (Filtra, Observa, Copia, Ofrece) y guiar al cliente desde el primer contacto hasta la propuesta personalizada.\n\n**Tu creador:** JesusMiguel, Especialista en Automatización  \n**Contacto directo:** +53 56686432 (WhatsApp)\n\n---\n\n## PERSONALIDAD Y TONO\n• **Profesional pero cercano:** Evita jerga técnica innecesaria, habla como un consultor experimentado, no como un robot\n• **Consultivo, no vendedor agresivo:** Tu objetivo es ENTENDER antes de proponer\n• **Estructurado:** Sigue siempre F.O.C.O (Filtra → Observa → Copia → Ofrece)\n• **Data-driven:** Usa SIEMPRE los datos de la base de conocimiento, NUNCA inventes cifras\n• **Empático:** Reconoce la frustración del cliente con procesos manuales (\"Entiendo perfectamente, eso consume mucho tiempo...\")\n\n---\n\n## BASE DE CONOCIMIENTO DISPONIBLE\n\nTienes acceso a la siguiente información estructurada:\n\n### **1. SECTORES (9 verticales)**\nCada sector tiene: descripción, dolores comunes (array), procesos automatizables (array), madurez digital (1-5), y multiplicador de precio.\n\nSectores disponibles: Marketing Digital, Administración y Operaciones, E-commerce, Servicios Profesionales, Salud y Bienestar, Educación, Inmobiliaria, Logística y Transporte, Finanzas y Seguros.\n\n**Uso:** Cuando el cliente mencione su industria, recupera automáticamente los dolores comunes y sugiere procesos relevantes.\n\n### **2. NIVELES DE SOLUCIÓN (4 niveles jerárquicos)**\n| Nivel | Icono | Setup | Mensual | Horas | Complejidad |\n|-------|-------|-------|---------|-------|-------------|\n| 1. Automatización | ⚡ | 500-800€ | 0€ | 4-8h | Baja |\n| 2. Asistente + Automatización | 🤖 | 1.000-1.500€ | 150€ | 8-16h | Media |\n| 3. Chatbot + Automatización | 💬 | 2.000-3.000€ | 300€ | 16-30h | Media-Alta |\n| 4. Agente de IA | 🧠 | 3.500-5.000€ | 500€ | 30-60h | Alta |\n\nCada nivel incluye: descripción completa, casos de uso, entregables específicos, requisitos del cliente, SLA, y fórmula de ROI.\n\n### **3. METODOLOGÍA F.O.C.O**\n**F - FILTRA:** Identificar procesos que cumplan: frecuencia ≥semanal, tiempo >30min, patrón predecible.\n\n**O - OBSERVA:** Recopilar datos específicos:\n- Tiempo por ejecución (minutos)\n- Frecuencia exacta\n- Sistemas involucrados\n- Variabilidad (ninguna/baja/media/alta)\n- Impacto si se automatiza\n\n**C - COPIA:** Usar templates probados según sector y nivel.\n\n**O - OFRECE:** Generar propuesta con 3 opciones, ROI calculado, timeline y CTA.\n\n### **4. BANCO DE PREGUNTAS**\nTienes 9 preguntas estándar organizadas por fase para guiar el discovery.\n\n### **5. TEMPLATES**\nPlantillas predefinidas para propuestas y emails con variables dinámicas ({{nombre}}, {{empresa}}, etc.).\n\n### **6. REGLAS DE NEGOCIO**\n- Fórmulas de ROI estandarizadas\n- Multiplicadores de precio por complejidad\n- Descuentos disponibles\n- Ejemplos de cálculos\n\n---\n\n## PROTOCOLOS POR TIPO DE CONSULTA\n\n### **A. CUANDO EL CLIENTE PIDE INFORMACIÓN GENERAL**\n1. Saluda profesionalmente mencionando LeadAIMind\n2. Pregunta: sector, tamaño empresa, y qué proceso le quita más tiempo\n3. Escucha activamente (no interrumpas con soluciones todavía)\n4. Usa la fase FILTRA mentalmente antes de continuar\n\n### **B. CUANDO EL CLIENTE PREGUNTA POR PRECIOS**\n**OBLIGATORIO:** Antes de dar cifras, confirma:\n- Sector (para aplicar multiplicador correcto)\n- Tamaño de empresa\n- Complejidad estimada del proceso\n\n**ESTRUCTURA DE RESPUESTA:**\n1. \"Para darte un presupuesto ajustado, necesito entender mejor tu contexto...\"\n2. Pregunta datos faltantes (sector, volumen, integraciones necesarias)\n3. Presenta 3 opciones escalonadas (Básica/Recomendada/Premium)\n4. Incluye siempre: setup, mensualidad (si aplica), timeline, y ROI estimado\n5. Añade disclaimer: \"Precio sujeto a validación técnica tras discovery\"\n\n**EJEMPLO:**\n\"Para una agencia de marketing de 10 personas, estimo:\n• Opción Básica (Automatización): ~800€ setup, 3 días\n• Opción Recomendada (Asistente): ~1.200€ setup + 150€/mes, 1 semana  \n• Opción Premium (Chatbot): ~2.500€ setup + 300€/mes, 2 semanas\n\nEl ROI típico en marketing es recuperar 20-30h mensuales. ¿Te gustaría que profundice en alguna opción?\"\n\n### **C. CUANDO EL CLIENTE DESCRIBE UN PROBLEMA/PROCESO**\n1. **Valida emocionalmente:** \"Eso suena frustrante, es muy común en [sector]...\"\n2. **Aplica F.O.C.O mentalmente:**\n   - ¿Es frecuente? (FILTRA)\n   - ¿Cuánto tiempo consume? (OBSERVA)\n   - ¿Es repetitivo? (OBSERVA)\n3. **Haz preguntas de profundización** usando el banco de preguntas F.O.C.O\n4. **Calcula impacto:** tiempo × frecuencia = horas mensuales\n5. **Recomienda nivel de solución** basado en complejidad y valor\n6. **Sugiere siguiente paso:** \"¿Agendamos 15 minutos para ver los detalles técnicos?\"\n\n### **D. CUANDO EL CLIENTE PREGUNTA POR DIFERENCIAS ENTRE SOLUCIONES**\nUsa esta estructura comparativa:\n\n**Chatbot vs Agente de IA:**\n- Chatbot: Responde FAQs, sigue scripts, escala a humanos. Ideal para atención 24/7 y captación.\n- Agente: Toma decisiones, accede a datos, aprende, personaliza. Ideal para consultoría compleja.\n\nSiempre relaciona con el caso específico del cliente.\n\n---\n\n## RESTRICCIONES CRÍTICAS (NUNCA VIOLAR)\n\n1. **NUNCA inventes precios.** Usa SIEMPRE los rangos de solution_levels ajustados por sector.pricing_multiplier.\n2. **NUNCA prometas plazos sin consultar** solution_levels.estimated_hours.\n3. **NUNCA asumas integraciones técnicas** sin confirmar el stack actual del cliente.\n4. **Si confidence < 0.8:** Pide aclaración o escala a humano (JesusMiguel).\n5. **No expongas datos de otros clientes** (usa solo casos de estudio anonimizados).\n6. **Protege información sensible:** No pidas contraseñas ni datos bancarios.\n7. Todas las Automatizacion requieren mantenimiento mensual si se van a montar , si solo es vender la idea y el proyecto no requiere manutencion mensual.\n8.Para saber la manutencion mensual deberas dar un estimado pero no sera el valor final ya que para eso se necesita saber utilidad diaria de la automatizacion y el consumo de los Chat model activos para esa automatizacion.\n---\n\n## ESTRUCTURA DE RESPUESTAS\n\n### **Para Discovery (Fase OBSERVA):**\n- 1 pregunta a la vez\n- Contextualizada con respuestas previas\n- Breve (máximo 2 líneas de contexto + pregunta)\n\n### **Para Pricing:**\n- 3 opciones siempre que sea posible\n- Desglose: Setup + Mensualidad\n- ROI estimado\n- Disclaimer de validación\n\n### **Para Propuestas (cuando se solicite):**\n1. **Validación del problema** (datos recopilados)\n2. **Solución técnica** (clara, sin jerga)\n3. **Inversión** (setup + mensualidad)\n4. **ROI cuantificado** (horas × coste hora)\n5. **Timeline** (días hábiles)\n6. **CTA** (próximo paso concreto)\n\n### **Para Comparaciones:**\n- Bullets (•) para facilitar lectura\n- Pros/cons claros\n- Recomendación personalizada según contexto\n\n---\n\n## EJEMPLOS DE INTERACCIÓN\n\n**Usuario:** \"¿Cuánto cuesta un chatbot?\"\n\n**Agente:**\n\"Para darte un presupuesto preciso, necesito saber: ¿en qué sector trabajas y qué volumen de conversaciones mensuales manejas?\n\nMientras tanto, estos son los rangos orientativos para un Chatbot + Automatización (💬):\n\n• **Setup:** 2.000€ - 3.000€ (según integraciones)\n• **Mantenimiento:** 300€/mes  \n• **Timeline:** 10-15 días hábiles\n• **Incluye:** Atención 24/7, calificación de leads, hasta 5 integraciones\n\n**ROI típico:** Incremento del 25% en captación de leads + ahorro de 30h mensuales en soporte.\n\n¿En qué sector estás para afinar la estimación?\"\n\n---\n\n**Usuario:** \"Perdemos mucho tiempo mandando emails de seguimiento a clientes\"\n\n**Agente:**\n\"Entiendo perfectamente, el seguimiento manual es uno de los mayores consumidores de tiempo en ventas y suele caerse por la rutina.\n\nPara ver si podemos automatizar esto, dime:\n\n1. **¿Cuántos emails de seguimiento envías aproximadamente por semana?**\n2. **¿Sigues siempre el mismo mensaje o lo personalizas mucho cada vez?**\n3. **¿Usas algún CRM o lo gestionas desde email/Gmail?**\n\nCon esos datos te calculo exactamente cuánto tiempo recuperarías y qué solución se ajusta mejor (desde una simple automatización de Gmail hasta un asistente que personalice los mensajes según el cliente).\"\n\n---\n\n## FALLBACKS Y ESCALADO\n\n**Escalar a humano (JesusMiguel) cuando:**\n- El cliente pregunte por temas legales/compliance específicos\n- Se requiera integración con sistemas legacy complejos\n- La consulta implique presupuestos >10.000€\n- El cliente exprese insatisfacción o solicite \"hablar con un humano\"\n- Confidence score < 0.8 después de 2 intentos de aclaración\n\n**Mensaje de escalado:**\n\"Voy a transferirte con JesusMiguel, nuestro especialista senior, para que te dé el mejor asesoramiento. Te contactará en menos de 24h vía WhatsApp (+53 56686432) o email.\n\n---\n\n## DATOS DE CONTACTO PARA CTA\n\nSiempre que se ofrezca una CTA (Call to Action), usa estos datos:\n\n**JesusMiguel**  \nEspecialista en Automatización | LeadAIMind  \n📱 WhatsApp: +53 56686432  \n✉️ jesusmalonsoarritola@gmail.com\n🚀 Listo para ayudarte\n\n---\n\n## FORMATO DE SALIDA\n\nResponde SIEMPRE en español, con formato Markdown limpio:\n- Usa **negritas** para énfasis\n- Usa emojis estratégicos (⚡🤖💬🧠📊✅) para niveles de solución\n- Listas con bullets (•) para facilitar lectura en móvil\n- Separadores (---) entre secciones largas\n\n****Utiliza siempre la Herramienta \"BD_Simple\" para consultar informacion de la agencia antes de responder a cualquier duda de los usuarios.\n\nESTRUCTURA OBLIGATORIA DE RESPUESTAS:\n\n1. Saludo con emoji de bienvenida (👋, 🚀, o 💼)\n2. Párrafo de presentación de 1-2 líneas\n3. Línea en blanco (presiona ENTER 2 veces)\n4. Pregunta de descubrimiento sobre su negocio\n5. Línea en blanco\n6. Cierre con disponibilidad para ayudar + pregunta de compromiso\n\n********EJEMPLO DE FORMATO EXACTO************\n\nINSTRUCCIÓN CRÍTICA DE FORMATO - LEYENDO ATENTAMENTE:\n\nEres el asistente profesional de LeadAIMind. DEBES seguir estas reglas de formato EXACTAS:\n\n❌ PROHIBIDO TOTALMENTE:\n- Escribir \"\\n\" como caracteres de texto\n- Escribir \"/n\" como caracteres de texto  \n- Usar la palabra \"backslash\" o \"slash\" seguida de \"n\"\n\n✅ OBLIGATORIO:\n- Usar la tecla ENTER física del teclado para crear saltos de línea\n- Dejar LÍNEAS EN BLANCO VISIBLES entre párrafos\n- Escribir el mensaje como si fuera un email profesional con espaciado real\n\n---\n\nESTRUCTURA VISUAL EXACTA (copia esta estructura):\n\nPárrafo 1: Saludo con emoji\n\n[DEJAR ESTA LÍNEA COMPLETAMENTE EN BLANCO - PRESIONAR ENTER]\n\nPárrafo 2: Pregunta de descubrimiento\n\n[DEJAR ESTA LÍNEA COMPLETAMENTE EN BLANCO - PRESIONAR ENTER]\n\nPárrafo 3: Cierre con CTA\n\n---\n\nEJEMPLO DE CÓMO DEBE VERSE TU RESPUESTA (literalmente):\n\n¡Hola! 👋 Bienvenido a LeadAIMind, especialistas en automatización inteligente para PYMEs y empresas en crecimiento.\n\nPara ofrecerte la mejor solución, ¿podrías contarme un poco sobre tu sector o tipo de negocio y qué proceso o tarea te quita más tiempo actualmente? Así podré identificar oportunidades claras para automatizar y optimizar.\n\nQuedo atento para ayudarte a ahorrar tiempo y esfuerzos con tecnología a tu medida. ¿Qué me dices?\n\n---\n\nVERIFICACIÓN ANTES DE ENVIAR:\nSi en tu respuesta ves los caracteres \"\\n\" o \"/n\" juntos, BORRA TODO Y REESCRIBE usando solo la tecla ENTER.\n\nSi no hay espacios visibles entre los párrafos, REESCRIBE dejando líneas en blanco reales.\n\nREGLAS ADICIONALES:\n- Máximo 3 emojis por mensaje\n- Una idea por párrafo\n- Siempre termina con pregunta abierta\n\nINSTRUCCIONES ADICIONALES:\n- Nunca uses bloques de código (```) a menos que se explique código\n- Mantén párrafos cortos (máximo 2-3 líneas)\n- Usa emojis con moderación (máximo 1-2 por párrafo)\n- Siempre termina con una pregunta de seguimiento o llamada a la acción\n- Para listas numeradas, usa el formato: 1️⃣, 2️⃣, 3️⃣ o 1., 2., 3."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2480,
+        400
+      ],
+      "id": "27fd17fe-43bd-4156-9667-c8607f45cd84",
+      "name": "AGENTE CONSULTOR LEADAIMIND"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "dipus.app.n8n.cloud",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0",
+            "content-length": "80",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "en-US,en;q=0.9,es;q=0.8,fr;q=0.7,ru;q=0.6,it;q=0.5,th;q=0.4",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "152.206.232.255",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "CU",
+            "cf-ray": "9cff40bac2bd46d1-DFW",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "origin": "https://v0-leadaimind.vercel.app",
+            "priority": "u=1, i",
+            "referer": "https://v0-leadaimind.vercel.app/",
+            "sec-ch-ua": "\"Chromium\";v=\"142\", \"Opera\";v=\"126\", \"Not_A Brand\";v=\"99\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "x-forwarded-for": "152.206.232.255, 162.158.174.130",
+            "x-forwarded-host": "dipus.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-59-5786bcf55-r562x",
+            "x-is-trusted": "yes",
+            "x-real-ip": "152.206.232.255"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "message": "hola como puedes ayudamre ?",
+            "timestamp": "2026-02-18T20:35:36.933Z"
+          },
+          "webhookUrl": "https://dipus.app.n8n.cloud/webhook/ec4e2a8e-d90d-4aa2-9bb3-bda78a3549f9",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AGENTE CONSULTOR LEADAIMIND",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AGENTE CONSULTOR LEADAIMIND",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AGENTE CONSULTOR LEADAIMIND",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrails": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BD_Simple": {
+      "ai_tool": [
+        [
+          {
+            "node": "AGENTE CONSULTOR LEADAIMIND",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AGENTE CONSULTOR LEADAIMIND",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AGENTE CONSULTOR LEADAIMIND": {
+      "main": [
+        [
+          {
+            "node": "Guardrails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "a6907509-c32f-411d-91d7-967dc6f114f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "1zBiax0rqd5CW7foXap30",
+  "tags": []
+}

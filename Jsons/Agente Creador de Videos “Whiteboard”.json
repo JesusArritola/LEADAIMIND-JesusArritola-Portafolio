@@ -1,0 +1,905 @@
+{
+  "name": "Agente Creador de Videos “Whiteboard”",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Agente Creador de Videos “Whiteboard”",
+        "formDescription": "Rellena los campos requeridos",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Guion",
+              "fieldType": "textarea",
+              "placeholder": "Escribe un guion ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Duracion ",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "4s"
+                  },
+                  {
+                    "option": "6s"
+                  },
+                  {
+                    "option": "8s"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "idioma",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "ES"
+                  },
+                  {
+                    "option": "EN"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estilo Visual",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Minimal"
+                  },
+                  {
+                    "option": "Educativo"
+                  },
+                  {
+                    "option": "Corporativo"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "CTA",
+              "placeholder": "Llamada a la accion",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Voz IA",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Yes"
+                  },
+                  {
+                    "option": "No"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "fieldType": "email",
+              "placeholder": "ejemplo@gmail.com",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        736,
+        864
+      ],
+      "id": "dd0396fa-9b52-4712-b977-9fcb59eb65a6",
+      "name": "On form submission",
+      "webhookId": "343479b0-3833-4311-9c59-4662c7cd1da7"
+    },
+    {
+      "parameters": {
+        "content": "Brief Video",
+        "height": 256,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        672,
+        800
+      ],
+      "typeVersion": 1,
+      "id": "383d0cc2-566e-4953-8d20-1d161b84a14a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        1200
+      ],
+      "id": "e02630f1-fcb8-41f6-adc6-a66de4bc24c3",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e606625b-c827-4b7e-ae62-d8aa20db7ae2",
+              "leftValue": "={{ $('Edit Fields').item.json['Voz IA'] }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "array",
+                "operation": "contains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2368,
+        864
+      ],
+      "id": "62d28a99-608d-4137-82cd-33a843703f7c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Guion }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un experto en storytelling para videos whiteboard de alto impacto.\n\nTu tarea es dividir el siguiente guion en exactamente 4 escenas optimizadas para video whiteboard animado.\n\nGUION ORIGINAL:\n{{ $json.Guion }}\n\nREGLAS OBLIGATORIAS:\n1. Generar EXACTAMENTE 4 escenas (ni más, ni menos)\n2. Cada escena debe tener UNA SOLA idea central clara\n3. Duración equilibrada: cada escena entre 15-25 segundos de narración\n4. Seguir estructura narrativa: Problema → Agitación → Solución → Llamada a la acción\n5. Texto narrado conversacional, NO corporativo ni robótico\n6. Cada idea clave debe ser memorable y visual\n\nESTRUCTURA NARRATIVA OBLIGATORIA:\n\nEscena 1 (PROBLEMA): Identifica el dolor principal del cliente de forma emocional\nEscena 2 (AGITACIÓN): Profundiza en las consecuencias de no resolver el problema\nEscena 3 (SOLUCIÓN): Presenta la solución de forma simple y clara\nEscena 4 (CTA): Llamada a la acción específica y motivante\n\nFORMATO DE SALIDA:\nDevuelve ÚNICAMENTE un objeto JSON válido, sin texto adicional, sin markdown, sin explicaciones.\n\n{\n  \"escenas\": [\n    {\n      \"numero\": 1,\n      \"texto_narrado\": \"Texto natural de 2-3 oraciones que se puede narrar en 15-25 segundos. Debe sonar conversacional, no corporativo.\",\n      \"idea_clave\": \"Frase corta de 3-5 palabras que resume el concepto visual principal\",\n      \"tipo_escena\": \"problema\"\n    },\n    {\n      \"numero\": 2,\n      \"texto_narrado\": \"Texto natural que profundiza en las consecuencias del problema de forma emocional.\",\n      \"idea_clave\": \"Frase que captura la frustración o pérdida\",\n      \"tipo_escena\": \"agitacion\"\n    },\n    {\n      \"numero\": 3,\n      \"texto_narrado\": \"Texto que presenta la solución de forma simple, clara y esperanzadora.\",\n      \"idea_clave\": \"Frase que captura el beneficio principal\",\n      \"tipo_escena\": \"solucion\"\n    },\n    {\n      \"numero\": 4,\n      \"texto_narrado\": \"Texto que motiva a la acción inmediata con urgencia positiva.\",\n      \"idea_clave\": \"Frase de acción clara\",\n      \"tipo_escena\": \"cta\"\n    }\n  ],\n  \"metadata\": {\n    \"duracion_total_estimada\": 80,\n    \"tono\": \"conversacional|educativo|motivacional\",\n    \"nivel_urgencia\": \"bajo|medio|alto\"\n  }\n}\n\nEJEMPLOS DE BUENAS IDEAS CLAVE:\n✅ \"Clientes confundidos = Ventas perdidas\"\n✅ \"Mensajes largos espantan\"\n✅ \"Simplifica con dibujos\"\n✅ \"Comunica y convierte mejor\"\n\nEJEMPLOS DE MALAS IDEAS CLAVE:\n❌ \"Explicación del problema de comunicación empresarial\"\n❌ \"La importancia de simplificar mensajes\"\n\nRECORDATORIO FINAL:\n- Solo JSON, sin ```json ni markdown\n- Exactamente 4 escenas\n- Texto narrado conversacional y natural\n- Ideas clave cortas y visuales"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1600,
+        864
+      ],
+      "id": "0d2aa9e6-09e2-4d1f-b86d-6460cd9d0ac5",
+      "name": "Dividir_Escenas"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Escenas : {{ $json.output }} \nEstilo Visual :{{ $('Edit Fields').item.json['Estilo Visual'] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un director creativo especializado en storyboards para videos whiteboard de alta conversión.\n\nTu tarea es convertir las escenas narrativas en un storyboard visual detallado, optimizado para animación whiteboard.\n\nESCENAS A CONVERTIR:\n{{ $json.output }}\n\nESTILO VISUAL SOLICITADO:\n{{ $('Edit Fields').item.json['Estilo Visual'] }}\n\nDURACIÓN POR ESCENA:\n{{ $('Edit Fields').item.json['Duracion '] }} segundos\n\nIDIOMA:\n{{ $('Edit Fields').item.json.idioma }}\n\n═══════════════════════════════════════════\n\nPRINCIPIOS DE DISEÑO WHITEBOARD:\n\n🎨 ESTILO VISUAL:\n- Dibujos simples tipo \"stick figure\" o iconos lineales\n- Trazos limpios y minimalistas\n- Sin sombreados complejos ni detalles innecesarios\n- Claridad visual > Realismo artístico\n\n✋ ANIMACIÓN DE MANO:\n- Cada elemento debe dibujarse secuencialmente (no aparecer todo a la vez)\n- Orden lógico: contexto → personaje → acción → resultado\n- Transiciones fluidas entre elementos\n- Timing preciso para sincronizar con narración\n\n📝 TEXTO EN PANTALLA:\n- Máximo 5-7 palabras por texto\n- Refuerza la idea, NO repite la narración completa\n- Tipografía legible (estilo manuscrito para whiteboard)\n- Aparece DESPUÉS del dibujo principal\n\n═══════════════════════════════════════════\n\nBIBLIOTECA DE ELEMENTOS VISUALES:\n\n👤 PERSONAS/EMOCIONES:\n- Confundido: Stick figure con signos de interrogación\n- Frustrado: Figura con cabeza entre las manos\n- Feliz: Figura con brazos arriba + estrella\n- Pensativo: Figura con dedo en barbilla + bombilla\n\n💼 CONCEPTOS DE NEGOCIO:\n- Dinero perdido: Billete con flecha descendente + símbolo $\n- Tiempo perdido: Reloj de arena vacío + calendario tachado\n- Cliente perdido: Figura alejándose + X roja\n- Éxito: Gráfica ascendente + check verde\n\n🔄 TRANSFORMACIÓN/CONTRASTE:\n- Antes/Después: Dividir pantalla con línea vertical\n- Problema/Solución: Cara triste → cara feliz\n- Complejo/Simple: Garabato desordenado → forma geométrica limpia\n- Caos/Orden: Múltiples elementos dispersos → todo organizado\n\n⚡ ACCIÓN/URGENCIA:\n- Flecha gruesa apuntando → objetivo\n- Reloj con manecillas girando rápido\n- Bombilla encendiéndose (idea)\n- Cohete despegando (crecimiento)\n\n═══════════════════════════════════════════\n\nTIPOS DE ANIMACIÓN:\n\n1. **draw_hand** (Dibujo con mano visible)\n   - Uso: 90% del video whiteboard\n   - Velocidad: 0.5-1 segundo por trazo\n   - Ideal para: Figuras, iconos, texto principal\n\n2. **write_text** (Escritura manuscrita)\n   - Uso: Títulos, números, palabras clave\n   - Velocidad: 0.3 segundos por palabra\n   - Ideal para: Estadísticas, CTAs, conceptos clave\n\n3. **fade_in** (Aparición gradual)\n   - Uso: Elementos de fondo, contextos\n   - Velocidad: 0.5 segundos\n   - Ideal para: Marcos, divisiones, fondos\n\n4. **morph** (Transformación)\n   - Uso: Transiciones entre estados\n   - Velocidad: 1 segundo\n   - Ideal para: Antes/después, problemas→soluciones\n\n5. **highlight** (Círculo o subrayado)\n   - Uso: Énfasis en elementos clave\n   - Velocidad: 0.3 segundos\n   - Ideal para: Números importantes, beneficios clave\n\n6. **erase** (Borrado con mano)\n   - Uso: Eliminar elementos negativos\n   - Velocidad: 0.5 segundos\n   - Ideal para: Descartar errores, limpiar obstáculos\n\n═══════════════════════════════════════════\n\nREGLAS DE CONSTRUCCIÓN:\n\n✅ HACER:\n- Empezar con contexto/escenario, luego agregar personajes/acción\n- Máximo 3-5 elementos dibujados por escena\n- Cada dibujo debe tener propósito narrativo claro\n- Usar metáforas visuales universales (bombilla=idea, reloj=tiempo)\n- Dejar espacio para texto sin saturar\n- Secuencia lógica: setup → desarrollo → punchline\n\n❌ EVITAR:\n- Dibujos demasiado detallados o artísticos\n- Más de 2 textos en pantalla simultáneamente\n- Elementos que no se relacionan con la narración\n- Perspectivas complejas o ángulos difíciles\n- Símbolos culturalmente específicos\n\n═══════════════════════════════════════════\n\nTIMING Y DURACIÓN:\n\n📊 Distribución recomendada por escena:\n- 30% Setup (dibujar contexto/escenario)\n- 40% Desarrollo (personaje + acción principal)\n- 20% Punchline (resultado/conclusión visual)\n- 10% Transición a siguiente escena\n\nEjemplo para escena de 20 segundos:\n- 0-6s: Dibujar contexto\n- 6-14s: Personaje + acción\n- 14-18s: Resultado\n- 18-20s: Texto en pantalla + transición\n\n═══════════════════════════════════════════\n\nFORMATO DE SALIDA (JSON PURO):\n\n{\n  \"storyboard\": [\n    {\n      \"escena\": 1,\n      \"dibujo_sugerido\": \"Descripción paso a paso: (1) Dibujar logo de empresa en centro, (2) Agregar múltiples globos de texto pequeños alrededor desordenados, (3) Dibujar figura humana confundida con signos de interrogación sobre cabeza, (4) Trazar flecha descendente hacia símbolo de dólar tachado\",\n      \"texto_en_pantalla\": \"¿Mensaje confuso = Cliente perdido?\",\n      \"animacion\": \"draw_hand\",\n      \"duracion_segundos\": 18,\n      \"elementos_clave\": [\n        \"Logo empresa (centro)\",\n        \"Globos texto desordenados\",\n        \"Figura confundida + ¿?\",\n        \"Flecha ↓ + $ tachado\"\n      ],\n      \"secuencia_dibujo\": [\n        {\"elemento\": \"Logo empresa\", \"tiempo\": \"0-3s\"},\n        {\"elemento\": \"Globos texto\", \"tiempo\": \"3-8s\"},\n        {\"elemento\": \"Figura confundida\", \"tiempo\": \"8-13s\"},\n        {\"elemento\": \"Flecha + resultado\", \"tiempo\": \"13-16s\"},\n        {\"elemento\": \"Texto pantalla\", \"tiempo\": \"16-18s\"}\n      ],\n      \"color_destacado\": \"rojo\",\n      \"nivel_complejidad\": \"simple\"\n    },\n    {\n      \"escena\": 2,\n      \"dibujo_sugerido\": \"Descripción paso a paso: (1) Dividir pantalla con línea vertical, (2) Lado izquierdo: dibujar múltiples textos largos + persona leyendo aburrida, (3) Lado derecho: dibujar mensaje corto con íconos + persona atenta con sonrisa, (4) Marcar lado derecho con check verde grande\",\n      \"texto_en_pantalla\": \"Simple gana siempre\",\n      \"animacion\": \"draw_hand\",\n      \"duracion_segundos\": 17,\n      \"elementos_clave\": [\n        \"División pantalla (línea vertical)\",\n        \"Lado izq: Textos largos + aburrimiento\",\n        \"Lado der: Mensaje simple + atención\",\n        \"Check verde lado derecho\"\n      ],\n      \"secuencia_dibujo\": [\n        {\"elemento\": \"Línea división\", \"tiempo\": \"0-2s\"},\n        {\"elemento\": \"Lado complejo\", \"tiempo\": \"2-7s\"},\n        {\"elemento\": \"Lado simple\", \"tiempo\": \"7-12s\"},\n        {\"elemento\": \"Check verde\", \"tiempo\": \"12-15s\"},\n        {\"elemento\": \"Texto pantalla\", \"tiempo\": \"15-17s\"}\n      ],\n      \"color_destacado\": \"verde\",\n      \"nivel_complejidad\": \"medio\"\n    },\n    {\n      \"escena\": 3,\n      \"dibujo_sugerido\": \"Descripción paso a paso: (1) Dibujar mano sosteniendo lápiz, (2) La mano dibuja bombilla apagada que se enciende, (3) De la bombilla salen rayos de luz, (4) Los rayos se transforman en íconos simples (check, estrella, flecha arriba), (5) Todo conecta a figura sonriente con brazos arriba\",\n      \"texto_en_pantalla\": \"Whiteboard = Claridad visual\",\n      \"animacion\": \"draw_hand\",\n      \"duracion_segundos\": 22,\n      \"elementos_clave\": [\n        \"Mano con lápiz\",\n        \"Bombilla encendiéndose\",\n        \"Rayos luz → íconos\",\n        \"Figura celebrando\"\n      ],\n      \"secuencia_dibujo\": [\n        {\"elemento\": \"Mano + lápiz\", \"tiempo\": \"0-4s\"},\n        {\"elemento\": \"Bombilla apagada→encendida\", \"tiempo\": \"4-10s\"},\n        {\"elemento\": \"Rayos + íconos\", \"tiempo\": \"10-16s\"},\n        {\"elemento\": \"Figura feliz\", \"tiempo\": \"16-20s\"},\n        {\"elemento\": \"Texto pantalla\", \"tiempo\": \"20-22s\"}\n      ],\n      \"color_destacado\": \"amarillo\",\n      \"nivel_complejidad\": \"medio\"\n    },\n    {\n      \"escena\": 4,\n      \"dibujo_sugerido\": \"Descripción paso a paso: (1) Dibujar calendario grande en centro, (2) Marcar día actual con círculo rojo, (3) Escribir 'HOY' en grande sobre el día, (4) Dibujar teléfono con ícono de llamada + flechas apuntando hacia él, (5) Agregar botón grande tipo CTA con texto del formulario\",\n      \"texto_en_pantalla\": \"{{ $('Edit Fields').item.json.CTA }}\",\n      \"animacion\": \"draw_hand\",\n      \"duracion_segundos\": 16,\n      \"elementos_clave\": [\n        \"Calendario con HOY marcado\",\n        \"Teléfono + ícono llamada\",\n        \"Flechas convergentes\",\n        \"Botón CTA destacado\"\n      ],\n      \"secuencia_dibujo\": [\n        {\"elemento\": \"Calendario\", \"tiempo\": \"0-4s\"},\n        {\"elemento\": \"HOY marcado\", \"tiempo\": \"4-7s\"},\n        {\"elemento\": \"Teléfono + flechas\", \"tiempo\": \"7-11s\"},\n        {\"elemento\": \"Botón CTA\", \"tiempo\": \"11-14s\"},\n        {\"elemento\": \"Texto pantalla\", \"tiempo\": \"14-16s\"}\n      ],\n      \"color_destacado\": \"rojo\",\n      \"nivel_complejidad\": \"simple\",\n      \"enfasis_urgencia\": true\n    }\n  ],\n  \"metadata_visual\": {\n    \"paleta_colores\": [\"negro\", \"rojo\", \"verde\", \"amarillo\"],\n    \"estilo_linea\": \"manuscrita-organica\",\n    \"complejidad_promedio\": \"simple-medio\",\n    \"elementos_totales\": 18,\n    \"transiciones_requeridas\": 3,\n    \"duracion_total\": 73\n  },\n  \"notas_produccion\": [\n    \"Mantener velocidad de dibujo constante (1-2 elementos por segundo)\",\n    \"Usar rojo para urgencia/problema, verde para solución\",\n    \"Texto debe aparecer DESPUÉS del dibujo principal, nunca antes\",\n    \"Transiciones: usar fade simple entre escenas, evitar cortes abruptos\"\n  ]\n}\n\n═══════════════════════════════════════════\n\nGUÍA DE ESTILOS SEGÚN CONFIGURACIÓN:\n\n**Si Estilo = \"Minimal\":**\n- Usar SOLO líneas negras\n- Máximo 2 elementos por escena\n- Sin colores destacados\n- Textos muy cortos (3-4 palabras max)\n\n**Si Estilo = \"Educativo\":**\n- Usar íconos reconocibles\n- Incluir números o estadísticas visuales\n- Colores para categorización (rojo=problema, verde=solución)\n- Diagramas simples (flechas, ciclos)\n\n**Si Estilo = \"Corporativo\":**\n- Líneas más precisas y profesionales\n- Incluir elementos de marca (logos, colores corporativos)\n- Gráficas ascendentes, métricas\n- Menos \"manuscrito\", más geométrico\n\n═══════════════════════════════════════════\n\nVALIDACIÓN FINAL:\n\nAntes de devolver el JSON, verifica:\n☐ Número de escenas coincide con input recibido\n☐ Cada dibujo_sugerido tiene descripción paso a paso\n☐ Texto en pantalla tiene máximo 7 palabras\n☐ Duraciones suman el total esperado\n☐ Secuencia_dibujo cubre toda la duración\n☐ Elementos_clave están todos en dibujo_sugerido\n☐ Animaciones son apropiadas para whiteboard\n☐ JSON válido sin markdown ni explicaciones\n\nDEVUELVE ÚNICAMENTE EL JSON SIN FORMATO ADICIONAL."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2000,
+        864
+      ],
+      "id": "657ea854-114b-482b-a83d-a4cd2ffb2fbe",
+      "name": "Storyboard_escenas"
+    },
+    {
+      "parameters": {
+        "content": "Loop para Crear los audios.",
+        "height": 496,
+        "width": 736,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2912,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "6a2ac6fc-232f-4668-a7cd-51d9a5b431e4",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Docs para guarda y almacenar los datos de la campaña.",
+        "height": 336,
+        "width": 512,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3632,
+        1104
+      ],
+      "typeVersion": 1,
+      "id": "ed92943d-64a0-4141-8d90-d5dd8f25596d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "525ae332-f201-4ae0-9e41-45041ef04f54",
+              "name": "Guion",
+              "value": "={{ $json.Guion }}",
+              "type": "string"
+            },
+            {
+              "id": "61126747-fb0b-46c6-94bc-5e92d03dacc0",
+              "name": "Duracion ",
+              "value": "={{ $json['Duracion '] }}",
+              "type": "string"
+            },
+            {
+              "id": "f22070f0-36ed-4beb-b427-740ede26a7b4",
+              "name": "idioma",
+              "value": "={{ $json.idioma }}",
+              "type": "string"
+            },
+            {
+              "id": "21eb5f76-b5f0-4400-998e-e47f89c5a588",
+              "name": "Estilo Visual",
+              "value": "={{ $json['Estilo Visual'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2655e21e-4873-4adf-b618-278d1aac4642",
+              "name": "CTA",
+              "value": "={{ $json.CTA }}",
+              "type": "string"
+            },
+            {
+              "id": "b88f647b-5530-4816-9cf4-aaa4115ae650",
+              "name": "['Voz IA'][0]",
+              "value": "={{ $json['Voz IA'][0] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        864
+      ],
+      "id": "a7c273b3-d773-43d0-97fc-194057da6686",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== Extraer storyboard =====\nlet rawStoryboard = $input.first().json.output || \"\"; // viene del nodo Storyboard_escenas\n\n// Quitar los ```json y espacios\nrawStoryboard = rawStoryboard.replace(/```json/g, \"\").replace(/```/g, \"\").trim();\n\n// Parsear JSON\nlet parsedStoryboard = {};\ntry {\n  parsedStoryboard = JSON.parse(rawStoryboard);\n} catch (e) {\n  console.error(\"Error parseando storyboard:\", e);\n  parsedStoryboard = { storyboard: [] };\n}\n\n// ===== Extraer voz en off (si existe) =====\nlet rawVoz = $input.first().json.voz_en_off || \"\"; // si viene del nodo AI Agent2\nrawVoz = rawVoz.replace(/```json/g, \"\").replace(/```/g, \"\").trim();\nlet parsedVoz = {};\ntry {\n  parsedVoz = JSON.parse(rawVoz);\n} catch (e) {\n  console.error(\"Error parseando voz:\", e);\n  parsedVoz = { voz_en_off: [] };\n}\n\n// ===== Construir escenas finales =====\nconst escenas_final = (parsedStoryboard.storyboard || []).map(e => {\n  const vozEscena = (parsedVoz.voz_en_off || []).find(v => v.escena === e.escena);\n  return {\n    id: e.escena,\n    dibujo: e.dibujo_sugerido,\n    texto: e.texto_en_pantalla,\n    animacion: e.animacion,\n    duracion: e.duracion_segundos,\n    voz: vozEscena ? vozEscena.texto : \"\"\n  };\n});\n\n// ===== Retornar JSON final =====\nreturn {\n  json: {\n    video_type: \"whiteboard\",\n    idioma: $json[\"idioma\"] || \"ES\",\n    estilo: $json[\"Estilo Visual\"] || \"Educativo\",\n    CTA_final: $json[\"CTA\"] || \"\",\n    escenas: escenas_final\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2688,
+        1200
+      ],
+      "id": "d06611bb-d498-4f92-b6ce-68a560e7a1ce",
+      "name": "normalizar1"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "= {{ $json.texto }}",
+        "voice": "nova",
+        "options": {
+          "response_format": "mp3",
+          "speed": 1,
+          "binaryPropertyOutput": "data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        3024,
+        720
+      ],
+      "id": "58898b31-8bba-4653-a49a-16f08aa91ede",
+      "name": "Generate audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=Whiteboard_{{ $json.Correo }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {
+          "folderColorRgb": "#9A0000"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1312,
+        512
+      ],
+      "id": "6ed6520f-4060-4779-990d-22b9d23fbb6f",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=Audio_ {{ $('Loop Over Items').item.json.id }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder').first().json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3504,
+        720
+      ],
+      "id": "a29607b8-bb18-464f-a54c-f6ed34eba49f",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Create folder').first().json.id }}",
+        "title": "Whiteboard_Guia"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        3712,
+        1200
+      ],
+      "id": "1254022a-a2b8-41b0-8913-0d5cc2e1aab1",
+      "name": "Create a document",
+      "executeOnce": false,
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "O37pRRxzqnV83upz",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2960,
+        432
+      ],
+      "id": "65f0080a-f6b5-4bd2-83cd-4d6268174dcd",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== Extraer storyboard =====\nlet rawStoryboard = $input.first().json.output || \"\"; // viene del nodo Storyboard_escenas\n\n// Quitar los ```json y espacios\nrawStoryboard = rawStoryboard.replace(/```json/g, \"\").replace(/```/g, \"\").trim();\n\n// Parsear JSON\nlet parsedStoryboard = {};\ntry {\n  parsedStoryboard = JSON.parse(rawStoryboard);\n} catch (e) {\n  console.error(\"Error parseando storyboard:\", e);\n  parsedStoryboard = { storyboard: [] };\n}\n\n// ===== Extraer voz en off (si existe) =====\nlet rawVoz = $input.first().json.voz_en_off || \"\"; // si viene del nodo AI Agent2\nrawVoz = rawVoz.replace(/```json/g, \"\").replace(/```/g, \"\").trim();\nlet parsedVoz = {};\ntry {\n  parsedVoz = JSON.parse(rawVoz);\n} catch (e) {\n  console.error(\"Error parseando voz:\", e);\n  parsedVoz = { voz_en_off: [] };\n}\n\n// ===== Construir escenas finales =====\nconst escenas_final = (parsedStoryboard.storyboard || []).map(e => {\n  const vozEscena = (parsedVoz.voz_en_off || []).find(v => v.escena === e.escena);\n  return {\n    id: e.escena,\n    dibujo: e.dibujo_sugerido,\n    texto: e.texto_en_pantalla,\n    animacion: e.animacion,\n    duracion: e.duracion_segundos,\n    voz: vozEscena ? vozEscena.texto : \"\"\n  };\n});\n\n// ===== Retornar JSON final =====\nreturn {\n  json: {\n    video_type: \"whiteboard\",\n    idioma: $json[\"idioma\"] || \"ES\",\n    estilo: $json[\"Estilo Visual\"] || \"Educativo\",\n    CTA_final: $json[\"CTA\"] || \"\",\n    escenas: escenas_final\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2688,
+        848
+      ],
+      "id": "75ca647d-f4fe-423e-abd0-2a2a0f6fddfa",
+      "name": "normalizar"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "escenas",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2624,
+        512
+      ],
+      "id": "58b1e744-f71f-49e2-b401-81719b08a6a9",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "locationChoice": "location",
+              "text": "=StoryBoard :  {{ $('Storyboard_escenas').item.json.output }}\nGuion : {{ $('On form submission').item.json.Guion }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        3936,
+        1200
+      ],
+      "id": "f95ccaac-c03a-4c35-85ff-d44d054d138f",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "O37pRRxzqnV83upz",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        3824,
+        416
+      ],
+      "id": "fa1686fc-d1a4-4a5a-b709-18bd16bac353",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2016,
+        1200
+      ],
+      "id": "39ef57bc-0b09-4668-a221-dce28fbe8564",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Setear Datos",
+        "height": 240,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        784
+      ],
+      "typeVersion": 1,
+      "id": "c878f15a-456d-459c-ba4f-09009e39667a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive para almacenar los audios generados",
+        "height": 224,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1216,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "ca7c5f9a-0f13-4ab0-9da1-2e70b25ac1fa",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 544,
+        "width": 800,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        800
+      ],
+      "typeVersion": 1,
+      "id": "6ccb31c3-8e7a-4262-b9c4-1cf15b2a6007",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "598f98f7-11a5-429a-91a9-db8ea412902a",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model FallBack",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "4ab6b43d-e805-44c3-b9f9-f07b68322012",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Normalizar datos",
+        "height": 224,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2608,
+        1136
+      ],
+      "typeVersion": 1,
+      "id": "bfabbd83-47f5-4cb4-b5e3-435bb2cb8480",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Normalizar datos",
+        "height": 224,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2608,
+        784
+      ],
+      "typeVersion": 1,
+      "id": "7ff9bd68-6b4e-4ae3-8ff5-761cb99f637b",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2944,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "4c17bdda-7243-4823-a492-78cf3a499aaf",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3392,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "f0ce483a-a375-4422-8857-2b6421487f32",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "🎬 Workflow: Agente IA Creador de Videos “Whiteboard”\nEste flujo de trabajo es un asistente de producción audiovisual automatizado. Su función es transformar un guion de texto simple en un plan de producción completo para videos estilo \"Whiteboard\" (pizarra blanca), generando instrucciones visuales detalladas y, opcionalmente, generando los archivos de voz en off para cada escena.\n\n✨ Importancia y Valor\n🧠 Pre-producción Automatizada: Elimina el bloqueo del guionista al dividir automáticamente el texto en escenas lógicas (Problema, Agitación, Solución, CTA).\n🎨 Dirección Artística IA: Proporciona a los animadores instrucciones precisas sobre qué dibujar, qué animación usar y cómo debe verse cada escena, asegurando un estilo coherente.\n🎙️ Generación de Voz: Utiliza Text-to-Speech (OpenAI) para crear los archivos de audio necesarios sin necesitar locutores humanos, agilizando el proceso.\n📂 Organización Inteligente: Crea automáticamente una carpeta en Google Drive específica para el proyecto, sube los audios generados y genera un documento en Google Docs con todo el resumen.\n🛠️ Problema que Resuelve\nEstructura Narrativa: Convierte un guion crudo en una estructura de 4 escenas optimizadas para la conversión, siguiendo el modelo PAS (Problema-Agitación-Solución).\nAmbigüedad Visual: Resuelve el problema de \"¿qué dibujamos aquí?\" dando ideas clave y descripciones paso a paso para el animador.\nGestión de Activos: Evita la pérdida de archivos subiendo automáticamente cada audio a su carpeta correspondiente.\nEscalabilidad: Permite producir múltiples videos whiteboard al día reduciendo el tiempo de guionización y storyboarding de horas a minutos.\n🧩 Nodos Clave Utilizados\n📝 On form submission: El punto de entrada que recibe el guion, duración, estilo visual y la opción de incluir voz IA.\n✏️ Edit Fields: Limpia y estandariza los datos del formulario para su uso posterior.\n🧠 Dividir_Escenas (Agente IA): Analiza el guion y lo fragmenta en 4 partes emocionales con texto narrado e ideas clave.\n🎨 Storyboard_escenas (Agente IA): Convierte las escenas en un storyboard técnico detallado, especificando tipos de animación (draw_hand, morph), colores y duraciones.\n🔀 If (Condición): Verifica si el usuario seleccionó la opción de \"Voz IA\" (Yes/No) para decidir si se genera audio.\n⚡ Code (Normalizar/Normalizar1): Procesa el JSON del storyboard para separar las escenas y prepararlas para el bucle.\n🔁 Loop Over Items: Itera sobre cada escena individual para generar el audio correspondiente.\n🎙️ Generate audio: Usa la API de OpenAI para sintetizar la voz de cada escena.\n📤 Upload file (Google Drive): Guarda cada archivo MP3 generado en la carpeta del proyecto.\n📄 Create a document / Update a document (Google Docs): Crea el guion de producción final y actualiza el contenido con el storyboard completo.\n🔗 Paso a Paso: Conexión del Flujo\nInicio y Configuración 🚦:\nConecta \"On form submission\" a \"Edit Fields\" (para procesar datos) y a \"Create folder\" en paralelo (para crear la carpeta en Drive inmediatamente).\nDesde \"Edit Fields\", conecta a \"Dividir_Escenas\".\nProcesamiento de IA 🧠:\nConecta la salida de \"Dividir_Escenas\" hacia \"Storyboard_escenas\".\nAsegúrate de conectar los modelos de lenguaje (Google Gemini y OpenAI) a los agentes correspondientes para que tengan \"inteligencia\".\nLógica Condicional 🔀:\nConecta \"Storyboard_escenas\" al nodo \"If\".\nSalida True (Si \"Voz IA\" = Yes): Conecta al nodo \"normalizar\".\nSalida False (Si \"Voz IA\" = No): Conecta al nodo \"normalizar1\".\nRuta CON Generación de Audio (Loop):\nDesde \"normalizar\", conecta a \"Split Out\" (para separar las escenas en items individuales).\nConecta \"Split Out\" al nodo \"Loop Over Items\".\nDentro del bucle: Conecta \"Loop Over Items\" a \"Generate audio\" y luego a \"Upload file\".\nConecta la salida de \"Upload file\" de vuelta a la entrada de \"Loop Over Items\" para continuar con la siguiente escena.\nCuando el bucle termine, conecta la salida final de \"Loop Over Items\" a \"Limit\".\nFinalización y Documentación 📄:\nDesde \"Limit\", conecta a \"Create a document\".\n(Para la ruta sin audio): Desde \"normalizar1\", conecta directamente a \"Create a document\".\nFinalmente, conecta \"Create a document\" a \"Update a document\" para insertar el storyboard JSON y el guion original en el texto del archivo.",
+        "height": 944,
+        "width": 1456,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1056,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "dbd0a923-b144-469c-8d91-164929a9a0ec",
+      "name": "Sticky Note12"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Dividir_Escenas",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Storyboard_escenas",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "normalizar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "normalizar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dividir_Escenas": {
+      "main": [
+        [
+          {
+            "node": "Storyboard_escenas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Storyboard_escenas": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Dividir_Escenas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalizar1": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate audio": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalizar": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Dividir_Escenas",
+            "type": "ai_languageModel",
+            "index": 1
+          },
+          {
+            "node": "Storyboard_escenas",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "1f0a2a02-d4c9-4f5e-b79a-cda771335090",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "ybPVlY01Liqj2g6ph1I7w",
+  "tags": []
+}

@@ -1,0 +1,447 @@
+{
+  "name": "Agente_Correos_Frios",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "14dEyznIjFRDGF4zUwtQPqhD25gAMrdTxoAEheM_Al9w",
+          "mode": "list",
+          "cachedResultName": "CRM_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14dEyznIjFRDGF4zUwtQPqhD25gAMrdTxoAEheM_Al9w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14dEyznIjFRDGF4zUwtQPqhD25gAMrdTxoAEheM_Al9w/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -160,
+        16
+      ],
+      "id": "ad9ada98-3832-40ec-a48c-15f6d83f5d8a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        144,
+        -112
+      ],
+      "id": "055d77e1-0ac4-4c04-a6c4-0d8c190caf54",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Bienvenido </title>\n</head>\n<body style=\"margin:0; padding:20px; font-family:Arial, sans-serif; background:#f4f4f4;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:600px; margin:auto; background:#ffffff; border-radius:8px;\">\n    <tr>\n      <td style=\"padding:20px; text-align:center;\">\n        <h2 style=\"margin:0; color:#333;\">¡Hola {{ $('Get row(s) in sheet').item.json.nombre }} tenemos una Oferta especial!</h2>\n        <p style=\"color:#555;\">Consigue un <strong>20% de descuento</strong> en tu próxima compra.</p>\n        <a href=\"{{cta_url}}\" \n           style=\"display:inline-block; margin-top:15px; padding:12px 20px; background:#2563eb; color:#fff; text-decoration:none; border-radius:5px;\">\n          Comprar ahora\n        </a>\n      </td>\n    </tr>\n    <tr>\n      <td style=\"padding:15px; text-align:center; font-size:12px; color:#888;\">\n        © 2025 Tu Marca · <a href=\"{{unsubscribe_url}}\" style=\"color:#2563eb;\">Darse de baja</a>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -96
+      ],
+      "id": "77808cad-a6cb-45b2-b7bf-d5dc9dbf4ccb",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Get row(s) in sheet').item.json.Correo }}",
+        "subject": "Bienvenido!!!",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        -96
+      ],
+      "id": "e062e001-34c7-491c-92cf-c8358139b118",
+      "name": "Send a message",
+      "webhookId": "ef9d402e-aac5-4e72-96bd-d8be34a06378",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4840bf27-aae6-4c82-88bf-c61f158bb4cd",
+              "name": "Enviado",
+              "value": "Enviado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        976,
+        -112
+      ],
+      "id": "3ad38c38-0e77-452a-9010-e142d45cf0d7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        16
+      ],
+      "id": "b5a24171-6e8d-4822-bf93-e3fa8d44228e",
+      "name": "Wait",
+      "webhookId": "1ab63646-15af-42d6-9d8f-2426476cbf08"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        16
+      ],
+      "id": "ee8874e8-5217-447d-8163-a900eef3b854",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "14dEyznIjFRDGF4zUwtQPqhD25gAMrdTxoAEheM_Al9w",
+          "mode": "list",
+          "cachedResultName": "CRM_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14dEyznIjFRDGF4zUwtQPqhD25gAMrdTxoAEheM_Al9w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14dEyznIjFRDGF4zUwtQPqhD25gAMrdTxoAEheM_Al9w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Get row(s) in sheet').item.json.ID }}",
+            "Estado": "={{ $json.Enviado }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1280,
+        -112
+      ],
+      "id": "d6e90b5f-8787-47e3-b73a-1d9016e915a8",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Nodo Iniciador .",
+        "height": 240,
+        "width": 304,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -576,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "6335f908-ea60-4034-b81d-ae80cfb67ba1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Modificar Html en el formato que desee para enviar por gmail",
+        "height": 192,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "69ef1efa-1984-44a9-9d64-98f3d6ee59d5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Poner Credenciales de Google Sheets para referir la hoja con los clientes",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "8f97f29a-371b-4779-84ae-d4b4861bd3a3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Poner Credenciales de Google Sheets para actualizar el estado del cliente",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1216,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "87b8c045-ee7a-45f3-ae9d-f37e78af5847",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 192,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "b82c27d4-a922-4354-90a7-4c1f97631667",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Nodos Utilizadas:\n\n-Trigger Manual : Nodo iniciador que se puede sustituir por otro para adaptarlo a su necesidad, por ejemplo un Schedule para hacerlo cada cierto tiempo.\n\n-Gmail : Conectar su Api para generar correos.\n\n-Google Sheets : Conectar su Api para obtener los datos del cliente y posteriormente actualizar su estado a enviado .\n\n-Edit Fields : Usado para obetener el ID del usuario y actualizar el estado a enviado.\n\n-Html : Usado para generar el formato del gmail a enviar.\n\n-Wait : Usado para esperar breves instancias de tiempo y hacerlo parecer más humano.",
+        "height": 576,
+        "width": 560,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "378f295c-7573-4944-b908-93c6470aa73c",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Agente de Correos en Frio.\n\n### Descripción\n\nEste agente de IA esta diseñado para obetener los datos de un CRM en este caso Google Sheets y enviar correos Electrónicos mediante Gmail estructurados de la forma que requiera para hacerlo más adaptable y eficaz para cualquier negocio.\n\n### Funcionalidades\n\n**Enviar Correos**:\nEnvia correos a todas las direcciones emails disponibles en el CRM y actualiza su estado a enviado.\n  \n\n### Beneficios\n\n- **Ahorro de Tiempo**: Automatiza el envío de correos manual.\n- **Accesibilidad**: Permite a la empresa o compañía acceder desde cualquier lugar para automatizar el envio de múltioples correos con una simple acción .\n- **Interacción Eficiente**: Facilita la comunicación y organización mediante una interfaz conversacional.\n\n### Recomendaciones\n\n- Asegúrate de manejar los datos de los usuarios de manera segura y cumplir con las regulaciones de privacidad.\n- Realiza actualizaciones periódicas para mejorar la funcionalidad y la seguridad .\n\n",
+        "height": 672,
+        "width": 912,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "9a7fba9a-d068-4065-94af-b4caeaefded7",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b551489b-d9b9-4f25-951f-a238a9f859f6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "mnZPfo4vHKxNPFpx",
+  "tags": []
+}

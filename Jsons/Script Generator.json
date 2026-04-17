@@ -1,0 +1,580 @@
+{
+  "name": "Script Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        1616,
+        1328
+      ],
+      "id": "e5fd6620-4c08-489b-8eaa-ae74b68d55a7",
+      "name": "Schedule Trigger",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MZUaW-ci--n3CxtKcz9kKVzN3K6j0fCcuIDny5-6PNA",
+          "mode": "list",
+          "cachedResultName": "Script_Generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MZUaW-ci--n3CxtKcz9kKVzN3K6j0fCcuIDny5-6PNA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MZUaW-ci--n3CxtKcz9kKVzN3K6j0fCcuIDny5-6PNA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2000,
+        1472
+      ],
+      "id": "7e06872e-4e74-4fa9-a721-f6f560439d73",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un creador de contenido experto especializado en hacer guiones para reels atractivos, de alta retención y estilo Varun Mayya.\nTu trabajo es tomar los inputs a continuación, hacer investigación adicional usando la herramienta de búsqueda \"Perplexity\", y producir un guion que se sienta conversacional, dinámico, perspicaz y basado en storytelling.\n\nInputs que recibirás:\nTopic: {{ $json.Topic }}\nMy Insight / Opinion: {{ $json['Personal Opinion'] }}\nTarget Audience : {{ $json['Target Audience'] }}\nPlataforma : {{ $json.Platform }}\nTone : {{ $json.Tone }}\nDuration : {{ $json.Duration }}\n\n***Instrucciones:\nUsa el tema proporcionado y mi insight/opinión personal como base.\n\nLlama a la HERRAMIENTA DE BÚSQUEDA para recopilar insights adicionales, datos o estadísticas sobre el tema que hagan el reel más valioso.\n\nEstructura el guion (~40–60 segundos de contenido hablado):\n\nHook: Empieza con una afirmación contundente, un dato sorprendente o una postura contraria a lo común.\n\nStory/Scenario: Ilustra el punto con una mini-historia, analogía o ejemplo tipo “imagina esto…”. Hazlo visual para que quien escucha pueda imaginar la escena.\n\nInsight: Integra de forma natural mi opinión/insight personal, como si estuviera dando una perspectiva única.\n\nSupport: Añade 1–2 elementos investigados (estadísticas, ejemplos reales o metáforas simples) para darle credibilidad.\n\nTakeaway: Termina con una conclusión clara y memorable que despierte curiosidad o invite a compartir.\n\n***Guías de estilo:\nEl guion debe sonar como un amigo inteligente y cercano explicando una idea.\n\nEl storytelling es obligatorio: siempre agrega un escenario, analogía o mini-historia para explicar el concepto.\n\nSin jerga de IA. Sin tono robótico.\n\nCorto, conversacional, dinámico. Fácil de decir en voz alta.\n\nEvita relleno como “En este video…” → empieza directo con el hook.\n\nHazlo atractivo para Reels: tono afilado, de liderazgo intelectual, fácil de recordar.\n\nOutput:\n\nProporciona únicamente el guion final, sin etiquetas, sin explicaciones y sin texto adicional.\n\nNo incluyas mensajes de error ni notas meta.\n\nEl output debe ser estrictamente el guion tal como sería dicho en el video.",
+        "needsFallback": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2928,
+        1280
+      ],
+      "id": "465db579-e013-49fd-aee5-5c64b4132705",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MZUaW-ci--n3CxtKcz9kKVzN3K6j0fCcuIDny5-6PNA",
+          "mode": "list",
+          "cachedResultName": "Script_Generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MZUaW-ci--n3CxtKcz9kKVzN3K6j0fCcuIDny5-6PNA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MZUaW-ci--n3CxtKcz9kKVzN3K6j0fCcuIDny5-6PNA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Loop Over Items').item.json.ID }}",
+            "Status": "Generated Script",
+            "Script Output": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Personal Opinion",
+              "displayName": "Personal Opinion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Target Audience",
+              "displayName": "Target Audience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tone",
+              "displayName": "Tone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Duration",
+              "displayName": "Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Script Output",
+              "displayName": "Script Output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3616,
+        1760
+      ],
+      "id": "14f5adf4-6b82-4e42-9e98-1f677caca7bb",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        1600
+      ],
+      "id": "5d25cdb6-c11d-42a4-8ff0-6f5d448c2bb5",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2928,
+        1632
+      ],
+      "id": "1646d327-0ca2-4930-9618-a182b9def056",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2752,
+        1632
+      ],
+      "id": "dd84acdd-4e09-4789-ab81-29aa02e58821",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2480,
+        1456
+      ],
+      "id": "19640d3f-3d20-40e4-8d50-7b56cdecded8",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        1136
+      ],
+      "id": "4198dd97-1523-488e-903a-99e8c1e7510f",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "Ejecutar manual ",
+        "height": 256,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1472,
+        1536
+      ],
+      "typeVersion": 1,
+      "id": "3db049d7-afca-4cc1-860b-b52c1a7b29ed",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Ejecutar cada x tiempo",
+        "height": 256,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1472,
+        1248
+      ],
+      "typeVersion": 1,
+      "id": "040fbcb7-01d5-49dc-b6ae-c814d86739be",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Sheets",
+        "height": 256,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3504,
+        1696
+      ],
+      "typeVersion": 1,
+      "id": "2147dc58-6c0a-4e6b-b4bb-758de3aae73b",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Sheets",
+        "height": 256,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1872,
+        1392
+      ],
+      "typeVersion": 1,
+      "id": "45814c87-6652-4846-8e58-4dd81703deaa",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Chat Model",
+        "height": 240,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2704,
+        1552
+      ],
+      "typeVersion": 1,
+      "id": "5de76d4b-400e-4f4e-bd2b-5eb5e2c61d82",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Perplexity para enriquecer los datos.",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3120,
+        1600
+      ],
+      "typeVersion": 1,
+      "id": "f88f909e-893b-4ef8-ac9e-8df84a424276",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA \nGenerar  los Scripts",
+        "height": 832,
+        "width": 752,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2688,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "3933548e-b44a-435e-8b9f-fc4ceab2266f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "simplify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify_Output', ``, 'boolean') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        3216,
+        1648
+      ],
+      "id": "5192578f-dfa4-44c6-b52d-99d9113052d4",
+      "name": "Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "Vo1d7YNqDzHhU5Dh",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "A🎬 SCRIPT GENERATOR AUTOMATIZADO (Reels con IA + Perplexity)\n🧠 Descripción\n\nEste workflow automatiza la creación de guiones cortos, conversacionales y de alta retención estilo Varun Mayya para Reels o videos tipo LinkedIn.\n\nParte de una fila en Google Sheets con estado “Generate Script”, toma el tema y la opinión personal, los enriquece con datos actualizados usando Perplexity, genera un guion estructurado (Hook, Story, Insight, Support, Takeaway) y actualiza automáticamente la hoja con el resultado.\n\nEs un sistema completo de generación de contenido automatizado.\n\n🚀 Importancia\n\n✅ Permite escalar creación de contenido sin esfuerzo manual\n✅ Integra investigación en tiempo real (no contenido genérico)\n✅ Convierte ideas sueltas en guiones listos para grabar\n✅ Ideal para creadores, agencias o automatización interna\n✅ Reduce horas de investigación + redacción\n\nEs un mini sistema editorial automatizado.\n\n🔥 Qué problema resuelve\n\n❌ Bloqueo creativo\n❌ Falta de estructura en guiones\n❌ Contenido sin datos ni credibilidad\n❌ Tiempo perdido investigando manualmente\n❌ Procesos manuales repetitivos\n\nConvierte una hoja de ideas en una máquina generadora de guiones.\n\n🧩 Nodos utilizados\n\n🟢 Manual Trigger / Schedule Trigger\nInicia el workflow manualmente o cada cierto tiempo.\n\n📊 Google Sheets (Get row(s))\nLee las filas del documento.\n\n🔁 Split In Batches (Loop Over Items)\nProcesa cada fila individualmente.\n\n🤖 AI Agent (LangChain Agent)\nGenera el guion usando el modelo + herramientas.\n\n🧠 Chat Model (OpenAI / Gemini)\nModelo de lenguaje que redacta el contenido.\n\n🔎 Perplexity Tool\nEnriquece el contenido con datos actualizados.\n\n📊 Google Sheets (Update Row)\nEscribe el guion generado y cambia el estado.\n\n\n⚙️ Paso a paso para usarlo\n1️⃣ Preparar Google Sheets\n\nCrear columnas:\n\nID\n\nTopic\n\nPersonal Opinion\n\nTarget Audience\n\nPlatform\n\nTone\n\nDuration\n\nStatus\n\nScript Output\n\nCuando quieras generar un guion:\n👉 Cambia Status a Generate Script\n\n2️⃣ Ejecutar el workflow\n\nOpciones:\n\n🟢 Manual → Click en “Execute Workflow”\n⏰ Automático → Activar Schedule Trigger\n\n3️⃣ El sistema hace esto automáticamente\n\n🔎 Busca filas con datos\n🔁 Procesa una por una\n🧠 Usa Perplexity para investigar el tema\n🤖 Genera guion estilo storytelling\n✍️ Lo guarda en “Script Output”\n✅ Cambia estado a “Generated Script”\n\n\n",
+        "height": 1808,
+        "width": 1392,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3968,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "5d0e33b1-8b10-493d-be7d-87b1d032b13e",
+      "name": "Sticky Note7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "dfed479d-f2fa-448a-956b-c2f61db35bb9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "gALJeHN9F_aU6LLDXf49X",
+  "tags": []
+}

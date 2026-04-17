@@ -1,0 +1,675 @@
+{
+  "name": "Agente_Creador_de_SOPs(Procesos Estandarizados)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Standard Operating Procedures",
+        "formDescription": "Describe el proceso que necesita",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "correo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Describe el proceso ",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        656,
+        480
+      ],
+      "id": "bf89de24-0bce-498d-9e4f-6579334a12dc",
+      "name": "On form submission",
+      "webhookId": "d2605476-33f2-468d-90c5-d96a40bf28d8"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Estos son los datos ingresados por el usuario : \nProblema : {{ $json['Describe el proceso '] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un agente Profesional creador de SOP (Standard Operating Procedures).\n\nTu misión es analizar la entrada del usuario y generar un SOP bien estructurado y listo para convertirse en PDF.\n\n⚠️ Instrucciones estrictas:\n- No generes texto introductorio ni conclusiones.\n- Devuelve ÚNICAMENTE el SOP con formato profesional.\n- Cada sección debe estar separada por al menos **dos saltos de línea**.\n- Usa títulos en **negrita** seguidos de los dos puntos.\n- Usa emojis en los títulos para hacerlo más interactivo.\n- Los pasos deben estar numerados y cada paso en una línea nueva.\n- No combines secciones en un solo bloque, cada sección debe estar claramente separada.\n\n📌 Estructura obligatoria del SOP:\n**Título:** [Aquí el título con un emoji relacionado]\n\n**Objetivo:** [Explicación breve y clara del objetivo]\n\n**Pasos numerados:**\n1. [Primer paso]\n2. [Segundo paso]\n3. [Tercer paso]\n...\n\n**Responsables:** [Quiénes deben ejecutar o supervisar el proceso]\n\n**Herramientas necesarias:** [Lista de herramientas o plataformas requeridas]\n\n**Resultados esperados:** [Qué se logra al finalizar el SOP]\n\nEjemplo de formato esperado (respetando saltos de línea):\n\n**Título:** Automatización de Gestión de Leads con n8n 🤖\n\n\n**Objetivo:** Establecer un procedimiento estandarizado para la creación y gestión automatizada de leads.\n\n\n**Pasos numerados:**\n1. Configurar formulario de captación.\n2. Integrar con Google Sheets.\n3. Automatizar envío de correos.\n4. Medir KPIs en dashboard.\n\n\n**Responsables:** Equipo de Marketing.\n\n\n**Herramientas necesarias:** n8n, Google Sheets, Gmail, IA.\n\n\n**Resultados esperados:** Leads captados y reportados automáticamente.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1136,
+        480
+      ],
+      "id": "738878c2-2e50-4f5e-963f-dac688116496",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        976,
+        784
+      ],
+      "id": "a06e04a6-2730-4973-9cae-028404c28c2c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "=Aqui tienes el el SOP para  {{ $('Edit Fields').item.json.Problema }}",
+        "message": "=Aqui le adjunto el archivo pdf con su Proceso",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        3184,
+        480
+      ],
+      "id": "c33e1f18-fef8-480d-a1f0-5d8d5e0a8746",
+      "name": "Send a message",
+      "webhookId": "2fc9fdc4-4ac6-4ea9-8264-275a79a22f8f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1312,
+        816
+      ],
+      "id": "ea6c5283-5d2f-42c7-acbc-2a0a8d2eb528",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2496,
+        480
+      ],
+      "id": "f1abb8df-5539-4986-9076-258a2ad89081",
+      "name": "OBTENER PDF"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdf.co/v1/pdf/convert/from/html",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "jesusmiguela546@gmail.com_UacpFuBjtQV28mHLVPxQdU5gkepiLBZNA7Rmgc61tTieppzDDmyibXG6nPxNRKsy"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "html",
+              "value": "={{ $('Edit Fields').item.json.SOP }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('Edit Fields').item.json.Problema }}.pdf "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2304,
+        480
+      ],
+      "id": "3dc3db75-cd9b-4d0a-9c89-30993a97ca93",
+      "name": "CREACIÓN PDF"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Edit Fields').item.json.Problema }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2784,
+        480
+      ],
+      "id": "41f87922-e76f-48be-ba1b-cb0a46d4ad05",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "440d10c8-3291-4577-88b4-7e06f43baa3c",
+              "name": "nombre",
+              "value": "={{ $('On form submission').item.json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "42c31cf1-457e-4501-b935-83b040884a92",
+              "name": "correo",
+              "value": "={{ $('On form submission').item.json.correo }}",
+              "type": "string"
+            },
+            {
+              "id": "b1068504-87fd-4903-9f84-7f66d7a1b1be",
+              "name": "Problema",
+              "value": "={{ $('On form submission').item.json['Describe el proceso '] }}",
+              "type": "string"
+            },
+            {
+              "id": "55259e05-6bfe-49f2-9da2-88dd4a55b643",
+              "name": "SOP",
+              "value": "={{ $('AI Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1616,
+        480
+      ],
+      "id": "44938068-6977-41c2-a89f-d016f4c6fe26",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1x5bfB4lY0zZV1U4c1a9xzUL0hQbiOaDZs6IuWYrzFcw",
+          "mode": "list",
+          "cachedResultName": "datos_SOP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1x5bfB4lY0zZV1U4c1a9xzUL0hQbiOaDZs6IuWYrzFcw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "SOP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1x5bfB4lY0zZV1U4c1a9xzUL0hQbiOaDZs6IuWYrzFcw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ $json.nombre }}",
+            "correo": "={{ $json.correo }}",
+            "problema": "={{ $json.Problema }}",
+            "propuesta de SOP": "={{ $json.SOP }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "problema",
+              "displayName": "problema",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "propuesta de SOP",
+              "displayName": "propuesta de SOP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1904,
+        480
+      ],
+      "id": "c7eb669b-8d58-4b6f-bce0-005e90c417e7",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "binaryPropertyName": "=data",
+          "fileName": "={{ $('Edit Fields').item.json.Problema }}.pdf"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2928,
+        480
+      ],
+      "id": "d2d40cc5-f3f0-419b-a035-9e8f17ce3ff5",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Subir el texto para convertirlo en pdf y luego descargarlo como pdf a traves de pdf.co",
+        "height": 544,
+        "width": 384,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2256,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "6400c355-78c3-4269-a059-d67e552c657f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Almacenar pdf en drive para luego descargarlo y enviarlo por correo",
+        "height": 544,
+        "width": 336,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2736,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "9de85499-6e56-4fc3-a127-faa598f01077",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 224,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3104,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "4b1f58d0-c8af-4295-8605-1cf6326d799b",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheet",
+        "height": 240,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1840,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "7331d869-3bd9-4fdc-9278-0526ff0ced85",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Setear y Normalizar datos",
+        "height": 208,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1536,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "e809c7a7-3a9f-467d-b0ea-4f6ba835952e",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 592,
+        "width": 560,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "e71669e6-1e76-4249-babd-fb7be02f25d2",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Form Trigger para captar datos cliente",
+        "height": 256,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "f365ddae-9c74-4ffb-8086-e6e18aad3e31",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 240,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        704
+      ],
+      "typeVersion": 1,
+      "id": "b30a655a-2c0a-4ff8-ae50-862d45ce66b5",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 240,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        704
+      ],
+      "typeVersion": 1,
+      "id": "cb534bac-9db5-4bdf-a2ef-921358663dc8",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive",
+        "height": 256,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2736,
+        368
+      ],
+      "typeVersion": 1,
+      "id": "36064466-6f44-4cbb-b1eb-7ad7870df7f1",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "📌 Descripción del Workflow: SOP_Agent\n🚀 ¿Qué hace?\nEste workflow automatiza la creación de SOPs (Standard Operating Procedures) a partir de la información que ingresa un usuario en un formulario.\nConvierte la descripción de un proceso en un documento estructurado y profesional, lo transforma en PDF y lo envía automáticamente por correo electrónico.\n\n🔄 Flujo paso a paso\n1️⃣ Form Trigger → Captura datos del usuario (nombre, correo, descripción del proceso).\n2️⃣ AI Agent (Gemini + OpenAI) → Analiza la entrada y genera el SOP con formato profesional (Título, Objetivo, Pasos, Responsables, Herramientas, Resultados).\n3️⃣ Set Node → Normaliza y organiza los datos (nombre, correo, problema, SOP).\n4️⃣ Google Sheets → Guarda la propuesta de SOP en una hoja para registro histórico.\n5️⃣ PDF.co  (HTTP Request) → Convierte el SOP en un archivo PDF.\n6️⃣ Google Drive → Sube el PDF a una carpeta designada y lo descarga para adjuntarlo.\n7️⃣ Gmail → Envía el PDF al correo del usuario con un mensaje personalizado.\n\n✨ Utilidad\n📑 Genera SOPs claros y estandarizados sin esfuerzo manual.\n\n⚡ Automatiza la conversión a PDF y el envío por correo.\n\n📊 Mantiene un registro en Google Sheets para control y seguimiento.\n\n🤖 Aprovecha IA para dar formato profesional y legible.\n\n🛠️ Problema que resuelve\nElimina la necesidad de redactar SOPs manualmente.\n\nAsegura que cada procedimiento quede documentado de forma clara y replicable.\n\nFacilita la distribución de SOPs en PDF a equipos o clientes.\n\nCentraliza la información en Google Sheets y Drive para fácil acceso.",
+        "height": 672,
+        "width": 928,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1632,
+        864
+      ],
+      "typeVersion": 1,
+      "id": "d2f3e2d4-3a38-4de4-98b9-a6165cdcf012",
+      "name": "Sticky Note11"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "CREACIÓN PDF": {
+      "main": [
+        [
+          {
+            "node": "OBTENER PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OBTENER PDF": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "CREACIÓN PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0ddabc76-a1e9-4f64-8025-c798152fef36",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "K4LWdTPvuVvQUFvm",
+  "tags": []
+}

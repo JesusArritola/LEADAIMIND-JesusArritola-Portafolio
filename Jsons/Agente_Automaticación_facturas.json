@@ -1,0 +1,716 @@
+{
+  "name": "Agente_Automaticación_facturas",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## RECEPCIÓN IMAGEN",
+        "height": 416,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3312,
+        4976
+      ],
+      "id": "21418a90-bf70-4eab-b468-59a8604f5675",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## PROCESAMIENTO CON IA \n",
+        "height": 656,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4160,
+        4832
+      ],
+      "id": "7f96c155-86f5-46e8-8e3e-a3365db6fdec",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## COMBINACIÓN Y LIMPIEZA DE DATOS",
+        "height": 432,
+        "width": 464,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4688,
+        5024
+      ],
+      "id": "3937a14d-394f-47c2-a014-0b742300eab5",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## ALMACENAMIENTO Y CONFIRMACIÓN\n",
+        "height": 448,
+        "width": 672,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        5248,
+        5024
+      ],
+      "id": "b68d44f4-3be1-4d7a-a0aa-2400101a48d8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Usar $input.all() para acceder a TODOS los datos que llegan al nodo\nconst allInputs = $input.all();\n\n// 2. DEBUG: Ver qué datos llegan (opcional, quitar después)\nconsole.log(\"DEBUG - Número de inputs:\", allInputs.length);\nallInputs.forEach((input, idx) => {\n  console.log(`Input ${idx} keys:`, Object.keys(input.json));\n  console.log(`Input ${idx} has chat.id?:`, !!input.json.message?.chat?.id);\n});\n\n// 3. Buscar el item que viene del nodo de análisis (OpenAI o Gemini)\nconst analyzeItem = allInputs.find(item => \n  item.json['0']?.content?.[0]?.text || item.json.content?.parts?.[0]?.text\n);\nconst raw = analyzeItem?.json['0']?.content?.[0]?.text ?? analyzeItem?.json.content?.parts?.[0]?.text ?? \"\";\n\nif (!raw) {\n  return { json: { _error: \"No llegó contenido desde el nodo de análisis de imagen.\" } };\n}\n\n// 4. Limpieza del texto para obtener solo el JSON válido\nconst m = raw.match(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/i);\nlet body = (m ? m[1] : raw).trim();\nbody = body.replace(/,\\s*([}\\]])/g, \"$1\").replace(/\\r/g, \"\");\n\nlet obj;\ntry {\n  obj = JSON.parse(body);\n} catch (e) {\n  return { json: { _error: \"JSON inválido tras limpiar\", _raw: raw, _clean: body } };\n}\n\n// 5. Traer el link del nodo \"Subir Imagen\"\nconst uploadItem = allInputs.find(item => item.json.webContentLink);\nconst imagen = uploadItem?.json.webContentLink ?? null;\n\n// 6. CORRECCIÓN: Usar $items() para obtener chat_id directamente del nodo Telegram\nlet chatId = null;\ntry {\n  const telegramItems = $items('Telegram');\n  if (telegramItems && telegramItems.length > 0) {\n    chatId = telegramItems[0].json.message?.chat?.id ?? null;\n  }\n} catch (e) {\n  console.log(\"Error obteniendo chat_id desde Telegram:\", e.message);\n  // Fallback: buscar en allInputs\n  const telegramItem = allInputs.find(item => item.json.message?.chat?.id);\n  chatId = telegramItem?.json.message?.chat?.id ?? null;\n}\n\n// 7. DEBUG del chatId encontrado\nconsole.log(\"DEBUG - chatId encontrado:\", chatId);\n\n// 8. Retornar el JSON final\nreturn {\n  json: {\n    fecha: obj.fecha,\n    hora: obj.hora,\n    entidad: obj.entidad,\n    tipo_documento: obj.tipo_documento,\n    numero_documento: String(obj.numero_documento ?? \"\"),\n    oficina: String(obj.oficina ?? \"\"),\n    terminal: String(obj.terminal ?? \"\"),\n    usuario: obj.usuario,\n    metodo_pago: obj.metodo_pago,\n    numero_cuenta: String(obj.numero_cuenta ?? \"\"),\n    valor_efectivo: Number(obj.valor_efectivo ?? 0),\n    valor_cheque: Number(obj.valor_cheque ?? 0),\n    valor_total: Number(obj.valor_total ?? ((Number(obj.valor_efectivo ?? 0) + Number(obj.valor_cheque ?? 0))))/100,\n    costo_transaccion: Number(obj.costo_transaccion ?? 0),\n    numero_transaccion: String(obj.numero_transaccion ?? \"\"),\n    resultado: obj.resultado,\n    imagen: imagen,\n    chat_id: chatId\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4992,
+        5200
+      ],
+      "id": "8238f877-1b44-4221-91f1-001d7673fdb7",
+      "name": "Parsear"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        3392,
+        5168
+      ],
+      "id": "8dc7a1ea-c056-4cf2-aa31-40fc3a45edad",
+      "name": "Telegram",
+      "webhookId": "cc1558ea-6c4c-4eaa-b407-6e1210b15ac2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Parsear').item.json.chat_id }}",
+        "text": "=📦 Factura registrada correctamente\n\nEntidad: {{ $json.entidad }}\nFecha:  {{ $json.fecha }}\nTotal: {{ $json.valor_total }}\n\nUsuario: {{ $json.usuario }}\nCuenta: {{ $json.numero_cuenta }}\nMetodo de pago: {{ $json.metodo_pago }}\nN° Transacción: {{ $json.numero_transaccion }}\n\n💵 Efectivo: {{ $json.valor_efectivo }}\n💳 Cheque: {{ $json.valor_cheque }}\n🧾 Total: {{ $json.valor_total }}\n\nResultado: {{ $json.resultado }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        5744,
+        5200
+      ],
+      "id": "006613dc-d6e6-433f-be8c-20de4b326892",
+      "name": "Confirmar Registro Factura",
+      "webhookId": "5313ff13-a4a4-4a14-ab27-c5d46df2e2a0",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=Imagen Factura",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4240,
+        4992
+      ],
+      "id": "b8bd73e6-00a0-46a8-8dae-72bfef85f253",
+      "name": "Subir Imagen",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1veA3rb9AENe8qBWIXCFEOkD5f8HnE5UjoshWf_F7daY",
+          "mode": "list",
+          "cachedResultName": "Hoja_Facturas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1veA3rb9AENe8qBWIXCFEOkD5f8HnE5UjoshWf_F7daY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Facturas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1veA3rb9AENe8qBWIXCFEOkD5f8HnE5UjoshWf_F7daY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ $json.fecha }}",
+            "entidad": "={{ $json.entidad }}",
+            "hora": "={{ $json.hora }}",
+            "tipo_documento": "={{ $json.tipo_documento }}",
+            "numero_documento": "={{ $json.numero_documento }}",
+            "terminal": "={{ $json.terminal }}",
+            "oficina": "={{ $json.oficina }}",
+            "usuario": "={{ $json.usuario }}",
+            "metodo_pago": "={{ $json.metodo_pago }}",
+            "numero_cuenta": "={{ $json.numero_cuenta }}",
+            "valor_efectivo": "={{ $json.valor_efectivo }}",
+            "valor_cheque": "={{ $json.valor_cheque }}",
+            "valor_total": "={{ $json.valor_total }}",
+            "costo_transaccion": "={{ $json.costo_transaccion }}",
+            "resultado": "={{ $json.resultado }}",
+            "imagen": "={{ $json.imagen }}",
+            "numero_transaccion": "={{ $json.numero_transaccion }}"
+          },
+          "matchingColumns": [
+            "tura"
+          ],
+          "schema": [
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "entidad",
+              "displayName": "entidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tipo_documento",
+              "displayName": "tipo_documento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "numero_documento",
+              "displayName": "numero_documento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "oficina",
+              "displayName": "oficina",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "terminal",
+              "displayName": "terminal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "usuario",
+              "displayName": "usuario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "metodo_pago",
+              "displayName": "metodo_pago",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "numero_cuenta",
+              "displayName": "numero_cuenta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "valor_efectivo",
+              "displayName": "valor_efectivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "valor_cheque",
+              "displayName": "valor_cheque",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "valor_total",
+              "displayName": "valor_total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "costo_transaccion",
+              "displayName": "costo_transaccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "numero_transaccion",
+              "displayName": "numero_transaccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "resultado",
+              "displayName": "resultado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "imagen",
+              "displayName": "imagen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        5312,
+        5200
+      ],
+      "id": "7348681e-a37f-4581-a05d-9908a7e51a29",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## IDENTIFICA TIPO MENSAJE",
+        "height": 416,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3680,
+        4976
+      ],
+      "typeVersion": 1,
+      "id": "bc8ff699-a394-4bff-812b-50b528c59a0f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "# Guía Práctica para Usar la Automatización de Análisis de Facturas en Telegram\n\n## Objetivo\n\nEsta automatización permite recibir imágenes de facturas a través de Telegram, analizarlas y guardar la información en Google Sheets, además de almacenar las imágenes en Google Drive.\n\n## 1. Enviar la Factura\n\n- **Enviar Imagen**:\n  - Abre Telegram y busca tu bot.\n  - Envía una imagen de la factura que deseas analizar.\n\n## 2. Análisis Automático\n\n- **Análisis**:\n  - La automatización procesará automáticamente la imagen recibida.\n  - Se extraerá la información relevante (como el monto y la fecha).\n\n## 3. Verificación de Resultados\n\n- **Revisar Google Sheets**:\n  - Abre Google Sheets.\n  - Busca la tabla donde se guardan las facturas.\n  - Verifica que la información extraída de la factura se haya añadido correctamente.\n\n- **Revisar Google Drive**:\n  - Abre Google Drive.\n  - Dirígete a la carpeta donde se guardan las imágenes de las facturas [Cursos PDF].\n  - Confirma que la imagen de la factura se haya subido correctamente.\n\n## 4. Repetir el Proceso\n\n- **Enviar Más Facturas**:\n  - Puedes repetir el proceso enviando más imágenes de facturas en cualquier momento.\n\n## Conclusión\n\nCon estos pasos sencillos, puedes gestionar tus facturas de manera eficiente, gracias a la automatización que analiza y organiza la información automáticamente.",
+        "height": 1168,
+        "width": 928
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2848,
+        5696
+      ],
+      "typeVersion": 1,
+      "id": "7d3cb756-d516-482e-9314-fdd19f5db2e3",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "# Guía Rápida para Configurar el Agente de Facturas\n\n## 1. Crear un Bot en Telegram\n\n1. **Iniciar BotFather**:\n   - Abre Telegram y busca el [BotFather](https://t.me/botfather).\n   - Inicia una conversación.\n\n2. **Crear un Nuevo Bot**:\n   - Usa el comando `/newbot` para crear un nuevo bot y sigue las instrucciones.\n\n3. **Guardar el Token**:\n   - Copia el token de API que te da BotFather. Lo necesitarás más adelante.\n\n## 2. Conectar el Bot a n8n\n\n1. **Acceder a n8n**:\n   - Inicia sesión en tu cuenta de n8n.\n\n2. **Agregar Credenciales**:\n   - Crea una nueva credencial para Telegram.\n   - Pega el token de API que obtuviste de BotFather.\n\n## 3. Configurar Herramientas de Google\n\n1. **Conectar Agentes**:\n   - Asegúrate de que las herramientas de Google que usarás (como Google Calendar y Google Drive) estén correctamente configuradas en n8n.\n   - Asegurate que las creedecniales del modelo chatgpt correctamentes configuradas\n\n",
+        "height": 768,
+        "width": 1056,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3824,
+        5696
+      ],
+      "typeVersion": 1,
+      "id": "95b10013-7ad6-4eaa-8a57-3a1637ed5bdf",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "### Agregar tus creedenciales de del bot de telegram ",
+        "height": 240,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3312,
+        5088
+      ],
+      "typeVersion": 1,
+      "id": "321c668f-57ff-4bb6-b34b-45b09620ec54",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "### Conectar tus creedenciales de chatGpt si vas a usar OpenAI",
+        "height": 256,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4160,
+        5232
+      ],
+      "typeVersion": 1,
+      "id": "759269a4-6437-4f57-b30b-6be19ec6fe4f",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "### Conectar tus creedenciales de google drive.\n",
+        "height": 256,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4160,
+        4896
+      ],
+      "typeVersion": 1,
+      "id": "d0da4708-6888-4b05-81a4-39183af3bc18",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4736,
+        5200
+      ],
+      "id": "cb547511-3ab6-4900-90bd-5087b3dd6394",
+      "name": "Combinar"
+    },
+    {
+      "parameters": {
+        "content": "### Conectar tus creedenciales de google sheets\n",
+        "height": 240,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5248,
+        5120
+      ],
+      "typeVersion": 1,
+      "id": "64a57fc7-1fdd-4726-86ea-37d12846a024",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0f921bbc-b119-4087-acce-e04e4bd2aa2e",
+                    "leftValue": "={{ $json.message.photo[0].file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagen"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "allMatchingOutputs": true
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3808,
+        5168
+      ],
+      "id": "8397ad9b-bc33-4d72-8ed6-c0b4b51a5de1",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "=Eres un extractor de datos de RECIBOS o FACTURAS.\nTu tarea es leer la imagen y devolver exclusivamente un JSON válido con la siguiente estructura:\n\n{\n\"fecha\": \"YYYY-MM-DD\",\n\"hora\": \"HH:MM:SS\",\n\"entidad\": \"string\",\n\"tipo_documento\": \"string\",\n\"numero_documento\": \"string\",\n\"oficina\": \"string\",\n\"terminal\": \"string\",\n\"usuario\": \"string\",\n\"metodo_pago\": \"string\",\n\"numero_cuenta\": \"string\",\n\"titular_producto\": \"string\",\n\"valor_efectivo\": number,\n\"valor_cheque\": number,\n\"valor_total\": number,\n\"costo_transaccion\": number,\n\"numero_transaccion\": \"string\",\n\"resultado\": \"string\"\n}\n\nReglas:\n\nDebes llenar todos los campos con la información del recibo, ninguno debe ir como null.\n\nSi un campo no aparece explícito en el recibo, debes deducirlo a partir del contexto (por ejemplo: si el medio de pago es “Efectivo”, pon el monto en valor_efectivo y en valor_cheque escribe 0).\n\nMontos: siempre como número entero, sin puntos, comas ni símbolos de moneda.\n\nFecha en formato YYYY-MM-DD y hora en HH:MM:SS.\n\n“resultado” debe ser “APROBADO” si la transacción se realizó correctamente, o “RECHAZADO” en caso contrario.\n\nDevuelve únicamente el JSON válido, sin texto adicional ni explicaciones.",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        4240,
+        5328
+      ],
+      "id": "4df41380-90dc-4705-a391-5c19bf47417e",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 240,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5680,
+        5120
+      ],
+      "typeVersion": 1,
+      "id": "d66cc1c9-03e6-45bf-9053-771d30cad01b",
+      "name": "Sticky Note11"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Parsear": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir Imagen": {
+      "main": [
+        [
+          {
+            "node": "Combinar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Confirmar Registro Factura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combinar": {
+      "main": [
+        [
+          {
+            "node": "Parsear",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Subir Imagen",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Combinar",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6c1d3690-f1f9-4217-bdf0-5806d4abcb6e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "w77ljuAb0dfk9sq7",
+  "tags": []
+}

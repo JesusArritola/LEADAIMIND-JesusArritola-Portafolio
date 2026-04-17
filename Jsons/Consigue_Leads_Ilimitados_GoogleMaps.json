@@ -1,0 +1,431 @@
+{
+  "name": "Consigue_Leads_Ilimitados_GoogleMaps",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Introduce tus intenciones de busqueda",
+        "formDescription": "Completa los campos y recibe los leads cualificados.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Tipo de Negocio",
+              "placeholder": "Escribe el tipo de negocio que quieres buscar ...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "=Localizacion",
+              "placeholder": "Escribe la ubicacion de tu negocio ",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -192,
+        -176
+      ],
+      "id": "0e2dbfe5-f3b1-48f9-9d1f-28279e9dcb3c",
+      "name": "Formulario_Leads",
+      "webhookId": "fbf87975-ac22-4019-871d-e03bfd032faa"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.google.com/maps/search/{{ $json['Tipo de Negocio'] }}+{{ $json['Localizacion'] }}",
+        "options": {
+          "allowUnauthorizedCerts": false,
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        128,
+        -224
+      ],
+      "id": "576e9da2-8cc0-499b-9a3c-c30449571574",
+      "name": "Google Maps Scraper",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json.data\nconst regex = /https?:\\/\\/[^\\/\\s\"'>]+/g\nconst websites = input.match(regex)\nreturn websites.map(website=>({json:{website}})) "
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -176
+      ],
+      "id": "83c3e65f-b0e1-4971-bb2c-c7c4688fd527",
+      "name": "Limpiar URLS"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -176
+      ],
+      "id": "c929cc60-7f3e-4ea0-8af8-007cab289baa",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bd755598-67ac-41c2-b7d3-9b95e85974a2",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "schema",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "76dfd4fc-9e29-446e-8197-963bb2b59e40",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "gg",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "7c4fe47d-e09e-4fae-80e9-b03174ae1ae8",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "gstatic",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            },
+            {
+              "id": "991ce2e9-122f-4bd8-8c1d-4f0dde06d426",
+              "leftValue": "={{ $json.website }}",
+              "rightValue": "google",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        -176
+      ],
+      "id": "1965a4a8-5f60-4255-8e5d-a1a36e972b6c",
+      "name": "filtrar_correctos"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        80
+      ],
+      "id": "09a2e3c5-edd8-4495-8f88-dcd49076596f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.website }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        256
+      ],
+      "id": "af7ee6d0-4e37-42c9-9b60-c57403173274",
+      "name": "Scrapeo:Webs_individuales",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json.data\nconst regex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.(?!jpeg|jpg|png|gif|webp|svg)[a-zA-Z]{2,}/g\nconst emails = input.match(regex)\nreturn {json: {emails:emails}}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        256
+      ],
+      "id": "f51d6138-3296-4955-91e9-40d7a2a7efbc",
+      "name": "Limpiar correos"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        256
+      ],
+      "id": "58d692a9-03d4-4e71-98df-749106e17eb2",
+      "name": "Wait",
+      "webhookId": "e7143119-889e-46cb-88c3-e394dd5bd230"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a845882a-c453-4ce7-b38d-9b269e2ac8e9",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        64
+      ],
+      "id": "bad9cc56-0fef-4f1a-9007-cf85659bf21e",
+      "name": "filtrar vacios"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        400,
+        64
+      ],
+      "id": "9e148651-30e8-4dac-a5b3-95a005bab2a7",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        608,
+        64
+      ],
+      "id": "8437aabc-f763-460e-9bdd-ab5bd5986400",
+      "name": "Remove Duplicates1"
+    },
+    {
+      "parameters": {
+        "content": "guardar\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "d0be8ba2-426b-4422-9247-dc95b41e9b36",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {
+    "Formulario_Leads": [
+      {
+        "json": {
+          "Tipo de Negocio": "dentista",
+          "Localizacion": "madrid",
+          "submittedAt": "2026-03-26T15:29:53.838-04:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Formulario_Leads": {
+      "main": [
+        [
+          {
+            "node": "Google Maps Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Scraper": {
+      "main": [
+        [
+          {
+            "node": "Limpiar URLS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar URLS": {
+      "main": [
+        [
+          {
+            "node": "filtrar_correctos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtrar_correctos": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "filtrar vacios",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Scrapeo:Webs_individuales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrapeo:Webs_individuales": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Limpiar correos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar correos": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtrar vacios": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e0198e75-291c-4500-9fc2-258c92da1b95",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "yyRkaBVbiybGltnP",
+  "tags": []
+}

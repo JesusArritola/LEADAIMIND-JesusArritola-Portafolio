@@ -1,0 +1,734 @@
+{
+  "name": "Agente_HR_Department",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "=======================================\n        CHRO AGENT WITH HR TEAM\n=======================================\n\n",
+        "height": 192,
+        "width": 2100,
+        "color": 5
+      },
+      "id": "89e059e8-2203-465d-bd22-700b978056d5",
+      "name": "Sticky Note Header",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1264,
+        -336
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "🧠 AGENTE CHRO CON EQUIPO DE RR. HH. - FLUJO DE TRABAJO DE IA\n🔥 Impulsado por OpenAI O3 y GPT-4.1-mini Sistema Multi-Agente\n\n\n📝 Descripción General\nEsta automatización multi-agente en n8n simula un departamento completo de RR. HH. Un agente estratégico CHRO recibe tu entrada de chat, analiza las necesidades de RR. HH. y delega en agentes especializados en reclutamiento, redacción de políticas, capacitación, gestión del desempeño, cultura y compensación—entregando soluciones integrales de RR. HH. al instante.\n\n⚙️ Cómo Funciona\nDisparador de chat recibe solicitudes de RR. HH. (ejemplo: \"Crear programa de incorporación para nuevos ingenieros\")\n\nAgente CHRO (O3) analiza la solicitud y determina las funciones de RR. HH. necesarias\n\nDelegación a agentes especialistas:\n\nAgente Reclutador\n\nRedactor de Políticas de RR. HH.\n\nEspecialista en Capacitación y Desarrollo\n\nEspecialista en Evaluación del Desempeño\n\nEspecialista en Compromiso de los Empleados\n\nAnalista de Compensación y Beneficios\n\nCada agente utiliza GPT-4.1-mini para una ejecución rápida y enfocada\n\nLos resultados se compilan y se devuelven vía chat o integrados con el HRIS\n\n👥 Conoce a Tu Equipo de RR. HH. con IA\nAgente\tPropósito\tModelo\tEntrega\n🧠 Agente CHRO\tPlanificación estratégica de RR. HH. y delegación\tO3\tComando central\n🎯 Reclutador\tDescripciones de puestos, selección, entrevistas\tGPT-4.1-mini\tMateriales de contratación\n📋 Redactor de Políticas\tPolíticas de RR. HH., manuales, cumplimiento\tGPT-4.1-mini\tDocumentación\n🎓 Especialista en Capacitación\tProgramas de aprendizaje, onboarding\tGPT-4.1-mini\tContenido de formación\n⭐ Especialista en Desempeño\tEvaluaciones, retroalimentación, objetivos\tGPT-4.1-mini\tHerramientas de evaluación\n🎉 Especialista en Compromiso\tCultura, actividades de equipo, comunicación\tGPT-4.1-mini\tIniciativas culturales\n💰 Analista de Compensación\tSalarios, beneficios, recompensas totales\tGPT-4.1-mini\tPaquetes de compensación\n💡 Casos de Uso\nCiclo completo de contratación: Publicación de vacantes → Preguntas de selección → Guías de entrevista → Cartas de oferta\n\nSuite de políticas: Crear un manual completo para empleados en minutos\n\nProgramas de incorporación: Planes de Día 1-90 con listas de verificación y capacitación\n\nCiclos de desempeño: Evaluaciones 360, objetivos, planes de desarrollo\n\nProgramas de cultura: Encuestas de compromiso, actividades de equipo, reconocimiento\n\nAnálisis de compensación: Benchmarking de mercado, revisiones de equidad salarial\n\n💸 Optimización de Costos\nO3 para CHRO: Solo decisiones estratégicas\n\nGPT-4.1-mini para especialistas: Reducción de costos del 90%\n\nProcesamiento en paralelo: Todos los agentes trabajan simultáneamente\n\nCaché de plantillas: Reutilización de documentos comunes de RR. HH.",
+        "height": 1428,
+        "width": 740,
+        "color": 5
+      },
+      "id": "9430b1da-1733-4e9b-9469-be48f66625e1",
+      "name": "Sticky Note Main",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1968,
+        1344
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a9b34d60-1ba1-47f8-a1fa-3edea21b18aa",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -896,
+        896
+      ],
+      "webhookId": "hr-webhook-id",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "bc4849f6-d51c-42d2-86f4-b991175cbd2e",
+      "name": "CHRO Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -176,
+        672
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {},
+      "id": "69b35687-52c6-480c-a3ff-fd6f68c46f73",
+      "name": "Think",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        3504,
+        1312
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "o3",
+          "cachedResultName": "o3"
+        },
+        "options": {}
+      },
+      "id": "7792ca49-f722-4a04-84b4-92c1f2906c09",
+      "name": "OpenAI Chat Model CHRO",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -288,
+        1024
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "0a109117-6a69-4db4-b556-f5d5013f4017",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1328,
+        1888
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "69884d23-f443-4ec2-ba4c-e6eed9af0bf8",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1936,
+        1024
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "a0378443-eb72-43d1-a61a-183998d402a0",
+      "name": "OpenAI Chat Model3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1536,
+        1472
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "3b4b7c1d-e5c7-497a-a890-b68f57cace64",
+      "name": "OpenAI Chat Model4",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1952,
+        1712
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "3ed9ab6f-9a5f-4b4e-82e8-a9f4d68096bb",
+      "name": "OpenAI Chat Model5",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1488,
+        768
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "5eed194d-091b-4bde-8fa8-abb0c560fff9",
+      "name": "OpenAI Chat Model6",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1856,
+        544
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 2000,
+        "width": 1184,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "1db5c76e-812c-4b82-84d2-ff672485ae1c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 208,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        1824
+      ],
+      "typeVersion": 1,
+      "id": "525b088c-cf8f-4f55-b309-8ebec70676f6",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 208,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1808,
+        1664
+      ],
+      "typeVersion": 1,
+      "id": "7cf7b73d-06c2-47fd-8f0f-7380f1b2d8cc",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 192,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1808,
+        1008
+      ],
+      "typeVersion": 1,
+      "id": "4380dedb-461d-40f8-80bc-3e97bee48caf",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 192,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1376,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "ff70bd06-1748-4ef8-8e2b-da67ec68a040",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 272,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        960
+      ],
+      "typeVersion": 1,
+      "id": "d47f0227-4eeb-4f36-885f-adc655725d53",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1776,
+        512
+      ],
+      "typeVersion": 1,
+      "id": "adda6dc8-8ccc-44ca-87b0-3c5c3d8b1b59",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 208,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1408,
+        1440
+      ],
+      "typeVersion": 1,
+      "id": "59a13bcd-b344-4579-a460-706e03c3113f",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Chat Trigger",
+        "height": 240,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        832
+      ],
+      "typeVersion": 1,
+      "id": "c0c33a33-0be4-4d00-863e-e82a150bb628",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Chief Humar Resource Officer",
+        "height": 272,
+        "width": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "f9076403-832a-4a30-8ead-47fcdc57ac2c",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Pensamiento",
+        "height": 240,
+        "width": 304,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3376,
+        1232
+      ],
+      "typeVersion": 1,
+      "id": "6c84de94-7f27-43d8-8cd9-4f7a240dc40b",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Llama a este Agente de IA que se especializa en análisis de compensación, paquetes de beneficios, evaluación comparativa de salarios y comunicación de recompensas totales.",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "bc6b7d5f-d3a5-42dd-981c-b573012084b6",
+      "name": "Analista de Compensación y Beneficios.",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "position": [
+        1936,
+        352
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "toolDescription": "Llamar a este Agente de IA que se especializa en compromiso de los empleados, iniciativas de cultura, actividades de formación de equipos y comunicaciones internas.",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "c8e614c5-4e87-4977-b7e2-aa13fc3ecd80",
+      "name": "Especialista en Compromiso de los Empleados.",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "position": [
+        1536,
+        592
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "toolDescription": "Llama a este Agente de IA que se especializa en redactar políticas de RR. HH., manuales para empleados y documentación de cumplimiento.",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "07ed47b8-3b1b-470a-9c90-b426f9ed7653",
+      "name": "HR Politica Escritor",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "position": [
+        2000,
+        912
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "toolDescription": "Llama a este Agente de IA que se especializa en crear materiales de capacitación, programas de incorporación y planes de desarrollo profesional.",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "9b074b2f-c4cd-4300-a95e-200671668c94",
+      "name": "Especialista en Capacitación y Desarrollo.",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "position": [
+        1600,
+        1312
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "toolDescription": "Llama a este Agente de IA que se especializa en evaluaciones de desempeño, plantillas de retroalimentación, establecimiento de objetivos y evaluaciones de empleados.",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "bff341db-ed58-4780-8af9-581c9533cb69",
+      "name": "Especialista en Evaluación del Desempeño.",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "position": [
+        1952,
+        1536
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "toolDescription": "Llama a este Agente de IA que se especializa en reclutamiento, descripciones de puestos, selección de candidatos y preguntas de entrevistas.",
+        "text": "={{ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "c7c51608-8ec1-4df4-aed9-614807948b68",
+      "name": "Agente Reclutador.",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "position": [
+        1456,
+        1728
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Utilizadas :\n-Chat Trigger : Usado para comenzar el flujo y establecer la comunicacion con los agentes de IA.\n-AI Agent : Usado para procesar la informacion del usuario.\n-AI Agent Tool : Usado para responder las necesidades especificas del usuario.\n-Chat Model  Openai : Usado como cerebro de los Agentes.",
+        "height": 752,
+        "width": 752,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1104,
+        1344
+      ],
+      "typeVersion": 1,
+      "id": "237fea95-d24b-4a83-b796-44694218174d",
+      "name": "Sticky Note11"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Analista de Compensación y Beneficios.",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "HR Politica Escritor",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Especialista en Compromiso de los Empleados.",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Especialista en Capacitación y Desarrollo.",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Especialista en Evaluación del Desempeño.",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Agente Reclutador.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente Reclutador.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "HR Politica Escritor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Especialista en Capacitación y Desarrollo.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Especialista en Evaluación del Desempeño.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Especialista en Compromiso de los Empleados.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Analista de Compensación y Beneficios.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model CHRO": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analista de Compensación y Beneficios.": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Especialista en Compromiso de los Empleados.": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HR Politica Escritor": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Especialista en Capacitación y Desarrollo.": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Especialista en Evaluación del Desempeño.": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Reclutador.": {
+      "ai_tool": [
+        [
+          {
+            "node": "CHRO Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9b60ea58-1056-4cd9-8115-fdd4110750d8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "FOEXdyDfAJXCE47h",
+  "tags": []
+}

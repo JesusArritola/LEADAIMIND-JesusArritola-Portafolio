@@ -1,0 +1,292 @@
+{
+  "name": "Agente_Creador_de_Videos_“Whiteboard”",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('On form submission').item.json.Descripcion_Whiteboard }}",
+        "options": {
+          "systemMessage": "=\"**Rol:**  \nEres un asistente automatizado especializado en analizar información proporcionada por usuario vía formulario para generar guiones precisos y concisos que sirvan de base a videos whiteboard.\n\n**Instrucción:**  \nAnaliza completa y detalladamente los datos del formulario, identifica y extrae toda la información relevante y significativa para construir un resumen claro y coherente del contexto. A partir de este resumen, crea un guion profesional, breve y específico en español, optimizado para ser interpretado por veo3.0 y generar un video explicativo whiteboard con audio narrado en español, con una duración fija de 2 segundos.\n\n**Pasos:**  \n1. Recibir y procesar todos los datos suministrados por el usuario en el formulario.  \n2. Filtrar y seleccionar la información clave que mejor describa el contexto general y los puntos esenciales.  \n3. Sintetizar un texto claro, directo y coherente que explique ese contexto de forma sencilla.  \n4. Redactar un guion conciso y profesional en español diseñado para un video whiteboard de 2 segundos con narración.  \n5. Asegurar que el guion sea compatible y específico para la plataforma veo3.0, priorizando claridad, naturalidad y precisión en el audio y video finales.\n\n**Objetivo final:**  \nGenerar un guion optimizado y claro que permita a veo3.0 crear un video whiteboard profesional, audiovisual, narrado en español, con duración exacta de 2 segundos, que explique de forma eficaz y breve el contexto basado en la información del formulario.\n\n**Reducción del alcance:**  \nNo incluir instrucciones técnicas avanzadas ni realizar la producción directa del video o audio. Enfocarse sólo en la extracción, síntesis y generación del guion para un video breve explicativo en formato whiteboard, con narración en español y duración máxima de 2 segundos.\"\n\nEl Video tiene que ser explicitamente de tipo whiteboard."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        16
+      ],
+      "id": "e77c7bc1-611f-420e-a694-eadf3d67f548",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        272
+      ],
+      "id": "bd57c8ce-c63e-4708-9a92-3a3b2c663623",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "Whiterboard",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        16
+      ],
+      "id": "752a84a9-28ed-48b1-abb8-bf1a0566b8a1",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Whiteboard Creator",
+        "formDescription": "Explica como quieres que sea el video y el tema fundamental",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Descripcion_Whiteboard",
+              "fieldType": "textarea",
+              "placeholder": "Rellena el campo con la descripcion",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -560,
+        16
+      ],
+      "id": "8832205e-8e3c-4405-a3ff-b391d46bd97d",
+      "name": "On form submission",
+      "webhookId": "30f8491b-bd06-49df-83ef-0d178344ca30"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-generate-001"
+        },
+        "prompt": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        608,
+        16
+      ],
+      "id": "f0fd8628-861d-4349-90db-de4d8bdca453",
+      "name": "Generate a video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento de los datos del usuario para generar el Prompt",
+        "height": 464,
+        "width": 464,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "765f32f3-6db1-41f6-b449-75a0c572d279",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conetar Credenciiales del Chat Model",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "379337dd-17df-423e-9127-718b745acf5a",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Form Trigger",
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -624,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "f2c72091-927b-446f-abc1-85427b79077e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conetar Credenciiales de gemini para generar el video con VEO3.0",
+        "height": 256,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "72365849-6f51-4a84-b98a-87e9bfdea98f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conetar Credenciiales de Google Drive",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1008,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "e0801756-81cf-44b1-ad5e-03b8231aeb4a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Usadas :\n-Form Trigger : Usado para captar el brief cliente.\n-Ai Agent : Usado para procesar la informacion obetnida del formulario.\n-Generate a Video From Gemini : Usado para generar el video estilo whiteboard.\n-Google Drive : Usado para guardar el video generado.",
+        "height": 256,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        544
+      ],
+      "typeVersion": 1,
+      "id": "016cb5f7-b753-4ed1-a272-c11ef78c563c",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "WhiteBoard Generator : \nDescripcion : \nFlujo de trabajo para crear videos whiteboard de una manera sencilla.\n\nFuncionalidad : \nPermite crear videos whiteboard dada un descripcion por el usuario a traves de un formulario para luego almacenarlos en Google Drive.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que permite crear videos whiteboard sobre cualquier tema de forma sencilla y directa con una breve descripcion.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas permitiendo crear un sistema aun mas robusto y utilizable.\n-Escalabilidad : Es un sistema completamente escalable segun la empresa y los requisitos requeridos.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 320,
+        "width": 752,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        544
+      ],
+      "typeVersion": 1,
+      "id": "e8613698-1cc3-4c93-9cad-bd46e4b937e9",
+      "name": "Sticky Note10"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a video": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "04f52879-1707-45e4-813b-67395d88f052",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "6ZdMz2GHBecX2buB",
+  "tags": []
+}

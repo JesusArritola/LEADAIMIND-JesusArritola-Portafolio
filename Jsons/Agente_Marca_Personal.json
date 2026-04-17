@@ -1,0 +1,1037 @@
+{
+  "name": "Agente_Marca_Personal",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Agente Marca Personal",
+        "formDescription": "Elige una categoria y desarrolla tu marca personal .",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Elige una Identidad",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Marca Personal"
+                  },
+                  {
+                    "option": "Compañia/Negocio"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Dinos tu idea",
+              "fieldType": "textarea",
+              "placeholder": "Por ejemplo \"Como automatizar tareas con IA\"",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Escoge Platarforma para Personalizar Contenido",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Instagram"
+                  },
+                  {
+                    "option": "Facebook"
+                  },
+                  {
+                    "option": "Youtube"
+                  },
+                  {
+                    "option": "TikTok"
+                  },
+                  {
+                    "option": "Email/Marketing"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Elige el Tipo de Contenido",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Post"
+                  },
+                  {
+                    "option": "Reel/Short"
+                  },
+                  {
+                    "option": "Carrusel"
+                  },
+                  {
+                    "option": "Hilo"
+                  },
+                  {
+                    "option": "Guion"
+                  },
+                  {
+                    "option": "Newsletter"
+                  },
+                  {
+                    "option": "Copy para anuncio"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Formalidad",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Casual"
+                  },
+                  {
+                    "option": "Semi-Formal"
+                  },
+                  {
+                    "option": "Formal"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Objetivo del Contenido",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Educar"
+                  },
+                  {
+                    "option": "Inspirar"
+                  },
+                  {
+                    "option": "Vender"
+                  },
+                  {
+                    "option": "Contar historia"
+                  },
+                  {
+                    "option": "Generar Interaccion"
+                  },
+                  {
+                    "option": "Posicionamiento de Marca"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Publico Objetivo",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Emprendedores"
+                  },
+                  {
+                    "option": "Freelancers"
+                  },
+                  {
+                    "option": "Estudiantes"
+                  },
+                  {
+                    "option": "Profesionales de Marketing "
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Longitud Deseada",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Corta"
+                  },
+                  {
+                    "option": "Media"
+                  },
+                  {
+                    "option": "Larga"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Idioma",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Español"
+                  },
+                  {
+                    "option": "Ingles"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "CTA Deseado",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Escribeme al DM"
+                  },
+                  {
+                    "option": "Sigueme para mas "
+                  },
+                  {
+                    "option": "Visita mi Web"
+                  },
+                  {
+                    "option": "Descarga mi guia"
+                  },
+                  {
+                    "option": "Agenda una llamada"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -816,
+        80
+      ],
+      "id": "7661ce04-9315-407b-81a1-8f29e650c6cf",
+      "name": "On form submission",
+      "webhookId": "25cdbb1f-13a6-45a6-8fd7-846144e046c7"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        368,
+        592
+      ],
+      "id": "86b51bae-d25c-4ef0-a14f-25a0041eb2e5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        336,
+        16
+      ],
+      "id": "e9b5526c-fdd2-4702-b9ac-3fe842350b8f",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos introducidos por el usuario  :\nIdentidad : {{ $json.Identidad }}\nIdea : {{ $json.Idea }}\nPlataforma : {{ $json.Plataforma }}\nContenido : {{ $json.Contenido }}\nFormalidad : {{ $json.Formalidad }}\nObjetivo : {{ $json.Objetivo }}\nPublico : {{ $json.Publico }}\nLongitud : {{ $json.Longitud }}\nIdioma : {{ $json.Idioma }}\nCTA : {{ $json.CTA }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un redactor profesional especializado en contenido corporativo. Tu misión es transformar los datos del formulario en contenido claro, profesional, orientado a resultados y alineado con la identidad de una empresa.\n\n⚠️ Instrucciones estrictas:\n- Mantén un tono profesional, directo y objetivo.\n- Habla en plural corporativo (“nosotros”, “nuestro equipo”, “la empresa”).\n- Enfócate en beneficios, procesos, soluciones y resultados.\n- Evita storytelling personal o emocional.\n- Usa frases claras, concisas y orientadas al valor.\n- Adapta el estilo a la plataforma seleccionada.\n- Incluye un CTA corporativo al final.\n- Incluye hashtags profesionales (máximo 10).\n- Respeta la formalidad, longitud e idioma seleccionados.\n- No inventes datos fuera del formulario.\n\n📌 Datos del formulario:\nIdentidad : {{ $json.Identidad }}\nIdea : {{ $json.Idea }}\nPlataforma : {{ $json.Plataforma }}\nContenido : {{ $json.Contenido }}\nFormalidad : {{ $json.Formalidad }}\nObjetivo : {{ $json.Objetivo }}\nPublico : {{ $json.Publico }}\nLongitud : {{ $json.Longitud }}\nIdioma : {{ $json.Idioma }}\nCTA : {{ $json.CTA }}\n\n📌 Estructura obligatoria:\n**Título:** (profesional y orientado a valor)\n\n**Contenido:**  \n- Beneficio principal  \n- Problema que resuelve  \n- Propuesta de valor  \n- Diferenciadores  \n- CTA corporativo  \n\n**Hashtags:** (máximo 10)\n\n**Plataforma:** (adaptado al estilo de la plataforma)\n\nLuego de Realizar el Output Parser Format utiliza la herramienta \"Append row in sheet in Google Sheets\"para guardar todo el \"output del agente\" en la columna \"Objetivo\" y cambiar el estado a \"Pendiente a Grabar\".\n\nGenera el contenido siguiendo exactamente estas reglas.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        528,
+        288
+      ],
+      "id": "7ba9ac7e-27cd-47a1-b8ea-731a4703f187",
+      "name": "Agente_Negocio"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos introducidos por el usuario  :\nIdentidad : {{ $json.Identidad }}\nIdea : {{ $json.Idea }}\nPlataforma : {{ $json.Plataforma }}\nContenido : {{ $json.Contenido }}\nFormalidad : {{ $json.Formalidad }}\nObjetivo : {{ $json.Objetivo }}\nPublico : {{ $json.Publico }}\nLongitud : {{ $json.Longitud }}\nIdioma : {{ $json.Idioma }}\nCTA : {{ $json.CTA }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un creador experto en contenido para Marca Personal. Tu misión es transformar los datos del formulario en contenido auténtico, emocional, humano y con storytelling, manteniendo siempre un tono cercano y natural.\n\n⚠️ Instrucciones estrictas:\n- No uses lenguaje robótico ni frases genéricas.\n- Habla en primera persona (“yo”, “mi”, “me”).\n- Usa storytelling breve, reflexiones y aprendizajes.\n- Mantén un tono cálido, directo y humano.\n- Usa frases cortas y fáciles de leer.\n- Incluye saltos de línea para mejorar la legibilidad.\n- Adapta el estilo a la plataforma seleccionada.\n- Incluye un CTA natural al final.\n- Incluye hashtags relevantes (máximo 2).\n- Respeta la formalidad, longitud e idioma seleccionados.\n- No inventes datos fuera del formulario.\n\n\n📌 Datos del formulario:\nIdentidad: {{ $json.Identidad }}\nIdea: {{ $json.Idea }}\nPlataforma: {{ $json.Plataforma }}\nTipo de contenido: {{ $json.Contenido }}\nFormalidad: {{ $json.Formalidad }}\nObjetivo: {{ $json.Objetivo }}\nPúblico objetivo: {{ $json.Publico }}\nLongitud: {{ $json.Longitud }}\nIdioma: {{ $json.Idioma }}\nCTA : {{ $json.CTA }}\n\n📌 Estructura obligatoria:\n**Título:** (creativo y emocional)\n\n**Contenido:**  \n- Hook fuerte  \n- Storytelling breve  \n- Reflexión o aprendizaje  \n- Valor práctico  \n- CTA humano  \n\n**Hashtags:** (máximo 2)\n\n**Plataforma:** (adaptado al estilo de la plataforma)\n\nLuego de Realizar el Output Parser Format utiliza la herramienta \"Append row in sheet in Google Sheets1\"para guardar todo el \"output del agente\" en la columna \"Objetivo\" y cambiar el estado a \"Pendiente a Grabar\".\n\nGenera el contenido siguiendo exactamente estas reglas.\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        528,
+        -416
+      ],
+      "id": "9e2a7740-a9ae-4bb1-8885-f56cf15c4fca",
+      "name": "Agente_Marca_Personal"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f4041ddd-2b31-4874-9262-9933e9b252c5",
+              "name": "Identidad",
+              "value": "={{ $json['Elige una Identidad'] }}",
+              "type": "string"
+            },
+            {
+              "id": "95a0d039-4891-467d-a512-1d4591e7f0cd",
+              "name": "Idea",
+              "value": "={{ $json['Dinos tu idea'] }}",
+              "type": "string"
+            },
+            {
+              "id": "97cadfe9-51bc-49c5-b13e-20eaac8109c1",
+              "name": "Plataforma",
+              "value": "={{ $json['Escoge Platarforma para Personalizar Contenido'] }}",
+              "type": "string"
+            },
+            {
+              "id": "51edf381-211b-46d7-8a39-616f98af91f0",
+              "name": "Contenido",
+              "value": "={{ $json['Elige el Tipo de Contenido'] }}",
+              "type": "string"
+            },
+            {
+              "id": "daa21c1e-2bec-48fe-a407-43db622ccc31",
+              "name": "Formalidad",
+              "value": "={{ $json.Formalidad }}",
+              "type": "string"
+            },
+            {
+              "id": "d9d414e7-53e1-4f35-972a-f8d9b00d944d",
+              "name": "Objetivo",
+              "value": "={{ $json['Objetivo del Contenido'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6530a0ca-69c8-4da0-b031-1145dabe5e0b",
+              "name": "Publico",
+              "value": "={{ $json['Publico Objetivo'] }}",
+              "type": "string"
+            },
+            {
+              "id": "96ea5631-ada5-441c-8232-7d924f31fca7",
+              "name": "Longitud",
+              "value": "={{ $json['Longitud Deseada'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f77f2a6c-89e9-4678-a4b3-c1eb04bde750",
+              "name": "Idioma",
+              "value": "={{ $json.Idioma }}",
+              "type": "string"
+            },
+            {
+              "id": "5aa24820-21f0-409b-a823-f1f346abd580",
+              "name": "CTA",
+              "value": "={{ $json['CTA Deseado'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        80
+      ],
+      "id": "ad33865a-6c4b-4af8-8427-f2e7961429a1",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Edit Fields').item.json.Identidad }}",
+                    "rightValue": "Personal",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "bb8f1089-c218-4b3b-8a16-8428f4495a43"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Personal"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "702bba6a-e641-4435-88e5-1bb0b1d8d6c6",
+                    "leftValue": "={{ $('Edit Fields').item.json.Identidad }}",
+                    "rightValue": "Negocio",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Negocio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -96,
+        80
+      ],
+      "id": "4761a058-e500-4045-b5ab-01a88e129a42",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "=Tu Propuesta esta lista.Echale un vitazo",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1824,
+        -64
+      ],
+      "id": "b6268d1f-7efb-4c8c-b5f4-81c44ae49809",
+      "name": "Send a message",
+      "webhookId": "1e33c286-c65c-4d4d-ba33-7599842233a6",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Titulo\": \"\",\n  \"Idnetidad\": \"\",\n  \"Idea\": \"\",\n  \"Plataforma\": \"\",\n  \"Contenido\": \"\",\n  \"Fromalidad\": \"\",\n  \"Objetivo\": \"\",\n  \"Publico\": \"\",\n  \"Longitud\": \"\",\n  \"Idioma\": \"\",\n  \"CTA\": \"\",\n  \"Hashtags\": \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1120,
+        80
+      ],
+      "id": "aa0416ff-0e5b-4944-ba85-fa77bda05db6",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "html": "<div style=\"font-family: Arial, sans-serif; padding: 20px; color: #222;\">\n  <h2 style=\"color:#7B3FE4;\">🏢 Nueva Propuesta de Contenido – Compañía / Negocio</h2>\n\n  <p>Contenido corporativo generado:</p>\n\n  <h3 style=\"margin-top: 25px;\">📌 <strong>Título</strong></h3>\n  <p>{{ $json.output.Titulo }}</p>\n\n  <h3 style=\"margin-top: 25px;\">📄 <strong>Contenido</strong></h3>\n  <p style=\"white-space: pre-line;\">{{ $json.output.Contenido }}\n  {{ $json.output.Objetivo }}\n  </p>\n\n  <h3 style=\"margin-top: 25px;\">📣 <strong>CTA Corporativo</strong></h3>\n  <p>{{ $json.output.CTA }}</p>\n\n  <h3 style=\"margin-top: 25px;\">🏷️ <strong>Hashtags Profesionales</strong></h3>\n  <p>{{ $json.output.Hashtags }}</p>\n\n  <h3 style=\"margin-top: 25px;\">🌐 <strong>Plataforma</strong></h3>\n  <p>{{ $json.output.Plataforma }}</p>\n\n  <hr style=\"margin-top: 40px;\">\n  <p style=\"font-size: 12px; color: #777;\">Generado por tu Agente Corporativo 🤖</p>\n</div>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        288
+      ],
+      "id": "d2f71841-df80-4ac9-a235-00f8c5831b5c",
+      "name": "HTML_negocio"
+    },
+    {
+      "parameters": {
+        "html": "<div style=\"font-family: Arial, sans-serif; padding: 20px; color: #333;\">\n  <h2 style=\"color:#4A90E2;\">💙 Nueva Propuesta de Contenido – Marca Personal</h2>\n\n  <p>Hola, aquí tienes tu contenido generado:</p>\n\n  <h3 style=\"margin-top: 25px;\">✨ <strong>Título</strong></h3>\n  <p>{{ $json.output.Titulo }}</p>\n\n  <h3 style=\"margin-top: 25px;\">📝 <strong>Contenido</strong></h3>\n  <p style=\"white-space: pre-line;\">{{ $json.output.Contenido }}</p>\n\n  <h3 style=\"margin-top: 25px;\">📣 <strong>CTA</strong></h3>\n  <p>{{ $json.output.CTA }}</p>\n\n  <h3 style=\"margin-top: 25px;\">🏷️ <strong>Hashtags</strong></h3>\n  <p>{{ $json.output.Hashtags }}</p>\n\n  <h3 style=\"margin-top: 25px;\">📌 <strong>Plataforma</strong></h3>\n  <p>{{ $json.output.Plataforma }}</p>\n\n  <hr style=\"margin-top: 40px;\">\n  <p style=\"font-size: 12px; color: #777;\">Generado por tu Agente de Marca Personal 🤖</p>\n</div>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        -416
+      ],
+      "id": "ab7a1b40-092e-4f7b-b889-1952aedb699d",
+      "name": "HTML_personal"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        608
+      ],
+      "id": "057a3382-6c6d-415b-86ca-5d5f43f259fa",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uCK6Vp9EP7q-4Lm_KRvN35-JMgg1qrw9BGZYgjuqWwE",
+          "mode": "list",
+          "cachedResultName": "Marca_Personal",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uCK6Vp9EP7q-4Lm_KRvN35-JMgg1qrw9BGZYgjuqWwE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 542764689,
+          "mode": "list",
+          "cachedResultName": "Negocio",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uCK6Vp9EP7q-4Lm_KRvN35-JMgg1qrw9BGZYgjuqWwE/edit#gid=542764689"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Objetivo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Objetivo', ``, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Objetivo",
+              "displayName": "Objetivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        736
+      ],
+      "id": "b02db163-4f6d-4497-b7d7-498294fdf3df",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1uCK6Vp9EP7q-4Lm_KRvN35-JMgg1qrw9BGZYgjuqWwE",
+          "mode": "list",
+          "cachedResultName": "Marca_Personal",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uCK6Vp9EP7q-4Lm_KRvN35-JMgg1qrw9BGZYgjuqWwE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Personal",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1uCK6Vp9EP7q-4Lm_KRvN35-JMgg1qrw9BGZYgjuqWwE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Objetivo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Objetivo', ``, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Objetivo",
+              "displayName": "Objetivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        48
+      ],
+      "id": "04e279d3-1d04-4aab-b1da-3d21346f9c08",
+      "name": "Append row in sheet in Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Cnecar Crdecae d Chat Model",
+        "height": 176,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "3fe5b491-2ab7-4a29-81f8-cfbf022844d0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Cnecar Crdecae d Chat Model",
+        "height": 176,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "72a08cb5-e72f-4c97-bf9f-97fbad53fdf1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Cnecar Crdecae d Chat Model",
+        "height": 176,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "a817ea42-c5dc-4de7-b033-c6fc964cc023",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Identificar Tipo",
+        "height": 352,
+        "width": 336,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "abad4cb6-b363-438e-96a0-fe0333d848ce",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Tomar Datos del Brief",
+        "height": 432,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -544,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "c788a2ff-f081-4142-8d5e-cf13f4ae6b9a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Brief cliente",
+        "height": 288,
+        "width": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -928,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "c4636722-7413-4f2f-ad29-9fe169d24e90",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 1520,
+        "width": 960,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        288,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "ed13f18e-0422-429c-a551-10051534ef93",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheett",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        736,
+        704
+      ],
+      "typeVersion": 1,
+      "id": "194a9b95-f930-47c1-b67b-287157f37287",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheett",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "4832e88a-ed01-4534-b2f7-d5249a84ca8a",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Parsear datos JSON",
+        "height": 256,
+        "width": 272,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        976,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "e9dfca1a-5973-4522-bd98-352d2dab6f66",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 272,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1760,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "e102b06b-5279-47c1-8aad-35423a4c9358",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Enriquecimiento y notificaion de propuesta",
+        "height": 1216,
+        "width": 832,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "c5911f46-a785-41a9-b344-50de5234fbd9",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "🧩 Descripción del Workflow: Personal_Branding\n🎯 Objetivo del Workflow\nAutomatizar la creación de contenido profesional tanto para Marca Personal como para Compañía/Negocio, generando textos optimizados según la identidad seleccionada, guardándolos en Google Sheets y notificando al usuario por email con una plantilla HTML personalizada.\n\n🚀 ¿Qué hace este workflow?\nEste flujo recibe un brief del usuario mediante un Form Trigger, procesa la información con IA, genera contenido adaptado a la identidad seleccionada (Personal o Negocio), lo guarda en Google Sheets y envía una notificación por correo con el contenido formateado en HTML.\n\n🔄 Flujo general\nForm Trigger → Captura identidad, idea, plataforma, tipo de contenido, formalidad, objetivo, público, longitud, idioma y CTA.\n\nSet Node (Edit Fields) → Normaliza los datos del formulario para que la IA los use correctamente.\n\nSwitch Node → Determina si el contenido debe generarse como Marca Personal o Compañía/Negocio.\n\nAgente IA (dos versiones)\n\nAgente_Marca_Personal → Genera contenido emocional, humano y con storytelling.\n\nAgente_Negocio → Genera contenido corporativo, profesional y orientado a resultados.\n\nStructured Output Parser → Convierte la respuesta de la IA en un JSON limpio y estructurado.\n\nGoogle Sheets → Guarda el contenido generado y marca el estado como “Pendiente a Grabar”.\n\nHTML Nodes → Construyen la plantilla HTML personalizada según el tipo de identidad.\n\nGmail Node → Envía el contenido final al correo del usuario.\n\n🧠 Inteligencia aplicada\nEl workflow utiliza dos prompts altamente diferenciados:\n\n🔵 Marca Personal\nTono humano, emocional y cercano\n\nStorytelling\n\nReflexiones personales\n\nCTA natural\n\nHashtags limitados\n\nAdaptación a plataforma\n\n🟣 Compañía/Negocio\nTono profesional y corporativo\n\nBeneficios, procesos y resultados\n\nCTA empresarial\n\nHashtags profesionales\n\nEnfoque en valor y autoridad\n\n💡 Ventajas del Workflow\nAutomatización total del proceso creativo.\n\nDoble identidad: contenido adaptado a Marca Personal o Empresa.\n\nConsistencia en tono, estilo y estructura.\n\nAhorro de tiempo: contenido generado en segundos.\n\nRegistro automático en Google Sheets para control editorial.\n\nNotificación inmediata por email con diseño HTML profesional.\n\nEscalable: puedes añadir más plataformas, estilos o idiomas.\n\n🛠️ Utilidad práctica\nEste workflow es ideal para:\n\nCreadores de contenido\n\nEmprendedores\n\nAgencias de marketing\n\nCommunity managers\n\nEmpresas que necesitan contenido constante\n\nAutomatización de calendarios editoriales\n\nGeneración rápida de propuestas para clientes",
+        "height": 1744,
+        "width": 1248,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2144,
+        -784
+      ],
+      "typeVersion": 1,
+      "id": "1679ecf5-04c4-4968-b1fc-e30d3275610c",
+      "name": "Sticky Note12"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente_Negocio",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente_Marca_Personal",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Agente_Marca_Personal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agente_Negocio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente_Marca_Personal": {
+      "main": [
+        [
+          {
+            "node": "HTML_personal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente_Negocio": {
+      "main": [
+        [
+          {
+            "node": "HTML_negocio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agente_Negocio",
+            "type": "ai_outputParser",
+            "index": 0
+          },
+          {
+            "node": "Agente_Marca_Personal",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente_Negocio",
+            "type": "ai_languageModel",
+            "index": 1
+          },
+          {
+            "node": "Agente_Marca_Personal",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente_Negocio",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente_Marca_Personal",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML_personal": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML_negocio": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2f9b041e-73c3-4104-87d0-68a771b50940",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "4G0g10aDPPkiwc3o",
+  "tags": []
+}

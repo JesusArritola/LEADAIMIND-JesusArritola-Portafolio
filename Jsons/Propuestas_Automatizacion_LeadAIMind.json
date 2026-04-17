@@ -1,0 +1,769 @@
+{
+  "name": "Propuestas_Automatizacion_LeadAIMind",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        736,
+        -352
+      ],
+      "id": "f36e4c10-01e9-4cc7-8246-a229ccde0f61",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        -352
+      ],
+      "id": "96c4fe33-973c-4edf-a805-a490cd6e906d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Asunto\": \"aqui deberas colocar el asunto del correo\",\n\t\"Cuerpo\": \"aqui deberas colocarl el cuerpot del correo \"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1280,
+        -432
+      ],
+      "id": "23e996e9-b79b-44f4-b8d9-cce71bfcbc45",
+      "name": "Structured Output Parser",
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Vas a utilizar los siguientes datos del negocio para generar la propuesta deseada : \nNombre completo : {{ $json.fullName }}\nCorreo : {{ $json.email }}\nPosicion de la persona : {{ $json.position }}\nCiudad : {{ $json.city }}\nOrganzaccion Nombre : {{ $json.organizationName }}\nOrganizacion Industria : {{ $json.organizationIndustry }}\nOrganizacion Tamaño(personas) : {{ $json.organizationSize }}\nDescripcion Organizacion : {{ $json.organizationDescription }}\nOrganizacion Especialidad : {{ $json.organizationSpecialities }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Objetivo del agente:  \nGenerar correos en frío profesionales y personalizados para negocios que podrían estar perdiendo clientes por falta de sistemas automáticos. El correo debe ser claro, directo y atractivo, mostrando cómo la automatización puede resolver sus problemas. El resultado debe estar formateado con párrafos separados y listas cuando corresponda, para que el mensaje sea fácil de leer y visualmente profesional.\n\nAdemás, el correo debe incluir plecas (│, ─, ║, etc.), emojis estratégicos y separadores visuales para captar más fácilmente la atención del remitente.\n\n*****Reglas Criticas: \n-Utiliza los datos de cada usuario para realizar un ataque quirurjico con la propuesta mediante el correo que vas a realizar.\n-Utiliza la informacion para darle valor, ventajas y datos exactos de lo que ganaria con estas soluciones a su problema(KPI de ahorro de tiempo o ganancia de dinero), etc.\n-Asegurate de analizar cada uno de los datos y hacer un propuesta que no se pueda resistir.\n-Nunca hables de una automatizacion en concreto por ejemplo mencionar un chatbot o algo de eso , nunca lo uses , recuerda que estas hablando con personas que no saben de eso , simplemente muestrales valor y beneficios de resolver esos problemas.\n\nPrompt\nRol del agente:  \nDevuelve el cuerpo del correo en formato HTML con párrafos <p> y listas <ul><li>.\nNo uses texto plano con \\n ni asteriscos.\nActúa como un redactor profesional de correos B2B especializado en ventas y automatización.\n\nDatos de entrada (variables del negocio):\n\nNombre del negocio\n\nSector/industria\n\nServicios o productos principales\n\nProblema identificado (ejemplo: pérdida de clientes, procesos manuales lentos, falta de seguimiento)\n\nPersona de contacto (ejemplo: nombre del responsable o gerente)\n\nInstrucciones de redacción:\n\nUsa un tono profesional, directo y cordial.\n\nMenciona el nombre del negocio y su sector para personalizar el mensaje.\n\nIdentifica el punto de dolor del negocio.\n\nExplica brevemente cómo la automatización puede resolver ese problema.\n\nIncluye una propuesta clara y atractiva que muestre beneficios inmediatos.\n\nPresenta los beneficios en lista con viñetas para mayor claridad.\n\nFinaliza con un CTA (llamado a la acción) sencillo y directo.\n\nSiempre despídete con la firma: JesusMiguel, Especialista en Automatización, listo para ayudarte.\n\nFormatea el correo con párrafos separados y saltos de línea claros.\n\nAgrega plecas, emojis y separadores visuales para atraer más fácilmente la atención del remitente.\n\nFormato del correo\nAsunto atractivo y profesional con emoji\n\nSaludo personalizado con pleca\n\nIntroducción breve (quién eres y por qué escribes)\n\nIdentificación del problema (punto de dolor del negocio)\n\nPropuesta de solución (cómo la automatización ayuda)\n\nBeneficios claros en lista con plecas y emojis\n\nCTA final con emoji\n\nFirma profesional con plecas y emoji\n\nEjemplo de salida esperada\nAsunto: 🚀 Optimización de procesos y crecimiento en Pop Strategy │\n\n<p>│ Estimada/o responsable │</p>\n\n<p>Mi nombre es <strong>JesusMiguel</strong> y me especializo en ayudar a agencias de marketing estratégico y publicidad, como <strong>Pop Strategy</strong>, a optimizar sus operaciones y potenciar su crecimiento.</p>\n\n<p>Entiendo que en el dinámico mundo del marketing, la gestión manual de campañas, el seguimiento de leads y la optimización de procesos internos pueden volverse rápidamente complejos y consumir un tiempo valioso. Esto podría resultar en oportunidades perdidas, respuestas tardías a clientes o una experiencia inconsistente para sus socios y clientes.</p>\n\n<p>✨ <strong>Imagínese contar con sistemas automáticos</strong> que gestionen de manera eficiente el seguimiento de leads y las campañas, asegurando que cada posible cliente reciba una respuesta rápida y personalizada, sin esfuerzo manual.</p>\n\n<hr/>\n\n<p>Implementar soluciones de automatización puede significar:</p>\n<ul>\n<li>✅ │ Un <strong>ahorro significativo de tiempo</strong> para su equipo</li>\n<li>🤝 │ Una <strong>mejora drástica en la experiencia</strong> de clientes y socios</li>\n<li>📈 │ Un <strong>aumento tangible en la conversión</strong> de leads y ventas</li>\n</ul>\n\n<hr/>\n\n<p>📅 Si esta interesado y tiene 5 minutos de su valioso tiempo entre y rellene su consulta gratuita y continuemos analizando su situacion mas de cerca para llegar a la mejor solucion : \n<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:0;\"> <tr> <td align=\"center\"> <a href=\"https://v0-leadaimind.vercel.app\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display:inline-block; padding:12px 20px; font-family:Arial, sans-serif; font-size:16px; color:#ffffff; background-color:#1f7aec; text-decoration:none; border-radius:6px; font-weight:600;\"> Consulta Gratis </a> </td> </tr> </table>\n\n<p>────────────────────────────</p>\n\n<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n  <tr>\n    <td style=\"padding:0; text-align:left;\">\n      \n      <!-- TABLA PRINCIPAL: 2 filas -->\n      <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\">\n        \n        <!-- FILA 1: Logo + frase -->\n        <tr>\n          <td style=\"padding:0; vertical-align:middle;\">\n            <a href=\"https://ibb.co/23cKkzyK\">\n              <img src=\"https://i.ibb.co/60vYXfyM/LOGO-Lead-AIMind.png\" alt=\"LOGO-Lead-AIMind\" border=\"0\" style=\"display:block; border-radius:12px; width:80px;\">\n            </a>\n          </td>\n          <td style=\"vertical-align:middle; padding-left:10px;\">\n            <p style=\"margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; font-weight:bold; text-align:left; white-space:nowrap;\">\n              Estrategia con Inteligencia Resultados con Precisión.\n            </p>\n          </td>\n        </tr>\n        \n        <!-- FILA 2: Texto debajo (ocupa 2 columnas) -->\n        <tr>\n          <td colspan=\"2\" style=\"padding-top:8px;\">\n            <p style=\"margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; font-weight:bold; text-align:left;\">\n              JesusMiguel │ Especialista en Automatización │ Listo para ayudarte 🚀\n            </p>\n          </td>\n        </tr>\n        \n      </table>\n      \n    </td>\n  </tr>\n</table>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1104,
+        -688
+      ],
+      "id": "b7bf74ae-7e9e-44be-afce-e547bcbbc1b6",
+      "name": "Generador_Correos_Personalizados",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmalonsoarritola@gmail.com",
+        "toEmail": "={{ $('Loop Over Items').item.json.email }}",
+        "subject": "={{ $json.output.Asunto }}",
+        "html": "={{ $json.output.Cuerpo }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1952,
+        -688
+      ],
+      "id": "6e84821e-f52b-4b4f-8020-3a44621f14f7",
+      "name": "Send email",
+      "webhookId": "493d100c-374a-4a9a-9cd9-40e728f7edcf",
+      "retryOnFail": false,
+      "credentials": {
+        "smtp": {
+          "id": "rbkf828y2Cr5tuK5",
+          "name": "SMTP account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM",
+          "mode": "list",
+          "cachedResultName": "TWIN_Propuestas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1703482226,
+          "mode": "list",
+          "cachedResultName": "Copia de IGLEADS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit#gid=1703482226"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -336,
+        -720
+      ],
+      "id": "a758faf5-4fd8-4053-9b3d-4ed57fd5d6a6",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        416,
+        -720
+      ],
+      "id": "9f35711c-ec04-4226-b74c-3197b871ed3b",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "content": "Correo Frio con propuesta mas form mas logo ",
+        "height": 832,
+        "width": 1984,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        224,
+        -832
+      ],
+      "typeVersion": 1,
+      "id": "a4a314df-e69f-4865-a23e-2b5022bf0321",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        976,
+        -1072
+      ],
+      "id": "abab6955-8a66-4753-b30f-2d6d4719b425",
+      "name": "No Operation, do nothing1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "Chat models",
+        "height": 288,
+        "width": 544,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        -464
+      ],
+      "typeVersion": 1,
+      "id": "2141f3e8-a2f7-4361-948c-6b4f1061ff02",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM",
+          "mode": "list",
+          "cachedResultName": "TWIN_Propuestas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1703482226,
+          "mode": "list",
+          "cachedResultName": "Copia de IGLEADS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit#gid=1703482226"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "Enviada",
+            "Propuesta": "={{ $('Generador_Correos_Personalizados').item.json.output }}",
+            "email": "={{ $('Loop Over Items').item.json.email }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "fullName",
+              "displayName": "fullName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "firstName",
+              "displayName": "firstName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "lastName",
+              "displayName": "lastName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "personal_email",
+              "displayName": "personal_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "phone_numbers",
+              "displayName": "phone_numbers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "position",
+              "displayName": "position",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "linkedinUrl",
+              "displayName": "linkedinUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "seniority",
+              "displayName": "seniority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "functional",
+              "displayName": "functional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationName",
+              "displayName": "organizationName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationWebsite",
+              "displayName": "organizationWebsite",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationLinkedinUrl",
+              "displayName": "organizationLinkedinUrl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationFoundedYear",
+              "displayName": "organizationFoundedYear",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationIndustry",
+              "displayName": "organizationIndustry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationSize",
+              "displayName": "organizationSize",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationDescription",
+              "displayName": "organizationDescription",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationSpecialities",
+              "displayName": "organizationSpecialities",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationCity",
+              "displayName": "organizationCity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationState",
+              "displayName": "organizationState",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "organizationCountry",
+              "displayName": "organizationCountry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Propuesta",
+              "displayName": "Propuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1648,
+        -320
+      ],
+      "id": "6edbf1c3-781a-4d11-8e24-62d48ed148ea",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -320
+      ],
+      "id": "24778833-182c-4109-a007-f1b9e72c797c",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmalonsoarritola@gmail.com",
+        "toEmail": "jesusmiguela546@gmail.com",
+        "subject": "Querido CEO tenemos buenas noticias!!!!",
+        "html": "Se ha completado correctamente la campaña de correos frios de TWINLATAMHUNTER.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        -1072
+      ],
+      "id": "607cf1e2-ab7c-4bfa-9728-974104a0334f",
+      "name": "Send email1",
+      "webhookId": "c8928be1-5145-461f-828a-d9b18da7b13a",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        272,
+        -1072
+      ],
+      "id": "5486bfc5-d300-485c-a552-e889841b32bb",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "1ab18073-6511-49d5-b46e-a95e08d6a57a",
+              "leftValue": "={{ $json.Estado }}",
+              "rightValue": "Enviada",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        784,
+        -704
+      ],
+      "id": "516b1490-bb43-4338-a854-6e7909dfa5c7",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generador_Correos_Personalizados",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generador_Correos_Personalizados",
+            "type": "ai_languageModel",
+            "index": 1
+          },
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generador_Correos_Personalizados",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generador_Correos_Personalizados": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generador_Correos_Personalizados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "096e5d41-11c3-4a7b-a345-b60fc3b4537f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "MpafMkqGl0KJF9yNoCDJF",
+  "tags": []
+}

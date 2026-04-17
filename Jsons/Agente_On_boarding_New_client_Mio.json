@@ -1,0 +1,545 @@
+{
+  "name": "Agente_On_boarding_New_client",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Bienvenido",
+        "formDescription": "Completa el formulario y forma parte de nuestra comunidad.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Apellido",
+              "placeholder": "LastName",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Empresa",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tagline",
+              "fieldType": "textarea",
+              "placeholder": "Que espera conseguir con nuestra colaboracion en los proximos 3 meses",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -18528,
+        672
+      ],
+      "id": "20103c44-89ba-4e26-831d-c6b6827d696e",
+      "name": "On form submission",
+      "webhookId": "f5e9763c-551b-4f43-8820-a1ddd52c7b15"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un agente OnBoarding especializado en  crear correos electrónicos de bienvenida cálido para un nuevo cliente basado en su información .Queremos que el correo sea conciso y amigable pero también profesional .Debe estar personalizado para ellos según su industria y lo que esperan obtener de nuestra colaboración.\nDebes utilizar saltos de linea cuando lo creas necesario para hacer el correo mas presencial y profesional.\n\nAquí está la información sobre el cliente\nNombre: {{ $json.Nombre }}\nCorreo: {{ $json.Correo }}\nEmpresa: {{ $json.Empresa }}\nObjetivo: {{ $json.Tagline }}\n\nAsegúrate de que siempre se firme el correo electrónico como \"JM\" la empresa es \"DipusAI\"  .No incluyas variables en la firma si la información es desconocida nunca queremos [Tu Nombre] o [Tu Información de Contacto] etc..\n\nPresenta esta información en 3 campos separados\nSubject: El asunto del correo electrónico\nBody: El cuerpo del correo electrónico\nEmail:{{ $json.Correo }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -17984,
+        352
+      ],
+      "id": "f60889eb-311b-4b64-90b9-f507cb742f6d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -18032,
+        624
+      ],
+      "id": "d4de0fa7-eed7-44c4-82c0-e994bf51e184",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.output }}"
+            },
+            {
+              "role": "system",
+              "content": "=Analiza la consulta json y muestra los parámetros por separado de esta entrada {{ $json.output }}: \n\nSubject: Aqui pondras el subject\nBody : Aqui pondras el cuerpo\nEmail : Aqui pondras el correo\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -17664,
+        352
+      ],
+      "id": "0c47fd9f-1efc-4d18-8adb-51f1a92760b0",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.output[0].content[0].text.Email }}",
+        "subject": "={{ $json.output[0].content[0].text.Subject }}",
+        "message": "={{ $json.output[0].content[0].text.Body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -17328,
+        352
+      ],
+      "id": "637df3cf-687e-4e2a-accf-0e647721703f",
+      "name": "Send a message",
+      "webhookId": "36633262-1734-4c9a-88c3-2c8b90d941a8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Toma la información del cliente proporcionada y crea un resumen de su perfil de cliente Aquí está la información de un cliente : \nName:{{ $json.Nombre }}\nEmpresa:{{ $json.Empresa }}\nObjetivo:{{ $json.Tagline }}\n\nDevuelve los siguientes parametros separados :\nName:{{ $json.Nombre }}\nEmail:{{ $json.Correo }}\nResumen: Resumen del cliente basado en la información",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -17968,
+        896
+      ],
+      "id": "e033242c-a530-4592-b4bf-b1aa98a94e23",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -18032,
+        1168
+      ],
+      "id": "45e97687-5830-4d05-9c4e-c97b61a6d2a1",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.output }}"
+            },
+            {
+              "role": "system",
+              "content": "=Analiza la consulta  y muestra los parámetros separados en 3 campos : \n\nNombre\nCorreo\nResumen"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -17616,
+        896
+      ],
+      "id": "2b3b97a6-f0e3-4506-b754-35b2576ad902",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1odmBqBW2X7ijTvhpFfbMbJAVO12FA88YnAH2fO5HnCE",
+          "mode": "list",
+          "cachedResultName": "ON_Boarding",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1odmBqBW2X7ijTvhpFfbMbJAVO12FA88YnAH2fO5HnCE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 730242356,
+          "mode": "list",
+          "cachedResultName": "Clientes_nuevos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1odmBqBW2X7ijTvhpFfbMbJAVO12FA88YnAH2fO5HnCE/edit#gid=730242356"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.output[0].content[0].text.Nombre }}",
+            "Correo": "={{ $json.output[0].content[0].text.Correo }}",
+            "Resumen": "={{ $json.output[0].content[0].text.Resumen }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Resumen",
+              "displayName": "Resumen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -17184,
+        896
+      ],
+      "id": "edc04292-ced5-4f1b-9de9-718aae326a07",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "BRIEF CLIENTE",
+        "height": 240,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18672,
+        608
+      ],
+      "typeVersion": 1,
+      "id": "8c423f0d-0fa2-4e11-9d1c-7ee154f702d3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Usadas :\n-Form Trigger : Usado para captar el brief cliente.\n-Ai Agent : Usado para procesar la informacion obetnida del formulario.\n-OpenAI : Usado para tranformar y terminar de procesar la informacion brindada por el AI Agent.\n-Gmail : Usado para enviar el correo al nuevo cliente.\n-Google Sheets : Usado para almacenar los datos del nuevo cliente",
+        "height": 256,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16944,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "d52bc65f-dd15-4647-b7dc-0ab428a62f4a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "On Boarding New Client : \nDescripcion : \nAutomatizacion para realizar un OnBoarding de los nuevos clientes que rellenen el formulario , enviarle un mensaje de bienvenida y almacenar sus datos en un google sheet.\n\nFuncionalidad : \nEnviar correos a los nuevos clientes y guardar sus datos asegurando una calida bienvenida a la comunidad.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que brindado un brief a traves de un formulario permite dar la bienvenida a nuevos clientes haciendo mas facil captar su atencion.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Escalabilidad : Es un sistema completamente escalable segun la empresa y los requisitos requeridos.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 320,
+        "width": 752,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16944,
+        784
+      ],
+      "typeVersion": 1,
+      "id": "4f481018-56b3-4208-b42a-272f6bd8701a",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Resumen PERFIL CLIENTE",
+        "height": 528,
+        "width": 1136,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        784
+      ],
+      "typeVersion": 1,
+      "id": "8c8195b4-fa46-4565-a269-b54aa3419f4c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "CORREO DE BIENVENIDA",
+        "height": 480,
+        "width": 992,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "138f8de3-77ed-4ff9-b30b-5a62596d6d49",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE GOOGLE SHEETS",
+        "height": 192,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -17264,
+        848
+      ],
+      "typeVersion": 1,
+      "id": "967c3fdd-e84c-4b61-82a9-b7f49cc8d510",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE CHAT MODEL",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        1152
+      ],
+      "typeVersion": 1,
+      "id": "f9fe1023-f2ff-425f-ad05-79937f8eabba",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE CHAT MODEL",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -18128,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "ca1fc784-31ee-484c-82d1-cde6fba55e1e",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "CONECTAR CREDENCIALES DE GMAIL",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -17376,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "ae449328-38a0-4595-b3d0-7b5fa1c42575",
+      "name": "Sticky Note8"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "96d73aef-6950-4af9-a20f-7de88c082ab3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "ye9D8DeuT7fSq7LW",
+  "tags": []
+}

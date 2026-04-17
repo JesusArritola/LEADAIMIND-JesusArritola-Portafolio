@@ -1,0 +1,907 @@
+{
+  "name": "paso 2_WF_Empowering",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "fcc0600a-81ef-4501-8957-d3f0cc5d724e",
+      "name": "OpenAI GPT-4o (Full)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        400,
+        176
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Plan",
+        "key": "=Plan_{{ $('Webhook Stripe').item.json.body.data.object.customer_details.email }}",
+        "options": {}
+      },
+      "id": "3c860199-48ac-4891-8397-13e59b2bed66",
+      "name": "Recuperar Datos",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        224,
+        -32
+      ],
+      "credentials": {
+        "redis": {
+          "id": "kMAR05BH1VYFWni4",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "check-event-type",
+              "leftValue": "={{ $json.body.type }}",
+              "rightValue": "checkout.session.completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "776e429e-48e2-4527-adb6-44fb52342823",
+      "name": "¿Pago Completado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "luz",
+        "options": {}
+      },
+      "id": "561ec644-c7a3-4d45-ba0c-55878ae13539",
+      "name": "Webhook Stripe",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1072,
+        0
+      ],
+      "webhookId": "stripe-webhook-dandote"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        400
+      ],
+      "id": "d5b0c18f-1271-4a2e-a6e5-6c4acdd7583f",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ed43833-a103-4adc-84e2-f1678ebd78ce",
+              "name": "Correo",
+              "value": "={{ $json.body.data.object.customer_details.email }}",
+              "type": "string"
+            },
+            {
+              "id": "c559a73d-4215-468d-bc66-92589980b011",
+              "name": "Nombre",
+              "value": "={{ $json.body.data.object.customer_details.individual_name }}",
+              "type": "string"
+            },
+            {
+              "id": "6f647f70-a325-4eb6-8887-034145806afe",
+              "name": "BusinessName",
+              "value": "={{ $json.body.data.object.customer_details.business_name }}",
+              "type": "string"
+            },
+            {
+              "id": "a609cbc8-c9e6-420c-b135-269fb3476b9f",
+              "name": "Estado",
+              "value": "Pagado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        -16
+      ],
+      "id": "ec1288c6-c065-4829-b1e6-68fbee69be71",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').first().json.Correo }}",
+        "subject": "=Plan Completo para {{ $('Edit Fields').first().json.Nombre }}",
+        "message": "=Aqui tienes tu Plan de negocio, Dandote la Luz\n\n{{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        -32
+      ],
+      "id": "7505225e-4928-4d6d-92f0-46dda41b3917",
+      "name": "Send a message",
+      "webhookId": "6baf4987-9080-45d0-84c1-ee10790ebc3e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "falta convertir a pdf",
+        "height": 352,
+        "width": 448
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "45ca6334-c212-476e-8238-3a6d1bd52754",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "ajustar y agregar prompt",
+        "height": 768,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "e281c237-7493-4452-a64a-b5a6a5ac045e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw",
+          "mode": "list",
+          "cachedResultName": "Formulario_Dandote_la_Luz",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "=Pagado",
+            "Correo": "={{ $json.Correo }}"
+          },
+          "matchingColumns": [
+            "Correo"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Pais",
+              "displayName": "Pais",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Como sera el negocio",
+              "displayName": "Como sera el negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Punto de Partida",
+              "displayName": "Punto de Partida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Inversion",
+              "displayName": "Inversion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tiempo a Dedicar",
+              "displayName": "Tiempo a Dedicar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Experiencia",
+              "displayName": "Experiencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tipo de Negocio",
+              "displayName": "Tipo de Negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Punto de Dolor",
+              "displayName": "Punto de Dolor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Proyeccion",
+              "displayName": "Proyeccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Negocio Buscado",
+              "displayName": "Negocio Buscado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Orden y Ejecucion",
+              "displayName": "Orden y Ejecucion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Primeros Clientes",
+              "displayName": "Primeros Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        16,
+        256
+      ],
+      "id": "cdbdd337-6afc-4bea-9b24-a90d7b87fcae",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw",
+          "mode": "list",
+          "cachedResultName": "Formulario_Dandote_la_Luz",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -176,
+        256
+      ],
+      "id": "d91f4241-984c-47dd-9eb8-08225867d2a6",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "apiKey",
+        "outputFormat": "pdf",
+        "inputBinaryData": false,
+        "inputFileContent": "={{ $json.emailBody }}",
+        "inputFilename": "=Plan_{{ $json.userName }}_{{ $json.formattedDate }}.html",
+        "additionalOptions": "={\n  \"engine\": \"chrome\",\n  \"output_filename\": \"=Plan_{{ $json.userName }}_{{ $now.format('DD-MM-YYYY') }}.pdf\"\n}"
+      },
+      "type": "@cloudconvert/n8n-nodes-cloudconvert.cloudConvert",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        -32
+      ],
+      "id": "7662994b-6b93-44ec-a624-559e5b07ff0c",
+      "name": "CloudConvert",
+      "credentials": {
+        "cloudConvertApi": {
+          "id": "ejhGXnAUE5bnOOwB",
+          "name": "CloudConvert account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. EXTRAE EL NOMBRE (Importante para el PDF)\nconst inputData = $input.first().json;\nconst userName = inputData.Nombre || inputData.userName || inputData['Tu nombre'] || 'Cliente';\n\n// 2. BUSCAR EL CONTENIDO\nlet rawText = inputData.output || inputData.summaryText || inputData.text || inputData.Plan;\n\n// 3. SI ES ARRAY, TOMAR EL PRIMERO\nif (Array.isArray(rawText) && rawText.length > 0) {\n    rawText = rawText[0];\n}\n\n// 4. SI NO HAY TEXTO, DEVOLVER ERROR\nif (!rawText) {\n    return [{ json: { error: \"No se encontró el texto del plan.\" } }];\n}\n\n// 5. CONVERTIR MARKDOWN A HTML\nlet html = rawText.replace(/^## (.*)/gm, '<h2>$1</h2>');\nhtml = html.replace(/^### (.*)/gm, '<h3>$1</h3>');\nhtml = html.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');\nhtml = html.replace(/---/gm, '<hr style=\"border: 0; border-top: 1px solid #eee; margin: 20px 0;\">');\nhtml = html.replace(/^- (.*)/gm, '<li style=\"margin-bottom: 5px;\">$1</li>');\nhtml = html.replace(/✅/g, '<span style=\"color: #28a745;\">✅</span>');\nhtml = html.replace(/⚠️/g, '<span style=\"color: #ffc107;\">⚠️</span>');\nhtml = html.replace(/☐/g, '<span style=\"color: #999;\">☐</span>');\n\n// 6. GENERAR FECHA CORTA PARA EL NOMBRE DEL ARCHIVO (Lógica Agregada)\nconst dateObj = new Date();\nconst day = String(dateObj.getDate()).padStart(2, '0'); // Día con dos dígitos (ej: 22)\nconst month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos (ej: 01)\nconst year = dateObj.getFullYear();\nconst formattedDate = `${day}-${month}-${year}`; // Resultado: 22-01-2025\n\n// 6.1. GENERAR FECHA LARGA PARA EL CUERPO DEL EMAIL (Para que se lea bien)\nconst longDate = dateObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });\n\n// 7. INSERTAR FECHA EN EL HTML\nhtml = html.replace('[Fecha actual]', longDate);\nhtml = html.replace(/\\n/g, '<br>');\n\n// 8. PLANTILLA FINAL HTML\nconst finalHtml = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <style>\n    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }\n    .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }\n    h1 { color: #333333; font-size: 24px; border-bottom: 2px solid #007bff; padding-bottom: 10px; }\n    h2 { color: #007bff; font-size: 20px; margin-top: 25px; background-color: #f8f9fa; padding: 10px; border-left:5px solid #007bff; }\n    h3 { color: #555; font-size: 18px; margin-top: 20px; }\n    p, li { line-height: 1.6; color: #555555; }\n    strong { color: #000; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    ${html}\n  </div>\n</body>\n</html>\n`;\n\n// 9. RETORNAR\nreturn [\n  {\n    json: {\n      emailBody: finalHtml,\n      userName: $('Edit Fields').first().json.Nombre,\n      formattedDate: formattedDate\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        -32
+      ],
+      "id": "608579ef-8970-4d03-8699-c70b0e3643f2",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "content": "Este es el prompt completo con la sección legal exhaustiva para barberías en Miami, Florida. Incluye:\n✅ Roadmap legal paso a paso (18 pasos organizados en 7 fases)\n✅ Costos exactos de cada licencia y permiso\n✅ Timelines realistas para cada trámite\n✅ Requisitos físicos del local\n✅ Penalidades por incumplimiento\n✅ Contactos de todas las agencias\n✅ Checklist de documentos a mantener\n✅ Costos iniciales y recurrentes desglosados",
+        "height": 560,
+        "width": 624,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "cb9ef814-c7df-4e6c-ab0b-1d6112457afe",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "attachment data",
+        "height": 432,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1696,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "8f239112-42fe-45a5-90fb-c1d659e6cc71",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Eres un experto consultor de negocios con 20+ años de experiencia. El cliente YA PAGÓ por el plan completo.\n\n📋 FORMATO DEL PLAN COMPLETO:\n\n---\n🧠 Tu Plan de Negocio Completo – Dándote la Luz\n📅 Generado: [Fecha actual]\n👤 Para: [Nombre del cliente]\n📍 Ubicación: [Ciudad/País]\n\n═══════════════════════════════════════════\n\n## 1. TU PUNTO DE PARTIDA\n\n### ✅ Lo que tienes hoy\n[Análisis detallado de recursos actuales]\n\n### ⚠️ Tus limitaciones reales\n[Análisis honesto de restricciones]\n\n### 💡 Tipo de negocio viable AHORA\n[Recomendación específica y justificada]\n\n═══════════════════════════════════════════\n\n## 2. PROYECCIÓN REALISTA\n\n### 🎯 Cómo debería verse tu negocio bien hecho\n**Año 1:** [Descripción realista]\n**Año 2:** [Descripción realista]\n**Año 3:** [Descripción realista]\n\n### 🚫 Qué NO conviene intentar todavía\n[Lista de errores comunes a evitar dado su perfil]\n\n### 📈 Qué cambios necesitarías para escalar\n[Requisitos concretos para crecer]\n\n═══════════════════════════════════════════\n\n## 3. PLAN DE CONSTRUCCIÓN\n\n### 💰 FINANZAS: Cómo ordenarte desde el día 1\n- Cuenta bancaria separada\n- Sistema de registro simple\n- Pricing inicial recomendado\n- Punto de equilibrio estimado\n- Reserva de emergencia sugerida\n\n### ⚙️ OPERACIONES: Sistemas mínimos\n- Herramientas necesarias (lista específica)\n- Procesos básicos a documentar\n- Métricas clave a trackear\n- Tiempo estimado por actividad\n\n### 📢 MARKETING: Cómo atraer clientes sin romper la operación\n- Canal principal recomendado (y por qué)\n- Mensaje central / propuesta de valor\n- Primeras 3 acciones de marketing\n- Presupuesto sugerido\n- Qué evitar en marketing\n\n═══════════════════════════════════════════\n\n## 4. CUMPLIMIENTO LEGAL Y REGULATORIO - BARBERÍA EN MIAMI, FLORIDA\n\n### 📋 ROADMAP LEGAL COMPLETO (PASO A PASO)\n\n**FASE 1: ESTRUCTURA LEGAL DEL NEGOCIO (Semanas 1-2)**\n\n**Paso 1: Registrar la Entidad Comercial**\n☐ Decidir estructura legal (LLC recomendado para barberías)\n☐ Registrar en Florida Division of Corporations (sunbiz.org)\n   - Costo: $125 para LLC\n   - Tiempo: 3-5 días hábiles\n   - Documentos necesarios: Articles of Organization\n☐ Elegir y registrar nombre comercial (DBA si es diferente al legal)\n   - Verificar disponibilidad en sunbiz.org\n   - Costo adicional DBA: $50\n\n**Paso 2: Obtener EIN (Employer Identification Number)**\n☐ Solicitar EIN del IRS online (gratis)\n   - Website: irs.gov/ein\n   - Tiempo: Inmediato (online)\n   - Necesario para: impuestos, cuenta bancaria, contratar empleados\n☐ Guardar carta de confirmación del EIN\n\n**Paso 3: Registro Fiscal Estatal**\n☐ Registrarse con Florida Department of Revenue\n   - Website: floridarevenue.com\n   - Obtener Sales Tax Certificate (si vendes productos)\n   - Costo: Gratis\n   - Tiempo: 1-2 semanas\n\n---\n\n**FASE 2: LICENCIAS PROFESIONALES Y DEL ESTABLECIMIENTO (Semanas 3-6)**\n\n**Paso 4: Licencia de Barbero Individual (para cada barbero)**\n☐ Requisito OBLIGATORIO para cada barbero que trabaje:\n   - 1,200 horas de formación certificada (600 teoría + 600 práctica)\n   - Aprobar examen estatal de Florida\n   - Costo examen: $100 - $200\n   - Costo licencia inicial: $60 - $200\n☐ Renovación cada 2 años (antes del 31 de julio años pares)\n   - Costo renovación: $70 ($95 si es tardía)\n   - Educación continua: 2 horas cada 2 años\n☐ Aplicar en: Florida Department of Business and Professional Regulation (DBPR)\n   - Website: myfloridalicense.com/dbpr\n\n**Paso 5: Licencia de Barbershop (Establecimiento)**\n☐ Solicitar Barbershop License ante DBPR\n   - Aplicación online en myfloridalicense.com\n   - Costo: $200 - $400 inicial\n   - Renovación anual: $100 - $200\n☐ Documentos requeridos:\n   - Proof of LLC/entidad registrada\n   - EIN\n   - Lease agreement del local\n   - Floor plan del establecimiento\n   - Proof of insurance\n   - Licencias de barbero de todos los empleados\n☐ Tiempo de aprobación: 4-8 semanas\n\n**Paso 6: Inspección del Local**\n☐ Requisitos mínimos del espacio OBLIGATORIOS:\n   - Mínimo 100 pies cuadrados (sin contar baño)\n   - Máximo 1 barbero por cada 100 pies cuadrados\n   - Baño con lavabo dentro del local O a máximo 300 pies\n   - Paredes permanentes si colinda con otro negocio\n   - Iluminación adecuada (mínimo 50 foot-candles)\n   - Ventilación apropiada\n☐ Preparar local para inspección pre-apertura\n☐ Coordinar inspección con DBPR (obligatoria antes de abrir)\n\n---\n\n**FASE 3: PERMISOS LOCALES Y MUNICIPALES (Semanas 4-8)**\n\n**Paso 7: Business Tax Receipt (Licencia Comercial Local)**\n☐ Solicitar en Miami-Dade County o ciudad específica (Miami, Miami Beach, etc.)\n   - Miami-Dade: miamidade.gov\n   - City of Miami: miamigov.com\n   - Costo: $100 - $400 dependiendo ubicación\n   - Renovación: Anual (cada octubre)\n☐ Documentos necesarios:\n   - Proof of location (lease)\n   - EIN\n   - Florida Barbershop License\n   - Zoning approval\n\n**Paso 8: Zoning Approval (Aprobación de Zonificación)**\n☐ Verificar que el local está zonificado para uso comercial/barbería\n☐ Obtener certificación de zonificación del municipio\n   - Costo: $50 - $200\n   - Necesario ANTES de firmar lease definitivo\n☐ Si requiere variación: solicitar Special Exception o Variance\n   - Tiempo adicional: 2-3 meses\n   - Costo: $500 - $2,000\n\n**Paso 9: Certificate of Use / Certificate of Occupancy**\n☐ Solicitar Certificate of Use en el municipio correspondiente\n   - Certifica que el inmueble cumple códigos de construcción\n   - Costo: $250 - $500\n   - Tiempo: 2-4 semanas\n☐ Inspección de:\n   - Bomberos (Fire Marshal)\n   - Códigos de construcción (Building Department)\n   - Accesibilidad (ADA compliance)\n\n---\n\n**FASE 4: PERMISOS SANITARIOS Y DE SALUD (Semanas 6-8)**\n\n**Paso 10: Permisos del Departamento de Salud**\n☐ Registro con Miami-Dade Department of Health\n   - Website: miamidade.gov/health\n☐ Cumplir requisitos sanitarios:\n   - Esterilizadores UV para herramientas\n   - Contenedores para instrumentos sucios/limpios separados\n   - Desinfectantes aprobados (Barbicide, etc.)\n   - Procedimientos de limpieza documentados\n   - Disposición adecuada de toallas/capas\n☐ Inspección sanitaria pre-apertura (obligatoria)\n   - Costo: Incluido o $100 - $200\n☐ Inspecciones periódicas (1-2 veces al año)\n\n**Paso 11: Control de Infecciones y Bioseguridad**\n☐ Implementar protocolo de desinfección:\n   - Limpieza de herramientas después de cada cliente\n   - Uso de capas/toallas limpias por cliente\n   - Barbicide o solución desinfectante EPA-aprobada\n☐ Capacitar al personal en prácticas sanitarias\n☐ Mantener log de limpieza diaria\n\n---\n\n**FASE 5: SEGUROS OBLIGATORIOS (Semana 8-10)**\n\n**Paso 12: Seguros Requeridos**\n☐ General Liability Insurance (OBLIGATORIO)\n   - Cobertura mínima: $1,000,000\n   - Costo: $600 - $1,500 por trimestre\n   - Proveedores: State Farm, Nationwide, The Hartford\n☐ Workers' Compensation Insurance (OBLIGATORIO si tienes empleados)\n   - Requerido por ley de Florida si tienes 4+ empleados\n   - Costo: Variable según nómina ($1,500 - $4,000/año)\n☐ Professional Liability Insurance (Recomendado)\n   - Protege contra demandas por servicios\n   - Costo: $300 - $800/año\n☐ Property Insurance (Recomendado)\n   - Cubre equipamiento, mobiliario\n   - Costo: $500 - $1,200/año\n\n---\n\n**FASE 6: COMPLIANCE LABORAL Y NÓMINA (Semanas 8-12)**\n\n**Paso 13: Registro como Empleador**\n☐ Registrar con Florida Department of Revenue (Reemployment Tax)\n   - Website: floridarevenue.com/taxes/reemployment\n   - Obligatorio si tienes empleados\n☐ Obtener Florida Unemployment Tax Account\n☐ Registrar con U.S. Department of Labor (OSHA)\n   - Si tienes 10+ empleados\n☐ Obtener Federal Employer Posters (obligatorios)\n   - Disponibles gratis en dol.gov\n\n**Paso 14: Sistema de Nómina y Retenciones**\n☐ Configurar sistema de payroll\n   - Opciones: Gusto, ADP, Paychex, QuickBooks Payroll\n   - Costo: $40 - $150/mes + $5-12 por empleado\n☐ Retener impuestos federales y estatales:\n   - Federal Income Tax (W-4)\n   - FICA (Social Security + Medicare): 7.65%\n   - Florida no tiene State Income Tax\n☐ Reportar nómina trimestralmente (Form 941)\n☐ Emitir W-2 a empleados (anualmente, antes del 31 de enero)\n\n**Paso 15: Verificación de Elegibilidad de Empleo**\n☐ Completar Form I-9 para cada empleado\n☐ Usar E-Verify (recomendado, obligatorio en algunos casos)\n   - Website: e-verify.gov\n☐ Mantener archivos de I-9 por 3 años mínimo\n\n---\n\n**FASE 7: CUMPLIMIENTO CONTINUO (Post-Apertura)**\n\n**Paso 16: Renovaciones y Mantenimiento de Licencias**\n☐ Calendario de renovaciones:\n   - Barbershop License: Anual (fecha específica en tu licencia)\n   - Licencias de barbero individuales: Cada 2 años (31 de julio)\n   - Business Tax Receipt local: Anual (típicamente octubre)\n   - Sales Tax Certificate: No expira pero requiere reportes mensuales/trimestrales\n☐ Educación continua para barberos: 2 horas cada 2 años\n\n**Paso 17: Reportes Fiscales Recurrentes**\n☐ Sales Tax (si vendes productos):\n   - Reportar mensualmente o trimestralmente\n   - Deadline: 1ro o 20 del mes siguiente\n   - Website: floridarevenue.com\n☐ Payroll Taxes:\n   - Federal: Quarterly (Form 941)\n   - Florida Reemployment Tax: Quarterly\n☐ Income Tax:\n   - LLC: Pass-through (reporta en personal tax return)\n   - Si eliges C-Corp: Corporate tax return anual\n\n**Paso 18: Inspecciones Recurrentes**\n☐ Inspecciones sanitarias del Dept. of Health: 1-2 veces al año\n☐ Inspecciones de DBPR: Aleatorias o por quejas\n☐ Fire Marshal: Periódicas (según municipio)\n☐ Mantener local en cumplimiento permanente\n\n**Paso 19: Actualización de Documentos**\n☐ Actualizar información si cambias:\n   - Dirección del negocio\n   - Estructura legal\n   - Número de barberos/empleados\n   - Servicios ofrecidos\n☐ Notificar a todas las agencias relevantes\n\n---\n\n### 📊 RESUMEN DE COSTOS LEGALES Y REGULATORIOS\n\n**INVERSIÓN INICIAL EN CUMPLIMIENTO:**\n| Item | Costo Estimado |\n|------|----------------|\n| Registro LLC en Florida | $125 |\n| EIN (IRS) | Gratis |\n| Barbershop License (DBPR) | $200 - $400 |\n| Licencias de barbero (por persona) | $60 - $200 c/u |\n| Business Tax Receipt (local) | $100 - $400 |\n| Zoning Approval | $50 - $200 |\n| Certificate of Use | $250 - $500 |\n| Permisos sanitarios | $100 - $200 |\n| General Liability Insurance (3 meses) | $600 - $1,500 |\n| Workers' Comp Insurance (si aplica) | $375 - $1,000 |\n| Sistema de Payroll (setup) | $100 - $300 |\n| Asesoría legal (recomendado) | $500 - $2,000 |\n| **TOTAL ESTIMADO** | **$2,460 - $6,825** |\n\n**COSTOS RECURRENTES ANUALES:**\n| Item | Costo Anual |\n|------|-------------|\n| Barbershop License (renovación) | $100 - $200 |\n| Licencias barbero (cada 2 años, prorrateado) | $35 - $100 c/u |\n| Business Tax Receipt | $100 - $400 |\n| General Liability Insurance | $2,400 - $6,000 |\n| Workers' Comp Insurance | $1,500 - $4,000 |\n| Professional Liability | $300 - $800 |\n| Sistema Payroll | $480 - $1,800 |\n| Asesoría contable/legal | $1,000 - $3,000 |\n| **TOTAL ESTIMADO ANUAL** | **$5,915 - $16,300** |\n\n---\n\n### ⚠️ PENALIDADES POR INCUMPLIMIENTO\n\n**ADVERTENCIAS CRÍTICAS:**\n❌ Operar sin Barbershop License:\n   - Multa: $500 - $1,000 por primera ofensa\n   - Cierre inmediato del establecimiento\n   - Posible acción penal\n\n❌ Emplear barberos sin licencia:\n   - Multa: $500 por barbero sin licencia\n   - Revocación de tu Barbershop License\n   - Responsabilidad legal por servicios provistos\n\n❌ No pagar Sales Tax:\n   - Multa: 10% del impuesto debido\n   - Intereses acumulativos\n   - Posible cierre del negocio\n   - Responsabilidad personal del dueño\n\n❌ Violar códigos de salud/sanitarios:\n   - Multa: $250 - $1,000 por violación\n   - Orden de cierre temporal\n   - Re-inspección requerida ($100+)\n\n❌ No tener Workers' Compensation:\n   - Multa: $1,000 - $5,000\n   - Stop-Work Order inmediata\n   - Responsabilidad total por accidentes de empleados\n\n---\n\n### 📞 CONTACTOS CLAVE DE AGENCIAS\n\n**NIVEL ESTATAL:**\n- **Florida DBPR (Barber Licensing)**\n  - Website: myfloridalicense.com/dbpr\n  - Phone: (850) 487-1395\n  - Email: Contact.DBPR@myfloridalicense.com\n\n- **Florida Division of Corporations**\n  - Website: sunbiz.org\n  - Phone: (850) 245-6052\n\n- **Florida Department of Revenue**\n  - Website: floridarevenue.com\n  - Phone: (850) 488-6800\n\n**NIVEL LOCAL (MIAMI-DADE):**\n- **Miami-Dade County Regulatory & Economic Resources**\n  - Website: miamidade.gov/business\n  - Phone: (786) 315-2000\n\n- **Miami-Dade Department of Health**\n  - Website: miamidade.gov/health\n  - Phone: (305) 324-2400\n\n- **City of Miami Building Department**\n  - Website: miamigov.com/building\n  - Phone: (305) 416-1100\n\n**NIVEL FEDERAL:**\n- **IRS (EIN, Taxes)**\n  - Website: irs.gov\n  - Phone: (800) 829-4933\n\n- **U.S. Department of Labor**\n  - Website: dol.gov\n  - Phone: (866) 487-2365\n\n---\n\n### ✅ CHECKLIST DE DOCUMENTOS A MANTENER\n\n**DOCUMENTOS CORPORATIVOS:**\n☐ Articles of Organization (LLC)\n☐ Operating Agreement\n☐ EIN Confirmation Letter\n☐ Business Tax Receipts (todos los años)\n☐ Lease Agreement del local\n\n**LICENCIAS Y PERMISOS:**\n☐ Barbershop License (original + renovaciones)\n☐ Licencias individuales de cada barbero\n☐ Certificate of Use / Occupancy\n☐ Zoning Approval Letter\n☐ Health Permit\n\n**SEGUROS:**\n☐ Pólizas de todos los seguros vigentes\n☐ Certificados de cobertura\n☐ Proof of Workers' Comp\n\n**REGISTROS LABORALES:**\n☐ I-9 Forms de todos los empleados\n☐ W-4 Forms\n☐ Contratos de trabajo\n☐ Payroll records (mínimo 3 años)\n☐ Accident reports\n\n**REGISTROS FISCALES:**\n☐ Sales tax returns (mínimo 3 años)\n☐ Payroll tax returns (Form 941)\n☐ Annual tax returns\n☐ Receipts y facturas\n\n**REGISTROS SANITARIOS:**\n☐ Logs de limpieza diaria\n☐ Reportes de inspecciones sanitarias\n☐ Certificados de capacitación del personal\n☐ Protocolos de desinfección\n\n---\n\n═══════════════════════════════════════════\n\n## 5. TUS PRÓXIMOS 90 DÍAS\n\n### Semana 1-2: FUNDAMENTOS\n☐ Paso 1: [Acción específica]\n☐ Paso 2: [Acción específica]\n\n### Semana 3-4: ESTRUCTURA\n☐ Paso 3: [Acción específica]\n\n### Mes 2: LANZAMIENTO\n☐ Paso 4: [Acción específica]\n\n### Mes 3: TRACCIÓN\n☐ Paso 5: [Acción específica]\n\n═══════════════════════════════════════════\n\n## 6. HERRAMIENTAS Y SOFTWARE RECOMENDADO\n\nComo experto en eficiencia operativa, debes recomendar las mejores herramientas tecnológicas para gestionar los 4 pilares críticos del negocio del cliente:\n\n1.  **Gestión de Planificación y Proyectos:** Software para organizar las tareas, hitos y fechas límite de los próximos 90 días.\n2.  **Aspectos Legales y Administrativos:** Plataformas para generar contratos básicos, facturación y gestión de documentos legales necesarios.\n3.  **CRM (Gestión de Clientes):** Un sistema para registrar los leads, seguimiento y datos de los clientes desde el primer contacto.\n4.  **Marketing y Automatización:** Herramientas para ejecutar la estrategia de marketing, diseñar contenido o automatizar redes sociales.\n\n**INSTRUCCIONES PARA LA RECOMENDACIÓN:**\nPara cada uno de los 4 pilares, recomienda **2 o 3 opciones**. Debes incluir:\n*   Una opción **Gratuita o Freemium** (ideal para emprendedores con bajo presupuesto).\n*   Una opción **Profesional/Paga** (para cuando el negocio escale).\n*   Breve justificación de por qué esa herramienta es ideal para el contexto de este cliente (tiempo, recursos y tipo de negocio).\n\n═══════════════════════════════════════════\n\n## 7. NOTAS FINALES\n[Mensaje personalizado de cierre con los puntos más importantes a recordar]\n\n---\n\n⚡ Recuerda: Este plan es una guía, no una ley. Adapta según lo que vayas aprendiendo.\n\n🧠 Dándote la Luz - Tu negocio, con claridad.\n---\n\n🚫 REGLAS:\n1. Sé ESPECÍFICO al contexto del país/ciudad.\n2. Da números y estimados donde sea posible.\n3. NO uses frases motivacionales vacías.\n4. Cada recomendación debe ser ACCIONABLE.\n5. Considera las restricciones reales del cliente.\n6. En la sección legal, sé EXTREMADAMENTE detallado con plazos, costos exactos y consecuencias de incumplimiento.\n7-Nunca agregues texto como este \"Lo siento por la confusión anterior\" simplemente omitelo y rigete por tu mision.\n8-Siempre debes poner todas las medidas legales y necesidades cada vez que se ejecute wf.",
+        "height": 448,
+        "width": 1024,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -928
+      ],
+      "typeVersion": 1,
+      "id": "7284a752-ffb0-463e-a8d3-4edec9375b51",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Plan }}\n\n---\n\nGenera el PLAN COMPLETO de negocio. El cliente ya pagó, entrega el máximo valor.",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un experto consultor de negocios con 20+ años de experiencia. El cliente YA PAGÓ por el plan completo.\n\n📋 FORMATO DEL PLAN COMPLETO:\n\nDebes generar un documento HTML profesional, visualmente atractivo y fácil de leer. Usa el siguiente formato:\n\n---\n<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Tu Plan de Negocio Completo</title>\n    <style>\n        body {\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n            line-height: 1.8;\n            color: #333;\n            max-width: 900px;\n            margin: 0 auto;\n            padding: 40px 20px;\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n        }\n        .container {\n            background: white;\n            padding: 40px;\n            border-radius: 20px;\n            box-shadow: 0 10px 40px rgba(0,0,0,0.1);\n        }\n        h1 {\n            color: #667eea;\n            font-size: 2.5em;\n            margin-bottom: 10px;\n            border-bottom: 4px solid #667eea;\n            padding-bottom: 15px;\n        }\n        h2 {\n            color: #764ba2;\n            font-size: 1.8em;\n            margin-top: 40px;\n            margin-bottom: 20px;\n            padding-left: 15px;\n            border-left: 5px solid #764ba2;\n        }\n        h3 {\n            color: #667eea;\n            font-size: 1.4em;\n            margin-top: 30px;\n            margin-bottom: 15px;\n        }\n        .header-info {\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n            color: white;\n            padding: 30px;\n            border-radius: 15px;\n            margin-bottom: 40px;\n        }\n        .header-info p {\n            margin: 8px 0;\n            font-size: 1.1em;\n        }\n        .section {\n            background: #f8f9ff;\n            padding: 25px;\n            border-radius: 12px;\n            margin: 25px 0;\n            border-left: 5px solid #667eea;\n        }\n        .highlight-box {\n            background: #fff4e6;\n            border-left: 5px solid #ff9800;\n            padding: 20px;\n            margin: 20px 0;\n            border-radius: 8px;\n        }\n        .success-box {\n            background: #e8f5e9;\n            border-left: 5px solid #4caf50;\n            padding: 20px;\n            margin: 20px 0;\n            border-radius: 8px;\n        }\n        .warning-box {\n            background: #ffebee;\n            border-left: 5px solid #f44336;\n            padding: 20px;\n            margin: 20px 0;\n            border-radius: 8px;\n        }\n        .info-box {\n            background: #e3f2fd;\n            border-left: 5px solid #2196f3;\n            padding: 20px;\n            margin: 20px 0;\n            border-radius: 8px;\n        }\n        ul, ol {\n            padding-left: 25px;\n            margin: 15px 0;\n        }\n        li {\n            margin: 10px 0;\n            line-height: 1.6;\n        }\n        .checkbox-item {\n            display: flex;\n            align-items: flex-start;\n            margin: 12px 0;\n            padding: 10px;\n            background: white;\n            border-radius: 8px;\n            transition: all 0.3s ease;\n        }\n        .checkbox-item:hover {\n            background: #f0f0f0;\n            transform: translateX(5px);\n        }\n        .checkbox {\n            font-size: 1.3em;\n            margin-right: 12px;\n            color: #667eea;\n        }\n        table {\n            width: 100%;\n            border-collapse: collapse;\n            margin: 25px 0;\n            background: white;\n            border-radius: 10px;\n            overflow: hidden;\n            box-shadow: 0 4px 15px rgba(0,0,0,0.1);\n        }\n        th {\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n            color: white;\n            padding: 15px;\n            text-align: left;\n            font-weight: 600;\n        }\n        td {\n            padding: 15px;\n            border-bottom: 1px solid #e0e0e0;\n        }\n        tr:hover {\n            background: #f8f9ff;\n        }\n        .timeline {\n            position: relative;\n            padding-left: 30px;\n            margin: 30px 0;\n        }\n        .timeline-item {\n            position: relative;\n            padding: 20px;\n            background: white;\n            border-radius: 10px;\n            margin-bottom: 20px;\n            box-shadow: 0 4px 10px rgba(0,0,0,0.08);\n        }\n        .timeline-item:before {\n            content: '●';\n            position: absolute;\n            left: -30px;\n            top: 20px;\n            color: #667eea;\n            font-size: 2em;\n        }\n        .emoji {\n            font-size: 1.3em;\n            margin-right: 8px;\n        }\n        .divider {\n            height: 3px;\n            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);\n            margin: 40px 0;\n            border-radius: 3px;\n        }\n        .footer {\n            text-align: center;\n            margin-top: 50px;\n            padding: 30px;\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n            color: white;\n            border-radius: 15px;\n        }\n        .contact-card {\n            background: white;\n            padding: 15px;\n            border-radius: 10px;\n            margin: 10px 0;\n            box-shadow: 0 3px 10px rgba(0,0,0,0.1);\n        }\n        .contact-card h4 {\n            color: #667eea;\n            margin: 0 0 10px 0;\n        }\n        .contact-card p {\n            margin: 5px 0;\n            color: #666;\n        }\n        strong {\n            color: #764ba2;\n        }\n        .phase-header {\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n            color: white;\n            padding: 15px 25px;\n            border-radius: 10px;\n            margin: 30px 0 20px 0;\n            font-size: 1.2em;\n            font-weight: bold;\n        }\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>🧠 Tu Plan de Negocio Completo – Dándote la Luz</h1>\n        \n        <div class=\"header-info\">\n            <p><strong>📅 Generado:</strong> [Fecha actual]</p>\n            <p><strong>👤 Para:</strong> [Nombre del cliente]</p>\n            <p><strong>📍 Ubicación:</strong> [Ciudad/País]</p>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>1️⃣ TU PUNTO DE PARTIDA</h2>\n\n        <div class=\"section\">\n            <h3>✅ Lo que tienes hoy</h3>\n            [Análisis detallado de recursos actuales con viñetas y emojis]\n        </div>\n\n        <div class=\"highlight-box\">\n            <h3>⚠️ Tus limitaciones reales</h3>\n            [Análisis honesto de restricciones]\n        </div>\n\n        <div class=\"success-box\">\n            <h3>💡 Tipo de negocio viable AHORA</h3>\n            [Recomendación específica y justificada]\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>2️⃣ PROYECCIÓN REALISTA</h2>\n\n        <div class=\"section\">\n            <h3>🎯 Cómo debería verse tu negocio bien hecho</h3>\n            \n            <div class=\"timeline\">\n                <div class=\"timeline-item\">\n                    <strong>📊 Año 1:</strong> [Descripción realista]\n                </div>\n                <div class=\"timeline-item\">\n                    <strong>📈 Año 2:</strong> [Descripción realista]\n                </div>\n                <div class=\"timeline-item\">\n                    <strong>🚀 Año 3:</strong> [Descripción realista]\n                </div>\n            </div>\n        </div>\n\n        <div class=\"warning-box\">\n            <h3>🚫 Qué NO conviene intentar todavía</h3>\n            [Lista de errores comunes a evitar dado su perfil]\n        </div>\n\n        <div class=\"info-box\">\n            <h3>📈 Qué cambios necesitarías para escalar</h3>\n            [Requisitos concretos para crecer]\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>3️⃣ PLAN DE CONSTRUCCIÓN</h2>\n\n        <div class=\"section\">\n            <h3>💰 FINANZAS: Cómo ordenarte desde el día 1</h3>\n            <ul>\n                <li><span class=\"emoji\">🏦</span> Cuenta bancaria separada</li>\n                <li><span class=\"emoji\">📊</span> Sistema de registro simple</li>\n                <li><span class=\"emoji\">💵</span> Pricing inicial recomendado</li>\n                <li><span class=\"emoji\">⚖️</span> Punto de equilibrio estimado</li>\n                <li><span class=\"emoji\">🛡️</span> Reserva de emergencia sugerida</li>\n            </ul>\n        </div>\n\n        <div class=\"section\">\n            <h3>⚙️ OPERACIONES: Sistemas mínimos</h3>\n            <ul>\n                <li><span class=\"emoji\">🛠️</span> Herramientas necesarias (lista específica)</li>\n                <li><span class=\"emoji\">📝</span> Procesos básicos a documentar</li>\n                <li><span class=\"emoji\">📊</span> Métricas clave a trackear</li>\n                <li><span class=\"emoji\">⏱️</span> Tiempo estimado por actividad</li>\n            </ul>\n        </div>\n\n        <div class=\"section\">\n            <h3>📢 MARKETING: Cómo atraer clientes sin romper la operación</h3>\n            <ul>\n                <li><span class=\"emoji\">🎯</span> Canal principal recomendado (y por qué)</li>\n                <li><span class=\"emoji\">💬</span> Mensaje central / propuesta de valor</li>\n                <li><span class=\"emoji\">🚀</span> Primeras 3 acciones de marketing</li>\n                <li><span class=\"emoji\">💰</span> Presupuesto sugerido</li>\n                <li><span class=\"emoji\">⚠️</span> Qué evitar en marketing</li>\n            </ul>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>4️⃣ CUMPLIMIENTO LEGAL Y REGULATORIO - BARBERÍA EN MIAMI, FLORIDA</h2>\n\n        <h3>📋 ROADMAP LEGAL COMPLETO (PASO A PASO)</h3>\n\n        <div class=\"phase-header\">\n            FASE 1: ESTRUCTURA LEGAL DEL NEGOCIO (Semanas 1-2)\n        </div>\n\n        <div class=\"section\">\n            <h4>📄 Paso 1: Registrar la Entidad Comercial</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Decidir estructura legal (LLC recomendado para barberías)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Registrar en Florida Division of Corporations (sunbiz.org)<br>\n                    <small style=\"color: #666;\">💵 Costo: $125 para LLC | ⏱️ Tiempo: 3-5 días hábiles | 📑 Documentos: Articles of Organization</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Elegir y registrar nombre comercial (DBA si es diferente al legal)<br>\n                    <small style=\"color: #666;\">✅ Verificar disponibilidad en sunbiz.org | 💵 Costo adicional DBA: $50</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🆔 Paso 2: Obtener EIN (Employer Identification Number)</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Solicitar EIN del IRS online (gratis)<br>\n                    <small style=\"color: #666;\">🌐 Website: irs.gov/ein | ⚡ Tiempo: Inmediato (online) | 📌 Necesario para: impuestos, cuenta bancaria, contratar empleados</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Guardar carta de confirmación del EIN</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>💼 Paso 3: Registro Fiscal Estatal</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Registrarse con Florida Department of Revenue<br>\n                    <small style=\"color: #666;\">🌐 Website: floridarevenue.com | 📜 Obtener Sales Tax Certificate (si vendes productos) | 💵 Costo: Gratis | ⏱️ Tiempo: 1-2 semanas</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"phase-header\">\n            FASE 2: LICENCIAS PROFESIONALES Y DEL ESTABLECIMIENTO (Semanas 3-6)\n        </div>\n\n        <div class=\"section\">\n            <h4>✂️ Paso 4: Licencia de Barbero Individual (para cada barbero)</h4>\n            <div class=\"warning-box\">\n                <strong>⚠️ REQUISITO OBLIGATORIO</strong> para cada barbero que trabaje:\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Completar formación certificada<br>\n                    <small style=\"color: #666;\">📚 1,200 horas (600 teoría + 600 práctica) | 📝 Aprobar examen estatal de Florida | 💵 Costo examen: $100 - $200 | 💵 Licencia inicial: $60 - $200</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Renovación cada 2 años (antes del 31 de julio años pares)<br>\n                    <small style=\"color: #666;\">💵 Costo renovación: $70 ($95 si es tardía) | 📖 Educación continua: 2 horas cada 2 años</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Aplicar en: Florida Department of Business and Professional Regulation (DBPR)<br>\n                    <small style=\"color: #666;\">🌐 Website: myfloridalicense.com/dbpr</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🏪 Paso 5: Licencia de Barbershop (Establecimiento)</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Solicitar Barbershop License ante DBPR<br>\n                    <small style=\"color: #666;\">🌐 Aplicación online en myfloridalicense.com | 💵 Costo: $200 - $400 inicial | 🔄 Renovación anual: $100 - $200</small>\n                </div>\n            </div>\n            <div class=\"info-box\">\n                <strong>📋 Documentos requeridos:</strong>\n                <ul>\n                    <li>✅ Proof of LLC/entidad registrada</li>\n                    <li>✅ EIN</li>\n                    <li>✅ Lease agreement del local</li>\n                    <li>✅ Floor plan del establecimiento</li>\n                    <li>✅ Proof of insurance</li>\n                    <li>✅ Licencias de barbero de todos los empleados</li>\n                </ul>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>⏱️ Tiempo de aprobación: 4-8 semanas</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🔍 Paso 6: Inspección del Local</h4>\n            <div class=\"success-box\">\n                <strong>📐 Requisitos mínimos del espacio OBLIGATORIOS:</strong>\n                <ul>\n                    <li>📏 Mínimo 100 pies cuadrados (sin contar baño)</li>\n                    <li>👥 Máximo 1 barbero por cada 100 pies cuadrados</li>\n                    <li>🚿 Baño con lavabo dentro del local O a máximo 300 pies</li>\n                    <li>🧱 Paredes permanentes si colinda con otro negocio</li>\n                    <li>💡 Iluminación adecuada (mínimo 50 foot-candles)</li>\n                    <li>🌬️ Ventilación apropiada</li>\n                </ul>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Preparar local para inspección pre-apertura</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Coordinar inspección con DBPR (obligatoria antes de abrir)</div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"phase-header\">\n            FASE 3: PERMISOS LOCALES Y MUNICIPALES (Semanas 4-8)\n        </div>\n\n        <div class=\"section\">\n            <h4>🏛️ Paso 7: Business Tax Receipt (Licencia Comercial Local)</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Solicitar en Miami-Dade County o ciudad específica<br>\n                    <small style=\"color: #666;\">🌐 Miami-Dade: miamidade.gov | 🌐 City of Miami: miamigov.com | 💵 Costo: $100 - $400 | 🔄 Renovación: Anual (cada octubre)</small>\n                </div>\n            </div>\n            <div class=\"info-box\">\n                <strong>📋 Documentos necesarios:</strong>\n                <ul>\n                    <li>✅ Proof of location (lease)</li>\n                    <li>✅ EIN</li>\n                    <li>✅ Florida Barbershop License</li>\n                    <li>✅ Zoning approval</li>\n                </ul>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>📍 Paso 8: Zoning Approval (Aprobación de Zonificación)</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Verificar que el local está zonificado para uso comercial/barbería</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Obtener certificación de zonificación del municipio<br>\n                    <small style=\"color: #666;\">💵 Costo: $50 - $200 | ⚠️ Necesario ANTES de firmar lease definitivo</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Si requiere variación: solicitar Special Exception o Variance<br>\n                    <small style=\"color: #666;\">⏱️ Tiempo adicional: 2-3 meses | 💵 Costo: $500 - $2,000</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🏗️ Paso 9: Certificate of Use / Certificate of Occupancy</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Solicitar Certificate of Use en el municipio correspondiente<br>\n                    <small style=\"color: #666;\">✅ Certifica que el inmueble cumple códigos de construcción | 💵 Costo: $250 - $500 | ⏱️ Tiempo: 2-4 semanas</small>\n                </div>\n            </div>\n            <div class=\"info-box\">\n                <strong>🔍 Inspección de:</strong>\n                <ul>\n                    <li>🚒 Bomberos (Fire Marshal)</li>\n                    <li>🏗️ Códigos de construcción (Building Department)</li>\n                    <li>♿ Accesibilidad (ADA compliance)</li>\n                </ul>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"phase-header\">\n            FASE 4: PERMISOS SANITARIOS Y DE SALUD (Semanas 6-8)\n        </div>\n\n        <div class=\"section\">\n            <h4>🏥 Paso 10: Permisos del Departamento de Salud</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Registro con Miami-Dade Department of Health<br>\n                    <small style=\"color: #666;\">🌐 Website: miamidade.gov/health</small>\n                </div>\n            </div>\n            <div class=\"success-box\">\n                <strong>🧼 Cumplir requisitos sanitarios:</strong>\n                <ul>\n                    <li>💡 Esterilizadores UV para herramientas</li>\n                    <li>🗑️ Contenedores para instrumentos sucios/limpios separados</li>\n                    <li>🧪 Desinfectantes aprobados (Barbicide, etc.)</li>\n                    <li>📝 Procedimientos de limpieza documentados</li>\n                    <li>♻️ Disposición adecuada de toallas/capas</li>\n                </ul>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Inspección sanitaria pre-apertura (obligatoria)<br>\n                    <small style=\"color: #666;\">💵 Costo: Incluido o $100 - $200</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>🔄 Inspecciones periódicas (1-2 veces al año)</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🦠 Paso 11: Control de Infecciones y Bioseguridad</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Implementar protocolo de desinfección:<br>\n                    <small style=\"color: #666;\">\n                        • Limpieza de herramientas después de cada cliente<br>\n                        • Uso de capas/toallas limpias por cliente<br>\n                        • Barbicide o solución desinfectante EPA-aprobada\n                    </small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Capacitar al personal en prácticas sanitarias</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Mantener log de limpieza diaria</div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"phase-header\">\n            FASE 5: SEGUROS OBLIGATORIOS (Semana 8-10)\n        </div>\n\n        <div class=\"section\">\n            <h4>🛡️ Paso 12: Seguros Requeridos</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>General Liability Insurance (OBLIGATORIO)</strong><br>\n                    <small style=\"color: #666;\">📊 Cobertura mínima: $1,000,000 | 💵 Costo: $600 - $1,500 por trimestre | 🏢 Proveedores: State Farm, Nationwide, The Hartford</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>Workers' Compensation Insurance (OBLIGATORIO si tienes empleados)</strong><br>\n                    <small style=\"color: #666;\">⚖️ Requerido por ley de Florida si tienes 4+ empleados | 💵 Costo: Variable según nómina ($1,500 - $4,000/año)</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>Professional Liability Insurance (Recomendado)</strong><br>\n                    <small style=\"color: #666;\">🛡️ Protege contra demandas por servicios | 💵 Costo: $300 - $800/año</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>Property Insurance (Recomendado)</strong><br>\n                    <small style=\"color: #666;\">🏪 Cubre equipamiento, mobiliario | 💵 Costo: $500 - $1,200/año</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"phase-header\">\n            FASE 6: COMPLIANCE LABORAL Y NÓMINA (Semanas 8-12)\n        </div>\n\n        <div class=\"section\">\n            <h4>👥 Paso 13: Registro como Empleador</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Registrar con Florida Department of Revenue (Reemployment Tax)<br>\n                    <small style=\"color: #666;\">🌐 Website: floridarevenue.com/taxes/reemployment | ⚠️ Obligatorio si tienes empleados</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Obtener Florida Unemployment Tax Account</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Registrar con U.S. Department of Labor (OSHA)<br>\n                    <small style=\"color: #666;\">📋 Si tienes 10+ empleados</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Obtener Federal Employer Posters (obligatorios)<br>\n                    <small style=\"color: #666;\">🆓 Disponibles gratis en dol.gov</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>💰 Paso 14: Sistema de Nómina y Retenciones</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Configurar sistema de payroll<br>\n                    <small style=\"color: #666;\">🛠️ Opciones: Gusto, ADP, Paychex, QuickBooks Payroll | 💵 Costo: $40 - $150/mes + $5-12 por empleado</small>\n                </div>\n            </div>\n            <div class=\"info-box\">\n                <strong>📊 Retener impuestos federales y estatales:</strong>\n                <ul>\n                    <li>🇺🇸 Federal Income Tax (W-4)</li>\n                    <li>💼 FICA (Social Security + Medicare): 7.65%</li>\n                    <li>🌴 Florida no tiene State Income Tax</li>\n                </ul>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Reportar nómina trimestralmente (Form 941)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Emitir W-2 a empleados (anualmente, antes del 31 de enero)</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>✅ Paso 15: Verificación de Elegibilidad de Empleo</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Completar Form I-9 para cada empleado</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    Usar E-Verify (recomendado, obligatorio en algunos casos)<br>\n                    <small style=\"color: #666;\">🌐 Website: e-verify.gov</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Mantener archivos de I-9 por 3 años mínimo</div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <div class=\"phase-header\">\n            FASE 7: CUMPLIMIENTO CONTINUO (Post-Apertura)\n        </div>\n\n        <div class=\"section\">\n            <h4>🔄 Paso 16: Renovaciones y Mantenimiento de Licencias</h4>\n            <div class=\"info-box\">\n                <strong>📅 Calendario de renovaciones:</strong>\n                <ul>\n                    <li>🏪 Barbershop License: Anual (fecha específica en tu licencia)</li>\n                    <li>✂️ Licencias de barbero individuales: Cada 2 años (31 de julio)</li>\n                    <li>🏛️ Business Tax Receipt local: Anual (típicamente octubre)</li>\n                    <li>💰 Sales Tax Certificate: No expira pero requiere reportes mensuales/trimestrales</li>\n                </ul>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Educación continua para barberos: 2 horas cada 2 años</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>💼 Paso 17: Reportes Fiscales Recurrentes</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>Sales Tax (si vendes productos):</strong><br>\n                    <small style=\"color: #666;\">📆 Reportar mensualmente o trimestralmente | ⏰ Deadline: 1ro o 20 del mes siguiente | 🌐 Website: floridarevenue.com</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>Payroll Taxes:</strong><br>\n                    <small style=\"color: #666;\">🇺🇸 Federal: Quarterly (Form 941) | 🌴 Florida Reemployment Tax: Quarterly</small>\n                </div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>\n                    <strong>Income Tax:</strong><br>\n                    <small style=\"color: #666;\">🏢 LLC: Pass-through (reporta en personal tax return) | 🏭 Si eliges C-Corp: Corporate tax return anual</small>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🔍 Paso 18: Inspecciones Recurrentes</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>🏥 Inspecciones sanitarias del Dept. of Health: 1-2 veces al año</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>🏛️ Inspecciones de DBPR: Aleatorias o por quejas</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>🚒 Fire Marshal: Periódicas (según municipio)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>✅ Mantener local en cumplimiento permanente</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>📝 Paso 19: Actualización de Documentos</h4>\n            <div class=\"info-box\">\n                <strong>🔄 Actualizar información si cambias:</strong>\n                <ul>\n                    <li>📍 Dirección del negocio</li>\n                    <li>🏢 Estructura legal</li>\n                    <li>👥 Número de barberos/empleados</li>\n                    <li>✂️ Servicios ofrecidos</li>\n                </ul>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Notificar a todas las agencias relevantes</div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h3>📊 RESUMEN DE COSTOS LEGALES Y REGULATORIOS</h3>\n\n        <h4 style=\"color: #667eea;\">💵 INVERSIÓN INICIAL EN CUMPLIMIENTO:</h4>\n        <table>\n            <thead>\n                <tr>\n                    <th>Item</th>\n                    <th>Costo Estimado</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <td>🏢 Registro LLC en Florida</td>\n                    <td>$125</td>\n                </tr>\n                <tr>\n                    <td>🆔 EIN (IRS)</td>\n                    <td>Gratis</td>\n                </tr>\n                <tr>\n                    <td>🏪 Barbershop License (DBPR)</td>\n                    <td>$200 - $400</td>\n                </tr>\n                <tr>\n                    <td>✂️ Licencias de barbero (por persona)</td>\n                    <td>$60 - $200 c/u</td>\n                </tr>\n                <tr>\n                    <td>🏛️ Business Tax Receipt (local)</td>\n                    <td>$100 - $400</td>\n                </tr>\n                <tr>\n                    <td>📍 Zoning Approval</td>\n                    <td>$50 - $200</td>\n                </tr>\n                <tr>\n                    <td>🏗️ Certificate of Use</td>\n                    <td>$250 - $500</td>\n                </tr>\n                <tr>\n                    <td>🏥 Permisos sanitarios</td>\n                    <td>$100 - $200</td>\n                </tr>\n                <tr>\n                    <td>🛡️ General Liability Insurance (3 meses)</td>\n                    <td>$600 - $1,500</td>\n                </tr>\n                <tr>\n                    <td>👷 Workers' Comp Insurance (si aplica)</td>\n                    <td>$375 - $1,000</td>\n                </tr>\n                <tr>\n                    <td>💰 Sistema de Payroll (setup)</td>\n                    <td>$100 - $300</td>\n                </tr>\n                <tr>\n                    <td>⚖️ Asesoría legal (recomendado)</td>\n                    <td>$500 - $2,000</td>\n                </tr>\n                <tr style=\"background: #667eea; color: white; font-weight: bold;\">\n                    <td><strong>💎 TOTAL ESTIMADO</strong></td>\n                    <td><strong>$2,460 - $6,825</strong></td>\n                </tr>\n            </tbody>\n        </table>\n\n        <h4 style=\"color: #764ba2; margin-top: 40px;\">🔄 COSTOS RECURRENTES ANUALES:</h4>\n        <table>\n            <thead>\n                <tr>\n                    <th>Item</th>\n                    <th>Costo Anual</th>\n                </tr>\n            </thead>\n            <tbody>\n                <tr>\n                    <td>🏪 Barbershop License (renovación)</td>\n                    <td>$100 - $200</td>\n                </tr>\n                <tr>\n                    <td>✂️ Licencias barbero (cada 2 años, prorrateado)</td>\n                    <td>$35 - $100 c/u</td>\n                </tr>\n                <tr>\n                    <td>🏛️ Business Tax Receipt</td>\n                    <td>$100 - $400</td>\n                </tr>\n                <tr>\n                    <td>🛡️ General Liability Insurance</td>\n                    <td>$2,400 - $6,000</td>\n                </tr>\n                <tr>\n                    <td>👷 Workers' Comp Insurance</td>\n                    <td>$1,500 - $4,000</td>\n                </tr>\n                <tr>\n                    <td>🏥 Professional Liability</td>\n                    <td>$300 - $800</td>\n                </tr>\n                <tr>\n                    <td>💰 Sistema Payroll</td>\n                    <td>$480 - $1,800</td>\n                </tr>\n                <tr>\n                    <td>⚖️ Asesoría contable/legal</td>\n                    <td>$1,000 - $3,000</td>\n                </tr>\n                <tr style=\"background: #764ba2; color: white; font-weight: bold;\">\n                    <td><strong>💎 TOTAL ESTIMADO ANUAL</strong></td>\n                    <td><strong>$5,915 - $16,300</strong></td>\n                </tr>\n            </tbody>\n        </table>\n\n        <div class=\"divider\"></div>\n\n        <h3>⚠️ PENALIDADES POR INCUMPLIMIENTO</h3>\n\n        <div class=\"warning-box\">\n            <h4 style=\"color: #f44336; margin-top: 0;\">🚨 ADVERTENCIAS CRÍTICAS:</h4>\n            \n            <div style=\"margin: 20px 0;\">\n                <strong>❌ Operar sin Barbershop License:</strong>\n                <ul>\n                    <li>💸 Multa: $500 - $1,000 por primera ofensa</li>\n                    <li>🔒 Cierre inmediato del establecimiento</li>\n                    <li>⚖️ Posible acción penal</li>\n                </ul>\n            </div>\n\n            <div style=\"margin: 20px 0;\">\n                <strong>❌ Emplear barberos sin licencia:</strong>\n                <ul>\n                    <li>💸 Multa: $500 por barbero sin licencia</li>\n                    <li>🚫 Revocación de tu Barbershop License</li>\n                    <li>⚖️ Responsabilidad legal por servicios provistos</li>\n                </ul>\n            </div>\n\n            <div style=\"margin: 20px 0;\">\n                <strong>❌ No pagar Sales Tax:</strong>\n                <ul>\n                    <li>💸 Multa: 10% del impuesto debido</li>\n                    <li>📈 Intereses acumulativos</li>\n                    <li>🔒 Posible cierre del negocio</li>\n                    <li>👤 Responsabilidad personal del dueño</li>\n                </ul>\n            </div>\n\n            <div style=\"margin: 20px 0;\">\n                <strong>❌ Violar códigos de salud/sanitarios:</strong>\n                <ul>\n                    <li>💸 Multa: $250 - $1,000 por violación</li>\n                    <li>⏸️ Orden de cierre temporal</li>\n                    <li>🔍 Re-inspección requerida ($100+)</li>\n                </ul>\n            </div>\n\n            <div style=\"margin: 20px 0;\">\n                <strong>❌ No tener Workers' Compensation:</strong>\n                <ul>\n                    <li>💸 Multa: $1,000 - $5,000</li>\n                    <li>🛑 Stop-Work Order inmediata</li>\n                    <li>⚖️ Responsabilidad total por accidentes de empleados</li>\n                </ul>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h3>📞 CONTACTOS CLAVE DE AGENCIAS</h3>\n\n        <h4 style=\"color: #667eea;\">🏛️ NIVEL ESTATAL:</h4>\n\n        <div class=\"contact-card\">\n            <h4>✂️ Florida DBPR (Barber Licensing)</h4>\n            <p>🌐 Website: myfloridalicense.com/dbpr</p>\n            <p>📞 Phone: (850) 487-1395</p>\n            <p>📧 Email: Contact.DBPR@myfloridalicense.com</p>\n        </div>\n\n        <div class=\"contact-card\">\n            <h4>🏢 Florida Division of Corporations</h4>\n            <p>🌐 Website: sunbiz.org</p>\n            <p>📞 Phone: (850) 245-6052</p>\n        </div>\n\n        <div class=\"contact-card\">\n            <h4>💰 Florida Department of Revenue</h4>\n            <p>🌐 Website: floridarevenue.com</p>\n            <p>📞 Phone: (850) 488-6800</p>\n        </div>\n\n        <h4 style=\"color: #764ba2; margin-top: 30px;\">🌴 NIVEL LOCAL (MIAMI-DADE):</h4>\n\n        <div class=\"contact-card\">\n            <h4>🏛️ Miami-Dade County Regulatory & Economic Resources</h4>\n            <p>🌐 Website: miamidade.gov/business</p>\n            <p>📞 Phone: (786) 315-2000</p>\n        </div>\n\n        <div class=\"contact-card\">\n            <h4>🏥 Miami-Dade Department of Health</h4>\n            <p>🌐 Website: miamidade.gov/health</p>\n            <p>📞 Phone: (305) 324-2400</p>\n        </div>\n\n        <div class=\"contact-card\">\n            <h4>🏗️ City of Miami Building Department</h4>\n            <p>🌐 Website: miamigov.com/building</p>\n            <p>📞 Phone: (305) 416-1100</p>\n        </div>\n\n        <h4 style=\"color: #007bff; margin-top: 30px;\">🇺🇸 NIVEL FEDERAL:</h4>\n\n        <div class=\"contact-card\">\n            <h4>💼 IRS (EIN, Taxes)</h4>\n            <p>🌐 Website: irs.gov</p>\n            <p>📞 Phone: (800) 829-4933</p>\n        </div>\n\n        <div class=\"contact-card\">\n            <h4>👥 U.S. Department of Labor</h4>\n            <p>🌐 Website: dol.gov</p>\n            <p>📞 Phone: (866) 487-2365</p>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h3>✅ CHECKLIST DE DOCUMENTOS A MANTENER</h3>\n\n        <div class=\"section\">\n            <h4>🏢 DOCUMENTOS CORPORATIVOS:</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Articles of Organization (LLC)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Operating Agreement</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>EIN Confirmation Letter</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Business Tax Receipts (todos los años)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Lease Agreement del local</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>📜 LICENCIAS Y PERMISOS:</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Barbershop License (original + renovaciones)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Licencias individuales de cada barbero</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Certificate of Use / Occupancy</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Zoning Approval Letter</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Health Permit</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🛡️ SEGUROS:</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Pólizas de todos los seguros vigentes</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Certificados de cobertura</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Proof of Workers' Comp</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>👥 REGISTROS LABORALES:</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>I-9 Forms de todos los empleados</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>W-4 Forms</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Contratos de trabajo</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Payroll records (mínimo 3 años)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Accident reports</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>💰 REGISTROS FISCALES:</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Sales tax returns (mínimo 3 años)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Payroll tax returns (Form 941)</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Annual tax returns</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Receipts y facturas</div>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h4>🧼 REGISTROS SANITARIOS:</h4>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Logs de limpieza diaria</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Reportes de inspecciones sanitarias</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Certificados de capacitación del personal</div>\n            </div>\n            <div class=\"checkbox-item\">\n                <span class=\"checkbox\">☐</span>\n                <div>Protocolos de desinfección</div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>5️⃣ TUS PRÓXIMOS 90 DÍAS</h2>\n\n        <div class=\"timeline\">\n            <div class=\"timeline-item\">\n                <h3>📅 Semana 1-2: FUNDAMENTOS</h3>\n                <div class=\"checkbox-item\">\n                    <span class=\"checkbox\">☐</span>\n                    <div>Paso 1: [Acción específica]</div>\n                </div>\n                <div class=\"checkbox-item\">\n                    <span class=\"checkbox\">☐</span>\n                    <div>Paso 2: [Acción específica]</div>\n                </div>\n            </div>\n\n            <div class=\"timeline-item\">\n                <h3>🏗️ Semana 3-4: ESTRUCTURA</h3>\n                <div class=\"checkbox-item\">\n                    <span class=\"checkbox\">☐</span>\n                    <div>Paso 3: [Acción específica]</div>\n                </div>\n            </div>\n\n            <div class=\"timeline-item\">\n                <h3>🚀 Mes 2: LANZAMIENTO</h3>\n                <div class=\"checkbox-item\">\n                    <span class=\"checkbox\">☐</span>\n                    <div>Paso 4: [Acción específica]</div>\n                </div>\n            </div>\n\n            <div class=\"timeline-item\">\n                <h3>📈 Mes 3: TRACCIÓN</h3>\n                <div class=\"checkbox-item\">\n                    <span class=\"checkbox\">☐</span>\n                    <div>Paso 5: [Acción específica]</div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>6️⃣ HERRAMIENTAS Y SOFTWARE RECOMENDADO</h2>\n\n        <p style=\"font-size: 1.1em; color: #666; margin-bottom: 30px;\">\n            Como experto en eficiencia operativa, te recomiendo las mejores herramientas tecnológicas para gestionar los 4 pilares críticos de tu negocio:\n        </p>\n\n        <div class=\"section\">\n            <h3>📊 1. Gestión de Planificación y Proyectos</h3>\n            <p style=\"color: #666; margin-bottom: 15px;\">Software para organizar las tareas, hitos y fechas límite de los próximos 90 días.</p>\n            \n            <div class=\"success-box\">\n                <strong>🆓 Opción Gratuita/Freemium:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n            \n            <div class=\"info-box\">\n                <strong>💎 Opción Profesional/Paga:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h3>⚖️ 2. Aspectos Legales y Administrativos</h3>\n            <p style=\"color: #666; margin-bottom: 15px;\">Plataformas para generar contratos básicos, facturación y gestión de documentos legales necesarios.</p>\n            \n            <div class=\"success-box\">\n                <strong>🆓 Opción Gratuita/Freemium:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n            \n            <div class=\"info-box\">\n                <strong>💎 Opción Profesional/Paga:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h3>👥 3. CRM (Gestión de Clientes)</h3>\n            <p style=\"color: #666; margin-bottom: 15px;\">Un sistema para registrar los leads, seguimiento y datos de los clientes desde el primer contacto.</p>\n            \n            <div class=\"success-box\">\n                <strong>🆓 Opción Gratuita/Freemium:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n            \n            <div class=\"info-box\">\n                <strong>💎 Opción Profesional/Paga:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n        </div>\n\n        <div class=\"section\">\n            <h3>📱 4. Marketing y Automatización</h3>\n            <p style=\"color: #666; margin-bottom: 15px;\">Herramientas para ejecutar la estrategia de marketing, diseñar contenido o automatizar redes sociales.</p>\n            \n            <div class=\"success-box\">\n                <strong>🆓 Opción Gratuita/Freemium:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n            \n            <div class=\"info-box\">\n                <strong>💎 Opción Profesional/Paga:</strong>\n                <p>[Herramienta específica con justificación]</p>\n            </div>\n        </div>\n\n        <div class=\"divider\"></div>\n\n        <h2>7️⃣ NOTAS FINALES</h2>\n\n        <div class=\"highlight-box\">\n            <p style=\"font-size: 1.1em; line-height: 1.8;\">\n                [Mensaje personalizado de cierre con los puntos más importantes a recordar]\n            </p>\n        </div>\n\n        <div class=\"footer\">\n            <h3 style=\"margin-top: 0;\">⚡ Recuerda</h3>\n            <p style=\"font-size: 1.1em; margin: 20px 0;\">\n                Este plan es una guía, no una ley. Adapta según lo que vayas aprendiendo.\n            </p>\n            <h2 style=\"margin: 30px 0 10px 0;\">🧠 Dándote la Luz</h2>\n            <p style=\"font-size: 1.2em; margin: 0;\">Tu negocio, con claridad.</p>\n        </div>\n    </div>\n</body>\n</html>\n---\n\n🚫 REGLAS:\n1. Sé ESPECÍFICO al contexto del país/ciudad.\n2. Da números y estimados donde sea posible.\n3. NO uses frases motivacionales vacías.\n4. Cada recomendación debe ser ACCIONABLE.\n5. Considera las restricciones reales del cliente.\n6. En la sección legal, sé EXTREMADAMENTE detallado con plazos, costos exactos y consecuencias de incumplimiento.\n7. Nunca agregues texto como \"Lo siento por la confusión anterior\" - simplemente omítelo y rígate por tu misión.\n8. Siempre debes poner todas las medidas legales y necesidades cada vez que se ejecute el workflow.\n9. GENERA TODO EL CONTENIDO EN HTML FORMATEADO con los estilos CSS incluidos en el <style> del header.\n10. USA EMOJIS abundantemente para hacer el contenido más visual y amigable.\n11. Mantén el tono PROFESIONAL pero CERCANO y fácil de digerir.\n12-No uses comillas ni nada similar al principio ni final , ni uses espacios innecesarios.\n13-Siempre deberas usar esta sintaxis para la fecha del plan completo : Fecha de generación: {{ new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) }}  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        528,
+        -32
+      ],
+      "id": "38ac5feb-8a2b-4a84-bd72-fdaf138698dc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        640,
+        288
+      ],
+      "id": "a66a5fde-4a75-4d98-86c4-44b51be3e8b8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook Stripe": [
+      {
+        "json": {
+          "headers": {
+            "host": "dipus.app.n8n.cloud",
+            "user-agent": "Stripe/1.0 (+https://stripe.com/docs/webhooks)",
+            "content-length": "4164",
+            "accept": "*/*; q=0.5, application/json",
+            "accept-encoding": "gzip, br",
+            "cache-control": "no-cache",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "54.187.216.72",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "9c83411686b5706c-PDX",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json; charset=utf-8",
+            "stripe-signature": "t=1770135611,v1=f5e58706cea605431ea40b64a89e3a3baf592f232405bc50b5aba4a5dd63c8da,v0=41ea07981c3c3ea414683012902d1f2891efcc642d98e45383e8b854a7f4f75b",
+            "x-forwarded-for": "54.187.216.72, 172.68.175.51",
+            "x-forwarded-host": "dipus.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-59-5786bcf55-mxnbg",
+            "x-is-trusted": "yes",
+            "x-real-ip": "54.187.216.72"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "id": "evt_1SwmKlCYkGi4zVUpZebF1cW6",
+            "object": "event",
+            "api_version": "2025-12-15.clover",
+            "created": 1770135611,
+            "data": {
+              "object": {
+                "id": "cs_test_a1imXmRbeR0ZjpcxLexGWuhbljEOrbJeT2i18pVMoWqAKYee5z7WWRVp5t",
+                "object": "checkout.session",
+                "adaptive_pricing": {
+                  "enabled": true
+                },
+                "after_expiration": null,
+                "allow_promotion_codes": false,
+                "amount_subtotal": 1500,
+                "amount_total": 1500,
+                "automatic_tax": {
+                  "enabled": false,
+                  "liability": null,
+                  "provider": null,
+                  "status": null
+                },
+                "billing_address_collection": "auto",
+                "cancel_url": "https://stripe.com",
+                "client_reference_id": null,
+                "client_secret": null,
+                "collected_information": {
+                  "business_name": "Dipus",
+                  "individual_name": "Jesus",
+                  "shipping_details": null
+                },
+                "consent": null,
+                "consent_collection": {
+                  "payment_method_reuse_agreement": null,
+                  "promotions": "none",
+                  "terms_of_service": "none"
+                },
+                "created": 1770135586,
+                "currency": "usd",
+                "currency_conversion": null,
+                "custom_fields": [],
+                "custom_text": {
+                  "after_submit": null,
+                  "shipping_address": null,
+                  "submit": null,
+                  "terms_of_service_acceptance": null
+                },
+                "customer": "cus_TubXBTlRHECP28",
+                "customer_account": null,
+                "customer_creation": "always",
+                "customer_details": {
+                  "address": {
+                    "city": null,
+                    "country": "US",
+                    "line1": null,
+                    "line2": null,
+                    "postal_code": "12345",
+                    "state": null
+                  },
+                  "business_name": "Dipus",
+                  "email": "jesusmiguela546@gmail.com",
+                  "individual_name": "Jesus",
+                  "name": "Dipus",
+                  "phone": null,
+                  "tax_exempt": "none",
+                  "tax_ids": []
+                },
+                "customer_email": null,
+                "discounts": [],
+                "expires_at": 1770221986,
+                "invoice": null,
+                "invoice_creation": {
+                  "enabled": false,
+                  "invoice_data": {
+                    "account_tax_ids": null,
+                    "custom_fields": null,
+                    "description": null,
+                    "footer": null,
+                    "issuer": null,
+                    "metadata": {},
+                    "rendering_options": null
+                  }
+                },
+                "livemode": false,
+                "locale": "auto",
+                "metadata": {},
+                "mode": "payment",
+                "name_collection": {
+                  "business": {
+                    "enabled": true,
+                    "optional": false
+                  },
+                  "individual": {
+                    "enabled": true,
+                    "optional": false
+                  }
+                },
+                "origin_context": null,
+                "payment_intent": "pi_3SwmKjCYkGi4zVUp02quX0xu",
+                "payment_link": "plink_1Ss7ReCYkGi4zVUpdI5H01pr",
+                "payment_method_collection": "if_required",
+                "payment_method_configuration_details": {
+                  "id": "pmc_1Ss6w7CYkGi4zVUpAZD5w9Gp",
+                  "parent": null
+                },
+                "payment_method_options": {
+                  "card": {
+                    "request_three_d_secure": "automatic"
+                  }
+                },
+                "payment_method_types": [
+                  "card",
+                  "klarna",
+                  "link",
+                  "cashapp",
+                  "amazon_pay"
+                ],
+                "payment_status": "paid",
+                "permissions": null,
+                "phone_number_collection": {
+                  "enabled": false
+                },
+                "recovered_from": null,
+                "saved_payment_method_options": {
+                  "allow_redisplay_filters": [
+                    "always"
+                  ],
+                  "payment_method_remove": "disabled",
+                  "payment_method_save": null
+                },
+                "setup_intent": null,
+                "shipping_address_collection": null,
+                "shipping_cost": null,
+                "shipping_options": [],
+                "status": "complete",
+                "submit_type": "auto",
+                "subscription": null,
+                "success_url": "https://stripe.com",
+                "total_details": {
+                  "amount_discount": 0,
+                  "amount_shipping": 0,
+                  "amount_tax": 0
+                },
+                "ui_mode": "hosted",
+                "url": null,
+                "wallet_options": null
+              }
+            },
+            "livemode": false,
+            "pending_webhooks": 1,
+            "request": {
+              "id": null,
+              "idempotency_key": null
+            },
+            "type": "checkout.session.completed"
+          },
+          "webhookUrl": "https://dipus.app.n8n.cloud/webhook/luz",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI GPT-4o (Full)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar Datos": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Pago Completado?": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Stripe": {
+      "main": [
+        [
+          {
+            "node": "¿Pago Completado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Recuperar Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CloudConvert": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4dbf9d0b-011a-47e1-92aa-22ae1b814955",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "kuC3xhItq9mQW9MW",
+  "tags": []
+}

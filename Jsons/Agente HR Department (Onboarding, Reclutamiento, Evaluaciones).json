@@ -1,0 +1,2874 @@
+{
+  "name": "Agente HR Department (Onboarding, Reclutamiento, Evaluaciones)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "HR Aplication Form",
+        "formDescription": "Micro–departamento de Recursos Humanos automatizado: desde aplicaciones a posiciones, onboarding, evaluaciones y seguimiento.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Tu nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "placeholder": "ejemplo@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telefono",
+              "placeholder": "Numero de telefono"
+            },
+            {
+              "fieldLabel": "Role",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Developer"
+                  },
+                  {
+                    "option": "Designer"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Experiencia (Años)",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "1 "
+                  },
+                  {
+                    "option": "2"
+                  },
+                  {
+                    "option": "3"
+                  },
+                  {
+                    "option": "4"
+                  },
+                  {
+                    "option": "5+"
+                  },
+                  {
+                    "option": "Menos de 1 año"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Disponibilidad",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Inmediata"
+                  },
+                  {
+                    "option": "1 Semana"
+                  },
+                  {
+                    "option": "1 Mes"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Perfil_Linkedin",
+              "placeholder": "Direccion de tu perfil de linkedin"
+            },
+            {
+              "fieldLabel": "Portfolio",
+              "placeholder": "Direccion de tu Porfolio"
+            },
+            {
+              "fieldLabel": "Resumen CV",
+              "fieldType": "file",
+              "fieldName": "data"
+            },
+            {
+              "fieldLabel": "Motivacion",
+              "fieldType": "textarea",
+              "placeholder": "Breve descripcion de motivacion"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "ENVIAR"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        1104,
+        2624
+      ],
+      "id": "ed88c4d9-caf7-4728-95cb-540d7804429c",
+      "name": "On form submission",
+      "webhookId": "f62311ed-35f9-4a87-9460-afda4bcd0898",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "={{ $json.Email }}",
+        "subject": "Confirmacion de recepcion de aplicacion",
+        "html": "=Gracias por postular al puesto {{ $json.Role }}.Los próximos pasos serán comunicados en breve si eres uno de los elegidos.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3104,
+        2384
+      ],
+      "id": "03c7507d-6b5e-4d44-b1fd-c2a30af8b55b",
+      "name": "Send email",
+      "webhookId": "6876295e-2d1a-4ff0-a663-70d43385dd58",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc",
+          "mode": "list",
+          "cachedResultName": "Reclutamiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $('Edit Fields').first().json.Nombre }}",
+            "Email": "={{ $('Edit Fields').first().json.Email }}",
+            "Telefono": "={{ $('Edit Fields').first().json.Telefono }}",
+            "Role": "={{ $('Edit Fields').first().json.Role }}",
+            "Experiencia (Años)": "={{ $('Edit Fields').first().json['Experiencia (Años)'] }}",
+            "Disponibilidad": "={{ $('Edit Fields').first().json.Disponibilidad }}",
+            "Perfil_Linkedin": "={{ $('Edit Fields').first().json.Perfil_Linkedin }}",
+            "Portfolio": "={{ $('Edit Fields').first().json.Portfolio }}",
+            "Resumen CV": "={{ $('Edit Fields').first().json['Resumen CV'] }}",
+            "Motivacion": "={{ $('Edit Fields').first().json.Motivacion }}",
+            "evaluationURL": "={{ $('Edit Fields').first().json.evaluationURL }}",
+            "Estado": "Pendiente",
+            "Prioridad": "={{ $('Basic LLM Chain').first().json.output.Categoria }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Experiencia (Años)",
+              "displayName": "Experiencia (Años)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Disponibilidad",
+              "displayName": "Disponibilidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Perfil_Linkedin",
+              "displayName": "Perfil_Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Portfolio",
+              "displayName": "Portfolio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resumen CV",
+              "displayName": "Resumen CV",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Motivacion",
+              "displayName": "Motivacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "evaluationURL",
+              "displayName": "evaluationURL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Prioridad",
+              "displayName": "Prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3200,
+        2720
+      ],
+      "id": "9484415b-68dc-48fa-bc3e-87e8eaf9d637",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Setear los datos ",
+        "height": 192,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2192,
+        2624
+      ],
+      "typeVersion": 1,
+      "id": "0986227c-f1a0-4bb9-9e38-7713fa39803b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Notificar al Admin de que el usuario x va a continuar con el Formulario de Evaluacion.",
+        "height": 272,
+        "width": 336,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3984,
+        2608
+      ],
+      "typeVersion": 1,
+      "id": "8276c40b-d197-4f07-bedf-ad79bf119110",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "db6c3c45-a63f-4afb-9fe9-21c92a051d71",
+              "name": "Nombre",
+              "value": "={{ $('On form submission').item.json.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "c53ea67a-913a-41a6-9641-d960b4fdc16e",
+              "name": "Email",
+              "value": "={{ $('On form submission').item.json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "e158d561-3f82-4887-b7e9-5460c804d802",
+              "name": "Telefono",
+              "value": "={{ $('On form submission').item.json.Telefono }}",
+              "type": "string"
+            },
+            {
+              "id": "49adc2e3-f707-478e-a533-cb6c90ae83a5",
+              "name": "Role",
+              "value": "={{ $('On form submission').item.json.Role }}",
+              "type": "string"
+            },
+            {
+              "id": "48d42b13-3f73-4fb3-bfbc-2ede824328d5",
+              "name": "Experiencia (Años)",
+              "value": "={{ $('On form submission').item.json['Experiencia (Años)'] }}",
+              "type": "string"
+            },
+            {
+              "id": "3fdb1641-a559-4c70-9ab9-11cbddd384b2",
+              "name": "Disponibilidad",
+              "value": "={{ $('On form submission').item.json.Disponibilidad }}",
+              "type": "string"
+            },
+            {
+              "id": "fca34b35-9fdb-426e-843e-6468e1ae2b7e",
+              "name": "Perfil_Linkedin",
+              "value": "={{ $json.Perfil_Linkedin || \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "2cd8cec9-3820-4e28-a35e-aa6347a3ddea",
+              "name": "Portfolio",
+              "value": "={{ $json.Portfolio || \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "063af012-7857-4098-8e9f-579feaf5379e",
+              "name": "Resumen CV",
+              "value": "={{ $json['Resumen CV'] || \"\" }}",
+              "type": "string"
+            },
+            {
+              "id": "a04c7cb3-20a5-460b-9e1d-0b547fa823f6",
+              "name": "Motivacion",
+              "value": "={{ $('On form submission').item.json.Motivacion }}",
+              "type": "string"
+            },
+            {
+              "id": "4d66f983-76cc-4272-b3d7-6f65a4ae5bee",
+              "name": "evaluationURL",
+              "value": "=https://docs.google.com/forms/d/e/1FAIpQLSdNQ3wwsUhwx7uZwHTZ_ATGV84NziMZvC7N1o3WeFpAYj_o6g/viewform?usp=pp_url&entry.1047014767={{ $('On form submission').first().json.Nombre }}&entry.1827329133={{ $('On form submission').first().json.Email }}&entry.54304683={{ $('On form submission').first().json.Role }}",
+              "type": "string"
+            },
+            {
+              "id": "a0c7d9cb-7f8c-4b8e-a2b3-7b2e87c14aaa",
+              "name": "Denegar",
+              "value": "Denegado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2272,
+        2656
+      ],
+      "id": "51413549-3d82-401a-be49-a20bad6613a6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "Enviar correo a usuario y adjuntar enlace para cuestionario de evaluacion en Google Form.",
+        "height": 288,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3968,
+        2272
+      ],
+      "typeVersion": 1,
+      "id": "4db057d9-22ef-4c9d-befe-82aabec3a449",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos Usuario nuevo : \nNombre : {{ $json.Nombre }}\nRole : {{ $json.Role }}\nExperiencia : {{ $json['Experiencia (Años)'] }}\nDisponibilidad : {{ $json.Disponibilidad }}\nPorfolio : {{ $json.Portfolio }}\nResumen CV : {{ $json['Resumen CV'] }}\nMotivacion : {{ $json.Motivacion }}\n\nIdentidad #1 : \nAsume que eres un agente profesional creador de correos de bienvenida para usuarios que ingresan nuevos de forma continua a traves de un formulario a nuestra empresa(DipusAI).\n\nTu mision : \n-Crear correos de bienvenida para cada usuario usando un tono profesional y agradable.\n-Nunca faltes al respeto ni uses terminos que no sean adecuados.\n-Transmite siempre confianza y haz sentir a cada usuario con tus correos como si se sintiera en casa.\n\nRegla Critica : \n-Dentro del correo siempre pero siempre debes poner este enlace antes de despedirte :\nFormulario de Evaluacion : {{ $json.evaluationURL }}\n-Asegurate siempre de devolver el body en html profesional claro y limpio listo para enviar con correo y siempre debes agregar un boton para el enlace del formulario.\n-Utiliza siempre el texto base de correo pero solo cambiando las variables dinamicas de este.\n\nTexto base de correo : \n\" Estimado/a {{ $json.Nombre }} \n\nMi nombre es JesusMiguel, y quiero darte la bienvenida personalmente a **DipusAI**.  \nEs un gusto contar contigo como {{ $json.Role }}, y acompañarte en este camino de crecimiento profesional.\n\nSabemos que te encuentras en una etapa inicial de tu carrera {{ $json['Experiencia (Años)'] }}, y precisamente por eso creemos que este es el mejor momento para impulsarte con las herramientas, el acompañamiento y la visión correcta para que puedas **superarte y evolucionar rápidamente**.\n\n✨ Imagina formar parte de un entorno donde:\n- Tu aprendizaje es prioridad.\n- Tu motivación {{ $json.Motivacion }} se transforma en resultados reales.\n- Cada proyecto te acerca un paso más a tu mejor versión profesional.\n\nTu disponibilidad de {{ $json.Disponibilidad }} nos permitirá integrarte de manera ágil y comenzar a trabajar en objetivos claros desde el primer momento.\n\n\"Aqui deberas añadir un boton con el link del formulario dentro\"\n────────────────────────────\n\nEquipo de trabajo de DipusAI.\"\n\nIdentidad #2 :\nEres un agente experto con mas de 10 años de experiencia como orquestador del Departamento de Recursos Humanos seleccionando con precision nuevos integrantes en condiciones optimas.\nSegun los datos ingresados por el usuario como todo un profesional en Recursos humannos vas a analizar en profundidad estos datos : Role : {{ $json.Role }},Experiencia : {{ $json['Experiencia (Años)'] }},Disponibilidad : {{ $json.Disponibilidad }} y vas a llegar a una conclusion final para ese usuario clasificando la prioridad segun estas tres categorias : Baja, Alta , Media y los vas a devolver como un campo extra del formulario.Por ejemplo : si el rol es developer pero es junior y tiene baja disponibilidad la prioridad seria baja.Asegurate de ser lo mas preciso posible en este aspecto para definir la prioridad de cada usuario con el minimo margen de error posible como un buen experto.",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2752,
+        3088
+      ],
+      "id": "5e9b8a44-7e40-4397-8776-0f6f86f264dd",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2576,
+        3376
+      ],
+      "id": "8f012f5f-ab62-4722-a539-1fcf4b0f1643",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Subject\": \"Aqui el asunto del correo\",\n\t\"Body\": \"Aqui el cuerpo del correo \",\n    \"Categoria\":\"aqui deberas darme la clasificacion del usuario\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2896,
+        3328
+      ],
+      "id": "3708df7f-bb75-47df-83fe-8610d3baf44b",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener datos del input (n8n style)\nconst input = $input.first().json;\n\n// Variables\nconst nombre = $('Edit Fields').first().json.Nombre || \"Usuario\";\nconst rol = input.Role || \"Profesional\";\nconst experiencia = $('Edit Fields').first().json['Experiencia (Años)'] || \"N/A\";\nconst disponibilidad = $('Edit Fields').first().json.Disponibilidad || \"N/A\";\nconst motivacion = $('Edit Fields').first().json.Motivacion || \"crecer profesionalmente\";\n\n// Subject del correo\nconst subject = `Bienvenido a DipusAI, ${nombre}`;\n\n// Body del correo (estilo persuasivo profesional)\nconst body = `\n│ Estimado/a ${nombre} │\n\nMi nombre es JesusMiguel, y quiero darte la bienvenida personalmente a **DipusAI**.  \nEs un gusto contar contigo como **${rol}**, y acompañarte en este camino de crecimiento profesional.\n\nSabemos que te encuentras en una etapa inicial de tu carrera (${experiencia}), y precisamente por eso creemos que este es el mejor momento para impulsarte con las herramientas, el acompañamiento y la visión correcta para que puedas **superarte y evolucionar rápidamente**.\n\n✨ Imagina formar parte de un entorno donde:\n- Tu aprendizaje es prioridad.\n- Tu motivación (${motivacion}) se transforma en resultados reales.\n- Cada proyecto te acerca un paso más a tu mejor versión profesional.\n\nTu disponibilidad de **${disponibilidad}** nos permitirá integrarte de manera ágil y comenzar a trabajar en objetivos claros desde el primer momento.\n\n\n────────────────────────────\n\nEquipo de trabajo de DipusAI.\n`;\n\n// Retornar output\nreturn [\n  {\n    json: {\n      Subject: subject,\n      Body: body.trim()\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3216,
+        3088
+      ],
+      "id": "8824ef36-ef65-4953-bb35-3fb4022176d0",
+      "name": "Code in JavaScript1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "PASO 2 \nLanzar Webhook con Form de Google Form para enviar correo con los recursos gratuitos de bienvenida.",
+        "height": 704,
+        "width": 1936,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4896,
+        1808
+      ],
+      "typeVersion": 1,
+      "id": "08ba1bea-a511-4b7f-b6a1-77fb5909ebe0",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Paso 3\nHacer checklist una vez forme parte del proceso y enviar por correo",
+        "height": 576,
+        "width": 1472,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4928,
+        2656
+      ],
+      "typeVersion": 1,
+      "id": "b9af6eef-67d9-45fc-9b25-c18373d86c34",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b050dd0e-81cc-45a5-ba7a-39f28cd95656",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        4960,
+        2080
+      ],
+      "id": "36955f38-f31e-4210-9141-7204adfc94d2",
+      "name": "Webhook",
+      "webhookId": "b050dd0e-81cc-45a5-ba7a-39f28cd95656",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1251cd0-f956-4572-8488-228d14f2de5e",
+              "name": "body.Nombre",
+              "value": "={{ $json.body.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "5421a39b-e267-48e1-8d04-368d94ea0ac3",
+              "name": "body.Correo",
+              "value": "={{ $('Webhook').item.json.body.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "aef67d25-49ab-4c71-a4b2-744d7202af5f",
+              "name": "body.Role",
+              "value": "={{ $json.body.Role }}",
+              "type": "string"
+            },
+            {
+              "id": "baaceb90-90bd-4125-b6d4-6f5ead96be61",
+              "name": "body['Cumplimiento de objetivos']",
+              "value": "={{ $json.body['Cumplimiento de objetivos'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8c4a6286-69ad-492d-9308-195d434c6a1a",
+              "name": "body['Dificultades encontradas']",
+              "value": "={{ $json.body['Dificultades encontradas'] }}",
+              "type": "string"
+            },
+            {
+              "id": "70a5e54b-b87c-476b-b6a0-40678915903c",
+              "name": "body['Logros destacados']",
+              "value": "={{ $json.body['Logros destacados'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a562a5c4-7a01-4834-8cef-bd3e0b64e3ac",
+              "name": "body['Motivacion/Feedack personal']",
+              "value": "={{ $json.body['Motivacion/Feedack personal'] }}",
+              "type": "string"
+            },
+            {
+              "id": "85f23190-4281-4c52-8be9-aba382dc211d",
+              "name": "Estado",
+              "value": "Enviado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5184,
+        2080
+      ],
+      "id": "72a2ef11-0f33-4eff-b0e9-956435e49f4a",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4fd20d51-d3bb-46b7-8195-607b09e2cd62",
+              "leftValue": "={{ $('On form submission').item.json.data[0] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1472,
+        2624
+      ],
+      "id": "d8a1a480-d838-4f11-8c2e-3dfdebf582ef",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('On form submission').item.json.Email }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {
+          "folderColorRgb": "#0003CF"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1344,
+        2144
+      ],
+      "id": "4e6fbe11-5f3f-474a-827c-a9687d6bee6f",
+      "name": "Create folder1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Rol:\nEres un asistente de éxito del cliente de DipusAI. Tu tono es profesional, empático, directo y orientado al crecimiento profesional.\n\nContexto:\nUn usuario {{ $json.body.Nombre }}, con el rol de {{ $json.body.Role }}, acaba de rellenar un formulario de retroalimentación y desarrollo profesional. El formulario contiene sus logros, dificultades y motivaciones. Tu tarea es enviarle un correo confirmando que sus datos han sido registrados y entregarle una selección de Recursos Gratuitos Estandar de DipusAI que le ayudarán a mejorar según su perfil.\n\nInstrucciones de Redacción:\n\nPersonalización: NO uses un genérico \"Hola\". Dirígete a {{ $json.body.Nombre }}.\nReconocimiento: Menciona explícitamente uno de sus logros o dificultades para demostrar que ha sido leído por un humano (o IA inteligente).\nEjemplo: \"Vemos que has logrado {{ $json.body['Logros destacados'] }} a pesar de las {{ $json.body['Dificultades encontradas'] }}\".\nConexión con Motivación: Usa su motivación (\"{{ $json.body['Motivacion/Feedack personal'] }}\") como puente para presentar los recursos.\nEntrega de Recursos: Presenta la lista estándar de recursos de DipusAI (definidos abajo) como herramientas para ayudarte a cumplir su objetivo de mejora.\nCierre: Firma profesional de DipusAI.\n\n\n###Recursos Gratuitos Estandar de DipusAI (Incluir siempre):\nKit de Herramientas para Automatización: Recursos para potenciar la eficiencia.\nGuía de Gestión del Tiempo bajo Presión: Tácticas para mejorar el rendimiento sin estrés.\nCheat Sheet de Comandos de IA: Referencia rápida para desarrolladores.\nAcceso a la Comunidad de DipusAI: Grupo de soporte exclusivo.\nFormato de Salida:\nDebes devolver estrictamente un objeto JSON con el subject y el body del correo.\n\nNecesito que el body me lo des de la siguiente forma de ejemplo : \n<p>Hola Jesus,</p>\n                    \n                    <p>Vemos que has logrado automatizar mucho en poco tiempo a pesar de trabajar bajo presión, lo cual es un gran logro que refleja tu dedicación y capacidad técnica. Entendemos también que quieres ser mejor, y en DipusAI queremos acompañarte en ese camino.</p>\n                    \n                    <p>Para ayudarte a cumplir tus objetivos y potenciar tu desarrollo profesional, te compartimos una selección de nuestros Recursos Gratuitos Estándar:</p>",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        5408,
+        2080
+      ],
+      "id": "814ba0d3-2114-44ce-964e-cdfbae9bec83",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"subject\": \"Hola Jesus, tus recursos de DipusAI para potenciar tu perfil de Developer etc...\",\n  \"body\": \"Hola Jesus,\\n\\nGracias por completar tu formulario de desarrollo en DipusAI etc....\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        5680,
+        2304
+      ],
+      "id": "dee084b1-aca8-4484-97cd-399e7f74148c",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        5424,
+        2320
+      ],
+      "id": "98dade28-e2d7-4ed8-bb26-5538134f6f75",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "jesusmiguela546@gmail.com",
+        "subject": "=Notificacion de Seguimiento para {{ $('Append row in sheet').first().json.Nombre }}",
+        "html": "=El usuario con nombre {{ $('Append row in sheet').first().json.Nombre }} y correo {{ $('Append row in sheet').first().json.Email }} ha sido seleccionado para continuar con el formulario de evaluacion para unirse a nuestro equipo devido a su prioridad : {{ $('Append row in sheet').first().json.Prioridad }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        4080,
+        2688
+      ],
+      "id": "d75af06f-861f-449c-ba2a-67fd14aa4d9f",
+      "name": "Notificar_Admin",
+      "webhookId": "8f5cc866-ccb0-4ab5-9ee0-338a3aa69568",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmaiil.com",
+        "toEmail": "={{ $('Append row in sheet').first().json.Email }}",
+        "subject": "={{ $('Basic LLM Chain').item.json.output.Subject }}",
+        "html": "={{ $('Basic LLM Chain').item.json.output.Body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        4080,
+        2368
+      ],
+      "id": "e0792d7b-6dd5-4dea-95cb-15f0f9b29731",
+      "name": "Correo+LinkForm",
+      "webhookId": "a51d2614-9a37-4b72-8ef2-d11a1e22f767",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Recursos DipusAI</title>\n    <style>\n        /* Estilos Generales */\n        body {\n            margin: 0;\n            padding: 0;\n            background-color: #f4f6f8; /* Gris muy suave de fondo */\n            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;\n            -webkit-font-smoothing: antialiased;\n            color: #333333;\n        }\n\n        /* Contenedor Principal */\n        .container {\n            width: 100%;\n            max-width: 600px;\n            margin: 0 auto;\n            background-color: #ffffff;\n            box-shadow: 0 4px 6px rgba(0,0,0,0.05);\n        }\n\n        /* Cabecera */\n        .header {\n            background-color: #1a252f; /* Azul oscuro serio */\n            padding: 30px;\n            text-align: center;\n        }\n\n        .logo {\n            color: #ffffff;\n            font-size: 24px;\n            font-weight: bold;\n            letter-spacing: 1px;\n            margin: 0;\n            text-transform: uppercase;\n        }\n\n        /* Cuerpo del contenido */\n        .content {\n            padding: 40px 30px;\n        }\n\n        .greeting {\n            font-size: 18px;\n            color: #1a252f;\n            margin-bottom: 20px;\n            font-weight: bold;\n        }\n\n        .message-text {\n            font-size: 16px;\n            line-height: 1.6;\n            color: #555555;\n            margin-bottom: 30px;\n        }\n\n        /* Sección de Recursos */\n        .resource-section {\n            background-color: #f8f9fa;\n            border-radius: 8px;\n            padding: 25px;\n            border: 1px solid #e1e4e8;\n        }\n\n        .section-title {\n            font-size: 18px;\n            color: #1a252f;\n            margin-top: 0;\n            margin-bottom: 20px;\n            border-bottom: 2px solid #3498db;\n            display: inline-block;\n            padding-bottom: 5px;\n        }\n\n        /* Fila del recurso (Tabla) */\n        .resource-row {\n            display: flex;\n            align-items: center;\n            justify-content: space-between;\n            padding: 15px 0;\n            border-bottom: 1px solid #e1e4e8;\n        }\n\n        .resource-row:last-child {\n            border-bottom: none;\n        }\n\n        .resource-name {\n            font-size: 15px;\n            color: #333333;\n            font-weight: 600;\n            width: 65%;\n        }\n\n        /* Botón CTA */\n        .btn {\n            display: inline-block;\n            padding: 10px 18px;\n            background-color: #3498db; /* Azul vibrante */\n            color: #ffffff !important;\n            text-decoration: none;\n            border-radius: 5px;\n            font-size: 14px;\n            font-weight: bold;\n            text-align: center;\n            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);\n            transition: background-color 0.3s ease;\n        }\n\n        .btn:hover {\n            background-color: #2980b9;\n        }\n\n        /* Footer */\n        .footer {\n            background-color: #1a252f;\n            padding: 20px;\n            text-align: center;\n            font-size: 12px;\n            color: #7f8c8d;\n        }\n\n        /* Versión Móvil */\n        @media only screen and (max-width: 600px) {\n            .container {\n                width: 100% !important;\n            }\n            .resource-row {\n                flex-direction: column;\n                align-items: flex-start;\n            }\n            .resource-name {\n                width: 100%;\n                margin-bottom: 10px;\n            }\n            .btn {\n                width: 100%;\n            }\n        }\n    </style>\n</head>\n<body>\n\n    <table class=\"container\" role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">\n        <!-- Cabecera -->\n        <tr>\n            <td class=\"header\">\n                <h1 class=\"logo\">DipusAI</h1>\n            </td>\n        </tr>\n\n        <!-- Contenido Principal -->\n        <tr>\n            <td class=\"content\">\n                <!-- Texto Dinámico del Agente -->\n                <div class=\"greeting\">Bienvenido {{ $('Edit Fields1').first().json.body.Nombre }},</div>\n                \n                <div class=\"message-text\">\n                    <!-- AQUÍ DEBES PEGAR EL TEXTO GENERADO POR EL AGENTE ANTERIOR -->\n                    {{ $json.output.body }}\n                    \n                    <!-- FIN DEL TEXTO DINÁMICO -->\n                </div>\n\n                <!-- Sección de Recursos -->\n                <div class=\"resource-section\">\n                    <h2 class=\"section-title\">Tus Recursos Exclusivos</h2>\n\n                    <!-- Recurso 1 -->\n                    <div class=\"resource-row\">\n                        <span class=\"resource-name\">Kit de Herramientas para Automatización</span>\n                        <a href=\"#\" class=\"btn\">Descargar</a>\n                    </div>\n\n                    <!-- Recurso 2 -->\n                    <div class=\"resource-row\">\n                        <span class=\"resource-name\">Guía de Gestión del Tiempo bajo Presión</span>\n                        <a href=\"#\" class=\"btn\">Ver Guía</a>\n                    </div>\n\n                    <!-- Recurso 3 -->\n                    <div class=\"resource-row\">\n                        <span class=\"resource-name\">Cheat Sheet de Comandos de IA</span>\n                        <a href=\"#\" class=\"btn\">Obtener</a>\n                    </div>\n\n                    <!-- Recurso 4 -->\n                    <div class=\"resource-row\">\n                        <span class=\"resource-name\">Acceso a la Comunidad de DipusAI</span>\n                        <a href=\"#\" class=\"btn\">Unirse</a>\n                    </div>\n                </div>\n\n                <div style=\"margin-top: 30px; font-size: 14px; color: #777;\">\n                    <p>Atentamente,<br>El equipo de DipusAI</p>\n                </div>\n            </td>\n        </tr>\n\n        <!-- Footer -->\n        <tr>\n            <td class=\"footer\">\n                &copy; 2026 DipusAI. Todos los derechos reservados.<br>\n                <a href=\"#\" style=\"color: #7f8c8d; text-decoration: underline;\">Política de Privacidad</a> | <a href=\"#\" style=\"color: #7f8c8d; text-decoration: underline;\">Darse de baja</a>\n            </td>\n        </tr>\n    </table>\n\n</body>\n</html>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        5952,
+        2080
+      ],
+      "id": "5bc5653f-caf8-468c-ab3d-e3c0d2f7386b",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('Edit Fields1').first().json.body.Correo }}",
+        "subject": "={{ $('Basic LLM Chain1').item.json.output.subject }}",
+        "html": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        6256,
+        2080
+      ],
+      "id": "659b7c47-5f2e-4dde-8196-f11492fe79fa",
+      "name": "Send email1",
+      "webhookId": "d3a39495-213e-44eb-bfc3-cec06cf8874c",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc",
+          "mode": "list",
+          "cachedResultName": "Reclutamiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Edit Fields1').item.json.body.Correo }}",
+            "Estado": "Enviado"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Experiencia (Años)",
+              "displayName": "Experiencia (Años)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Disponibilidad",
+              "displayName": "Disponibilidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Perfil_Linkedin",
+              "displayName": "Perfil_Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Portfolio",
+              "displayName": "Portfolio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Resumen CV",
+              "displayName": "Resumen CV",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Motivacion",
+              "displayName": "Motivacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "evaluationURL",
+              "displayName": "evaluationURL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        6560,
+        2080
+      ],
+      "id": "498edee4-d68b-45f5-86a2-b85bd6028377",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets.",
+        "height": 352,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6464,
+        1968
+      ],
+      "typeVersion": 1,
+      "id": "670bad84-e5ef-4534-9aec-950b9a98e56e",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc",
+          "mode": "list",
+          "cachedResultName": "Reclutamiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit#gid=0"
+        },
+        "event": "rowUpdate",
+        "options": {
+          "columnsToWatch": [
+            "Estado"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        5008,
+        2848
+      ],
+      "id": "dcd6e2e7-c8eb-47b7-bd07-4c67b91de0ff",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "aoQwhPAJvKD2ggqD",
+          "name": "Google Sheets Trigger account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "114c0be5-07d4-4917-b035-644c90f1da30",
+              "name": "Nombre",
+              "value": "={{ $json.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "644b2e1c-406f-417e-816a-7acca77004f8",
+              "name": "Email",
+              "value": "={{ $json.Email }}",
+              "type": "string"
+            },
+            {
+              "id": "783f231b-0c93-4ec5-84da-d359232b4b8f",
+              "name": "Role",
+              "value": "={{ $json.Role }}",
+              "type": "string"
+            },
+            {
+              "id": "ea698349-f172-4d63-8e74-c1571104cc27",
+              "name": "Estado",
+              "value": "Checklist",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5296,
+        2848
+      ],
+      "id": "219ce2f9-221f-4ac3-be6e-3bfb2ddb25e4",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Checklist DipusAI</title>\n    <style>\n        body {\n            margin: 0;\n            padding: 0;\n            background-color: #f4f6f8;\n            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;\n        }\n        .checklist-container {\n            width: 100%;\n            max-width: 600px;\n            margin: 20px auto;\n            background-color: #ffffff;\n            border-radius: 8px;\n            border: 1px solid #e1e4e8;\n            overflow: hidden;\n            box-shadow: 0 2px 4px rgba(0,0,0,0.05);\n        }\n        .checklist-header {\n            background-color: #1a252f; /* Azul DipusAI Oscuro */\n            padding: 15px 25px;\n            text-align: center;\n        }\n        .checklist-header h2 {\n            margin: 0;\n            color: #ffffff;\n            font-size: 18px;\n            text-transform: uppercase;\n            letter-spacing: 1px;\n        }\n        .step-row {\n            padding: 0; /* Quitamos padding para que el enlace ocupe todo */\n            border-bottom: 1px solid #f0f0f0;\n        }\n        .step-row:last-child {\n            border-bottom: none;\n        }\n        \n        /* ESTILO DEL ENLACE DEL PASO */\n        .step-link {\n            display: block;\n            padding: 15px 25px;\n            text-decoration: none; /* Quitar subrayado */\n            transition: background-color 0.2s;\n        }\n        .step-link:hover {\n            background-color: #f0f7fb; /* Azul muy suave al pasar el mouse */\n        }\n\n        .step-content {\n            display: flex;\n            align-items: flex-start;\n            gap: 15px;\n        }\n        .checkbox-box {\n            min-width: 20px;\n            height: 20px;\n            border: 2px solid #3498db; /* Azul Vibrante */\n            border-radius: 4px;\n            background-color: #ffffff;\n            margin-top: 2px;\n            transition: background-color 0.2s, border-color 0.2s;\n        }\n        /* Efecto visual al pasar el mouse sobre la casilla */\n        .step-link:hover .checkbox-box {\n            background-color: #d6eaf8; \n            border-color: #1a252f;\n        }\n        \n        .text-area {\n            font-size: 14px;\n            line-height: 1.5;\n            color: #333333;\n        }\n        .step-title {\n            display: block;\n            font-weight: bold;\n            color: #1a252f;\n            font-size: 15px;\n            margin-bottom: 4px;\n        }\n        .action-text {\n            display: block;\n        }\n        .emoji-icon {\n            font-size: 14px;\n            margin-right: 5px;\n        }\n        \n        /* --- ESTILOS DEL BOTÓN DE FINALIZACIÓN --- */\n        .cta-footer {\n            background-color: #ffffff;\n            padding: 25px;\n            text-align: center;\n            border-top: 1px solid #e1e4e8;\n        }\n        .btn-finish {\n            display: inline-block;\n            background-color: #27ae60; /* Verde Éxito */\n            color: #ffffff !important;\n            text-decoration: none;\n            padding: 15px 30px;\n            border-radius: 5px;\n            font-weight: bold;\n            font-size: 16px;\n            box-shadow: 0 4px 6px rgba(39, 174, 96, 0.2);\n            transition: background-color 0.3s;\n        }\n        .btn-finish:hover {\n            background-color: #219150;\n        }\n        .footer-note {\n            font-size: 12px;\n            color: #95a5a6;\n            margin-top: 10px;\n        }\n        \n        @media only screen and (max-width: 600px) {\n            .checklist-container {\n                width: 100% !important;\n                border-radius: 0;\n            }\n            .btn-finish {\n                width: 100%; \n                box-sizing: border-box;\n            }\n        }\n    </style>\n</head>\n<body>\n\n    <table class=\"checklist-container\" role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\">\n        \n        <!-- Header -->\n        <tr>\n            <td class=\"checklist-header\">\n                <h2>🚀 Ruta Express de Onboarding</h2>\n            </td>\n        </tr>\n\n        <!-- Pasos -->\n        <tr>\n            <td>\n                \n                <!-- PASO 1: Enlace que activa step=1 -->\n                <a href=\"https://dipus.app.n8n.cloud/webhook-test/15f6cd92-c204-4075-8512-7a6883550e59?email={{ $json.Email }}&step=1\" class=\"step-link\">\n                    <div class=\"step-content\">\n                        <div class=\"checkbox-box\"></div>\n                        <div class=\"text-area\">\n                            <span class=\"step-title\">Paso 1: La Victoria Rápida (Día 1)</span>\n                            <span class=\"action-text\"><span class=\"emoji-icon\">🎯</span><strong>Acción:</strong> Leer la \"Cheat Sheet de Comandos de IA\".</span>\n                        </div>\n                    </div>\n                </a>\n\n                <!-- PASO 2: Enlace que activa step=2 -->\n                <a href=\"https://dipus.app.n8n.cloud/webhook-test/15f6cd92-c204-4075-8512-7a6883550e59?email={{ $json.Email }}&step=2\" class=\"step-link\">\n                    <div class=\"step-content\">\n                        <div class=\"checkbox-box\"></div>\n                        <div class=\"text-area\">\n                            <span class=\"step-title\">Paso 2: Análisis y Descarga (Día 2)</span>\n                            <span class=\"action-text\"><span class=\"emoji-icon\">🎯</span><strong>Acción:</strong> Revisar la \"Guía de Gestión del Tiempo bajo Presión\".</span>\n                        </div>\n                    </div>\n                </a>\n\n                <!-- PASO 3: Enlace que activa step=3 -->\n                <a href=\"https://dipus.app.n8n.cloud/webhook-test/15f6cd92-c204-4075-8512-7a6883550e59?email={{ $json.Email }}&step=3\" class=\"step-link\">\n                    <div class=\"step-content\">\n                        <div class=\"checkbox-box\"></div>\n                        <div class=\"text-area\">\n                            <span class=\"step-title\">Paso 3: Conexión Humana (Día 3)</span>\n                            <span class=\"action-text\"><span class=\"emoji-icon\">🎯</span><strong>Acción:</strong> Entrar en la \"Comunidad de DipusAI\".</span>\n                        </div>\n                    </div>\n                </a>\n\n                <!-- PASO 4: Enlace que activa step=4 -->\n                <a href=\"https://dipus.app.n8n.cloud/webhook-test/15f6cd92-c204-4075-8512-7a6883550e59?email={{ $json.Email }}&step=4\" class=\"step-link\">\n                    <div class=\"step-content\">\n                        <div class=\"checkbox-box\"></div>\n                        <div class=\"text-area\">\n                            <span class=\"step-title\">Paso 4: Práctica Real (Día 4)</span>\n                            <span class=\"action-text\"><span class=\"emoji-icon\">🎯</span><strong>Acción:</strong> Abrir el \"Kit de Herramientas para Automatización\".</span>\n                        </div>\n                    </div>\n                </a>\n\n                <!-- PASO 5: Enlace que activa step=5 -->\n                <a href=\"https://dipus.app.n8n.cloud/webhook-test/15f6cd92-c204-4075-8512-7a6883550e59?email={{ $json.Email }}&step=5\" class=\"step-link\">\n                    <div class=\"step-content\">\n                        <div class=\"checkbox-box\"></div>\n                        <div class=\"text-area\">\n                            <span class=\"step-title\">Paso 5: El Puente al Éxito (Día 5)</span>\n                            <span class=\"action-text\"><span class=\"emoji-icon\">🎯</span><strong>Acción:</strong> Agendar una Auditoría de Automatización con DipusAI.</span>\n                        </div>\n                    </div>\n                </a>\n\n            </td>\n        </tr>\n\n        <!-- BOTÓN DE FINALIZACIÓN -->\n        <tr>\n            <td class=\"cta-footer\">\n                <a href=\"https://dipus.app.n8n.cloud/webhook-test/15f6cd92-c204-4075-8512-7a6883550e59?email={{ $json.Email }}&status=completed\" class=\"btn-finish\">\n                    ✅ He terminado el Checklist\n                </a>\n                <div class=\"footer-note\">Al tocar cada paso se registrará tu progreso.</div>\n            </td>\n        </tr>\n\n    </table>\n\n</body>\n</html>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        5488,
+        2848
+      ],
+      "id": "8fc14f58-fd75-433d-b9bd-0d8c242f453e",
+      "name": "HTML1"
+    },
+    {
+      "parameters": {
+        "fromEmail": "=jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('Edit Fields2').item.json.Email }}",
+        "subject": "Enhorabuena aqui tienes tus proximos pasos en DIpus AI",
+        "html": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        5808,
+        2848
+      ],
+      "id": "f640c946-00aa-49d2-a03c-b56c68a76709",
+      "name": "Send email2",
+      "webhookId": "82579ec5-00d4-4254-91d2-b77aaa4a1623",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc",
+          "mode": "list",
+          "cachedResultName": "Reclutamiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Edit Fields2').item.json.Email }}",
+            "Estado": "Checklist"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Experiencia (Años)",
+              "displayName": "Experiencia (Años)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Disponibilidad",
+              "displayName": "Disponibilidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Perfil_Linkedin",
+              "displayName": "Perfil_Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Portfolio",
+              "displayName": "Portfolio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Resumen CV",
+              "displayName": "Resumen CV",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Motivacion",
+              "displayName": "Motivacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "evaluationURL",
+              "displayName": "evaluationURL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        6112,
+        2848
+      ],
+      "id": "88883bd2-4585-4835-8180-18a44c907098",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "15f6cd92-c204-4075-8512-7a6883550e59",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        5024,
+        3744
+      ],
+      "id": "d9304a8b-3d13-4137-ae17-62ff8d2f194f",
+      "name": "Webhook1",
+      "webhookId": "15f6cd92-c204-4075-8512-7a6883550e59"
+    },
+    {
+      "parameters": {
+        "content": "Paso 4\nChecklist completado  , webhook con metodo GET para al cliquear el boton del correo  y se dispare",
+        "height": 784,
+        "width": 1920,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4928,
+        3328
+      ],
+      "typeVersion": 1,
+      "id": "b9181bff-e01c-433a-8c5c-4b629b5aac77",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2fb846b8-2dd8-4553-ad45-9865e19752e0",
+              "name": "query.email",
+              "value": "={{ $json.query.email }}",
+              "type": "string"
+            },
+            {
+              "id": "a8a9ee47-3217-4515-a0b5-a2fb93f3502d",
+              "name": "query.status",
+              "value": "={{ $json.query.status }}",
+              "type": "string"
+            },
+            {
+              "id": "02261292-2625-4095-9f02-b490c51ffdb0",
+              "name": "Estado",
+              "value": "Completado",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5280,
+        3744
+      ],
+      "id": "0658ee1b-9da5-43c0-bf7d-79798b60c2be",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc",
+          "mode": "list",
+          "cachedResultName": "Reclutamiento",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zEIi6EtlDjjaSx8ijcaUr0Q0xt1IPyfbyHfYLpGiepc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $json.query.email }}",
+            "Estado": "={{ $json.Estado }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Role",
+              "displayName": "Role",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Experiencia (Años)",
+              "displayName": "Experiencia (Años)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Disponibilidad",
+              "displayName": "Disponibilidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Perfil_Linkedin",
+              "displayName": "Perfil_Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Portfolio",
+              "displayName": "Portfolio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Resumen CV",
+              "displayName": "Resumen CV",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Motivacion",
+              "displayName": "Motivacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "evaluationURL",
+              "displayName": "evaluationURL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        5520,
+        3744
+      ],
+      "id": "3ac48381-6d89-4157-8deb-3b5b30e487b6",
+      "name": "Update row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "=jesusmiguela546@gmail.com",
+        "toEmail": "={{ $json.Email }}",
+        "subject": "Checklist Completado.",
+        "html": "=El usuario con correo  {{ $json.Email }} ha completado exitosamente su Checklist",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        5872,
+        3744
+      ],
+      "id": "2e658a20-7aa7-46e4-a506-6ae8775c9322",
+      "name": "Send email3",
+      "webhookId": "8a49442f-1748-48da-88ff-73ceea6f7931",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Cambiar estado a completado.",
+        "height": 192,
+        "width": 208,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5456,
+        3696
+      ],
+      "typeVersion": 1,
+      "id": "ddb5bc5b-6cab-4e59-a3c9-3ff87a045a3c",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets.",
+        "height": 304,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6032,
+        2752
+      ],
+      "typeVersion": 1,
+      "id": "12992888-e3e2-4409-883d-00d110a1597d",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "cambiar estado a enviado",
+        "height": 224,
+        "width": 230,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6496,
+        2048
+      ],
+      "typeVersion": 1,
+      "id": "d9d4518a-aaa3-4842-bfad-4cbea77789f9",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Cambiar estado a pendiente ",
+        "height": 272,
+        "width": 400,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3024,
+        2624
+      ],
+      "typeVersion": 1,
+      "id": "73d31439-ccec-4ddb-a27d-cd3c9f4ffbed",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('Edit Fields3').item.json.query.email }}",
+        "subject": "Enhorabuena!!!!",
+        "html": "<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"background-color: #f4f6f8; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px 20px;\">\n  <tr>\n    <td>\n      <table role=\"presentation\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\" style=\"margin: 0 auto; background-color: #ffffff; border-radius: 12px; border-top: 5px solid #1a252f; box-shadow: 0 10px 25px rgba(0,0,0,0.08); overflow: hidden;\">\n        \n        <!-- Icono y Título -->\n        <tr>\n          <td style=\"padding: 40px 30px; text-align: center;\">\n            <div style=\"font-size: 60px; margin-bottom: 20px;\">🎉</div>\n            <h1 style=\"color: #1a252f; margin: 0 0 15px 0; font-size: 24px;\">¡Felicidades!</h1>\n            \n            <!-- Mensaje -->\n            <p style=\"color: #666666; font-size: 16px; line-height: 1.6; margin: 0;\">\n              Has completado exitosamente tu checklist de onboarding con DipusAI. \n            </p>\n            <p style=\"color: #666666; font-size: 16px; line-height: 1.6; margin: 15px 0 0 0;\">\n              Estás listo para el siguiente nivel.\n            </p>\n\n            <!-- Pie de carta pequeño -->\n            <div style=\"margin-top: 30px; font-size: 12px; color: #999999;\">\n              Equipo DipusAI\n            </div>\n          </td>\n        </tr>\n\n      </table>\n    </td>\n  </tr>\n</table>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        6272,
+        3744
+      ],
+      "id": "95e277cc-a489-4588-9a28-0784d526f3a1",
+      "name": "Send email4",
+      "webhookId": "08647cfc-29fb-4436-bda0-5c4f50fdfff0",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        6560,
+        3712
+      ],
+      "id": "df8f800c-9831-48a4-83e7-b3fbab7edd0a",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "Brief cliente",
+        "height": 208,
+        "width": 272,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1040,
+        2592
+      ],
+      "typeVersion": 1,
+      "id": "add501b3-23da-4678-83cb-e3b8a642f73c",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "¿Tiene CV ?",
+        "height": 224,
+        "width": 272,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1392,
+        2576
+      ],
+      "typeVersion": 1,
+      "id": "4c4724fc-cd04-4e82-982d-688d8fed7174",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive para crear carpeta dle usuario y guardar sus documentos en caso de que tenga CV.\n Carpeta  Azul",
+        "height": 544,
+        "width": 1008,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        1984
+      ],
+      "typeVersion": 1,
+      "id": "a1a5345a-0e39-4c10-82b9-9d3d1ef36a5f",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "name": "={{ $('On form submission').first().json.data[0].filename }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Create folder1').first().json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2016,
+        2128
+      ],
+      "id": "7ae2b99a-cf25-441c-ade7-80d0bce91d3c",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conctr Credenciales del chat model",
+        "height": 224,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2496,
+        3296
+      ],
+      "typeVersion": 1,
+      "id": "cdc75366-a073-4838-9bc7-ba24a76b2456",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "user",
+            "emailAddress": "={{ $json.name }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1536,
+        2144
+      ],
+      "id": "5f95cc13-c373-482f-ada5-886901b3ac8c",
+      "name": "Share folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Sheet",
+        "height": 192,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3072,
+        2672
+      ],
+      "typeVersion": 1,
+      "id": "cf3dea31-36c3-44e3-9506-d87080801021",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciaes e Correo SMTP de Gmail o el que desee.\nEnviar agradecimiento al usuario por postularse para el puesto.",
+        "height": 256,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2976,
+        2304
+      ],
+      "typeVersion": 1,
+      "id": "a830678d-3493-4fc5-bb9c-b53dd885eb43",
+      "name": "Sticky Note20"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA y clasifcacon de los usuarios segun experiencia/role/disponibilidad en Baja, Media, Alta.\n",
+        "height": 512,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2464,
+        3024
+      ],
+      "typeVersion": 1,
+      "id": "e0cc598a-fc08-4158-a972-171fab98449f",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencale del coreo.",
+        "height": 176,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4000,
+        2336
+      ],
+      "typeVersion": 1,
+      "id": "fdb57b37-d60a-4755-96e6-fefb9043dc69",
+      "name": "Sticky Note21"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencale del coreo.",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4016,
+        2656
+      ],
+      "typeVersion": 1,
+      "id": "6c1d9a37-0117-4464-b4f2-6e3e03f6adaa",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "Cambiar estado a Checklist",
+        "height": 192,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6064,
+        2800
+      ],
+      "typeVersion": 1,
+      "id": "ef9cb3ff-6830-46d3-9797-2ed8d53461dd",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Sheet",
+        "height": 304,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4928,
+        2768
+      ],
+      "typeVersion": 1,
+      "id": "4cfaf803-304f-43e4-9db6-1ff31b27ff6c",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencales de correo para enviar los proximos pasos y Checklist una vez completado el Formulario de Evaluacion.",
+        "height": 256,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5712,
+        2768
+      ],
+      "typeVersion": 1,
+      "id": "846a33c3-50a8-4cf6-9fd3-c33b9c84f9fa",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "content": "Checklist Completado",
+        "height": 208,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4928,
+        3696
+      ],
+      "typeVersion": 1,
+      "id": "38ae4d16-3424-4cd4-920b-c2ef452c2765",
+      "name": "Sticky Note26"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencales de correo.",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5792,
+        3712
+      ],
+      "typeVersion": 1,
+      "id": "de5a14e1-8851-4be7-a381-c273b0956908",
+      "name": "Sticky Note27"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencales de correo.",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6192,
+        3712
+      ],
+      "typeVersion": 1,
+      "id": "05185517-5567-43c1-a6e8-df31ad58abfc",
+      "name": "Sticky Note28"
+    },
+    {
+      "parameters": {
+        "content": "Notifcar Admin que cliente competo el CheckList.",
+        "height": 448,
+        "width": 336,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5760,
+        3536
+      ],
+      "typeVersion": 1,
+      "id": "ee25dbc5-ceff-408a-8ca2-6d61a6330054",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "content": "Felicitar cliente una vez termine el ChekList.",
+        "height": 448,
+        "width": 336,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6144,
+        3536
+      ],
+      "typeVersion": 1,
+      "id": "b3a1a188-ebca-4e5e-a404-10c68fe2529f",
+      "name": "Sticky Note30"
+    },
+    {
+      "parameters": {
+        "content": "Obtener datos Google Form",
+        "height": 208,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4896,
+        2048
+      ],
+      "typeVersion": 1,
+      "id": "79f9845e-0e76-4f17-96bf-90dbcade9192",
+      "name": "Sticky Note31"
+    },
+    {
+      "parameters": {
+        "content": "Paso 1",
+        "height": 2032,
+        "width": 3536,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1040,
+        1984
+      ],
+      "typeVersion": 1,
+      "id": "561eac8e-38f4-498c-95f4-90542289114a",
+      "name": "Sticky Note32"
+    },
+    {
+      "parameters": {
+        "content": "LLM para recursos gratuitos y Checklist",
+        "height": 464,
+        "width": 464,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5376,
+        2016
+      ],
+      "typeVersion": 1,
+      "id": "ba095104-725c-4258-8539-5382b6446510",
+      "name": "Sticky Note33"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Correo para enviar recursos gratuitos al usuario una vez completado el Formulario de Evaluacion.",
+        "height": 272,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6160,
+        2000
+      ],
+      "typeVersion": 1,
+      "id": "b8cf0701-f81e-4927-8ef1-5f09b16098f4",
+      "name": "Sticky Note34"
+    },
+    {
+      "parameters": {
+        "content": "Plantilla HTML",
+        "height": 352
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5888,
+        1968
+      ],
+      "typeVersion": 1,
+      "id": "b97a07ca-11a8-4f97-aaa5-25af38f5a9a9",
+      "name": "Sticky Note35"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1792,
+        2128
+      ],
+      "id": "19dc0f85-d07a-4722-83b3-144be62ccb00",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('On form submission').item.json.Email }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {
+          "folderColorRgb": "#930A0A"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        2656
+      ],
+      "id": "fd6575e4-d23b-4288-bfae-adfb0c4fc4f0",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "writer",
+            "type": "user",
+            "emailAddress": "={{ $('On form submission').item.json.Email }}"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1968,
+        2656
+      ],
+      "id": "01717343-804d-4d9d-9c06-3699bc22eed5",
+      "name": "Share folder1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales para crear carpeta y compartirla con los usuarios Sin CV.\nCarpeta Roja",
+        "height": 272,
+        "width": 432,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1712,
+        2592
+      ],
+      "typeVersion": 1,
+      "id": "a652fce8-4e97-471a-b129-04c9901bbbe0",
+      "name": "Sticky Note36"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3efae97c-2b6f-4bcf-a262-23ad66efe11f",
+              "leftValue": "={{ $json.Prioridad }}",
+              "rightValue": "Media",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "4fbec8ed-b615-4367-b181-3ba5611619b8",
+              "leftValue": "={{ $json.Prioridad }}",
+              "rightValue": "Alta",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3552,
+        2720
+      ],
+      "id": "0fec7e13-74a6-451c-a671-fb0b2a8f1a97",
+      "name": "Prioridad"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3424,
+        2384
+      ],
+      "id": "d8dd558b-b0b3-4cb9-89eb-c6c03dfa8424",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmiguela546@gmail.com",
+        "toEmail": "={{ $('Append row in sheet').first().json.Email }}",
+        "subject": "=Calificacion de  {{ $('Append row in sheet').first().json.Nombre }}",
+        "html": "=Hola {{ $('Append row in sheet').first().json.Nombre }} ,\n\nLamentamos enormemente que no cumples con los requisitos para formar parte de nosotros, esfuerzate un poco y vuelva a intentarlo mas adelante.\n\nMucha Suerte.\nSaludos.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        4048,
+        3120
+      ],
+      "id": "36c6ceeb-d0ef-4849-b5f7-6488bbfbab8d",
+      "name": "Send email5",
+      "webhookId": "4f75d79f-34bc-42bc-aafb-6734d2f08143",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "¿Cual es la prioridad ?",
+        "height": 256,
+        "width": 304,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3456,
+        2640
+      ],
+      "typeVersion": 1,
+      "id": "a427273b-3a2a-4181-864a-954ac814480d",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "Formatear correo, utilizar en caso de querer un correo estatico para los usuarios.",
+        "height": 224,
+        "width": 368,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3120,
+        3024
+      ],
+      "typeVersion": 1,
+      "id": "aa9a460f-68c3-4e9e-9db4-bd2df8086126",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Enviar correo al usuario con prioridad baja para notificarle que no ha sido seleccionado para continuar con los siguientes pasos.",
+        "height": 256,
+        "width": 368,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3904,
+        3040
+      ],
+      "typeVersion": 1,
+      "id": "a0cd00dd-f54b-4142-99a8-dd9f2dd09251",
+      "name": "Sticky Note37"
+    },
+    {
+      "parameters": {
+        "content": "Plantilla HTML",
+        "height": 288
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5424,
+        2768
+      ],
+      "typeVersion": 1,
+      "id": "af9c7fb0-5616-47fb-86dc-a895cab31105",
+      "name": "Sticky Note38"
+    },
+    {
+      "parameters": {
+        "content": "Activar Trigger cuando el estado cambie a enviado.",
+        "height": 224,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4928,
+        2800
+      ],
+      "typeVersion": 1,
+      "id": "9cd86cde-c24a-4968-9e06-79a21cbb8051",
+      "name": "Sticky Note39"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets.",
+        "height": 288,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5408,
+        3632
+      ],
+      "typeVersion": 1,
+      "id": "aaae9a0d-39ce-4b61-8105-87cf00d0a23e",
+      "name": "Sticky Note40"
+    },
+    {
+      "parameters": {
+        "content": "🚀 Micro-Departamento de Recursos Humanos (RRHH) Automatizado : \nEste flujo de trabajo es un sistema integral de reclutamiento y onboarding. Su función es gestionar el ciclo de vida completo de un candidato: desde la recepción de la solicitud, clasificación inteligente con IA, almacenamiento seguro de documentos, hasta el envío secuencial de formularios de evaluación, recursos gratuitos y un checklist interactivo de bienvenida.\n\n✨ Importancia y Valor\n🧠 Clasificación Inteligente: Utiliza una IA (LLM) para analizar el perfil (Rol, Experiencia, Disponibilidad) y asignar automáticamente una prioridad (Alta, Media, Baja). Esto permite filtrar candidatos sin leer CVs manualmente.\n📂 Gestión Documental Automática: Detecta si el candidato subió CV. Si es así, crea una carpeta personal en Google Drive, sube el archivo y le da permisos de escritura. Si no hay CV, crea la carpeta pero mantiene el flujo activo.\n📊 CRM Automático: Centraliza toda la información en una Hoja de Google Sheets, actualizando el estado del candidato en tiempo real (Pendiente -> Enviado -> Checklist -> Completado).\n🤖 Nutrición y Seguimiento: El sistema no deja al candidato en el limbo. Envía correos automáticos personalizados según su etapa: confirmación inicial, enlace de evaluación (si es apto), recursos de desarrollo y checklist de onboarding.\n🛠️ Problema que Resuelve\nPérdida de Tiempo en Filtrado: Elimina la necesidad de revisar manualmente cientos de correos curriculares. La IA rechaza automáticamente a candidatos de prioridad baja.\nDesorden de Archivos: Resuelve el problema de los archivos perdidos adjuntándolos y organizándolos en carpetas nombradas por el email del usuario en Drive.\nFalta de Seguimiento (Nurturing): Automatiza el proceso de \"enganche\" del candidato mediante el envío de recursos valiosos (Cheat Sheet, Guías de Gestión) para mantener su interés antes de la contratación.\nFricción en el Onboarding: Guía al nuevo miembro a través de pasos claros (Checklist) interactivos para su primera semana.\n🧩 Nodos Clave Utilizados\n📝 On form submission: Punto de entrada para los datos del candidato.\n🤖 Basic LLM Chain: Analiza el perfil para determinar la prioridad y redacta correos personalizados.\n🔀 If (Condición CV): Verifica si el candidato subió archivo para decidir si se crea carpeta con documentos.\n📂 Google Drive (Create/Upload/Share): Gestiona la creación de carpetas, subida de CVs y permisos de acceso.\n📊 Google Sheets (Append/Update): Actúa como base de datos para guardar candidatos y actualizar sus estados.\n📧 Send Email (x5): Gestiona el envío de correos de confirmación, rechazo, recursos, checklist y felicitaciones.\n🌐 Webhooks:\nWebhook: Recibe datos del formulario de evaluación.\nWebhook1: Procesa los clics en el checklist del correo.\n🌐 Google Sheets Trigger: Detecta cambios en la hoja para iniciar el envío del checklist.\n📋 Paso a Paso: Cómo Utilizar este Workflow\nPara poner en marcha este sistema de RRHH, sigue estos pasos esenciales:\n\n🟢 Activar los Nodos de Inicio:\nAl abrir el flujo, verás que los nodos On form submission, Webhook, Webhook1 y Google Sheets Trigger están deshabilitados (color gris tenue).\nAcción: Haz clic derecho sobre cada uno de estos 4 nodos y selecciona \"Enable Node\" para activar el flujo.\n📤 Compartir el Formulario de Postulación:\nHaz clic en el nodo \"On form submission\".\nCopia la \"Production URL\" que aparece en la ventana lateral.\nPega este enlace en tu sitio web, LinkedIn o campañas de marketing para recibir candidatos.\n🧩 Configurar el Formulario de Evaluación:\nEste workflow espera recibir datos de un Google Form externo (para la segunda fase).\nAsegúrate de tener un Google Form creado y configurado para enviar sus respuestas al \"Webhook\" (segundo bloque del flujo) mediante Google Apps Script.\n⚙️ Verificar las Conexiones:\nAsegúrate de que las credenciales de Google Drive, Google Sheets y Correo SMTP estén correctamente conectadas y actualizadas.\n🚀 Flujo de Operación (Lo que sucede automáticamente):\nFase 1 (Recepción): Cuando un usuario envía el formulario, el sistema crea una carpeta en Drive (si tiene CV), guarda los datos en Sheets (Estado: Pendiente) y envía un correo de confirmación.\nFase 2 (Filtro IA): La IA analiza los datos. Si la prioridad es Media o Alta, se envía un correo al Admin y al usuario con el enlace al formulario de evaluación. Si es Baja, se envía un correo de rechazo amable.\nFase 3 (Evaluación): Si el usuario llena el Google Form, se activa el Webhook, se envía un correo con Recursos Gratuitos y el estado cambia a \"Enviado\".\nFase 4 (Onboarding): El disparador de Sheets detecta el estado \"Enviado\" y envía un correo con un Checklist interactivo.\nFase 5 (Finalización): Cuando el usuario termina el checklist (vía Webhook), el estado pasa a \"Completado\", se notifica al Admin y se felicita al usuario.\n👀 Monitoreo:\nRevisa la Hoja de Cálculo de Google Sheets (\"Reclutamiento\") para ver en tiempo real qué etapa lleva cada candidato y cómo ha sido clasificado por la IA.",
+        "height": 960,
+        "width": 2400,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1152,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "692b9c38-bce9-4198-95d2-61b7d19edfcc",
+      "name": "Sticky Note41"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Prioridad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create folder1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder1": {
+      "main": [
+        [
+          {
+            "node": "Share folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML1": {
+      "main": [
+        [
+          {
+            "node": "Send email2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email2": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Send email3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email3": {
+      "main": [
+        [
+          {
+            "node": "Send email4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email4": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share folder": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Share folder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share folder1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notificar_Admin": {
+      "main": [
+        []
+      ]
+    },
+    "Prioridad": {
+      "main": [
+        [
+          {
+            "node": "Correo+LinkForm",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notificar_Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send email5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email5": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "379ed920-6da2-4477-a1a5-3a947dd3668a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "kdw1kEeHl_oQmANwgOn7b",
+  "tags": []
+}

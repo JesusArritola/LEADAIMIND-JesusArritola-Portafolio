@@ -1,0 +1,952 @@
+{
+  "name": "TWITTER_FILTRO",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        96
+      ],
+      "id": "a9020102-6a72-4d45-9da8-a7699b26e6eb",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "Trigger Diario",
+        "height": 272,
+        "width": 484,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1504,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "35aea3ce-f553-4e11-902a-df240794c778",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Analizar y Procesar todos los tweets referentes a la IA\nCrear guiones enriquecidos con Perplexity\n",
+        "height": 256,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1408,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "993affc1-67ea-4aa8-a5ce-f9bc1dafd73d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Guardar datos en google Sheet listo para video \nConectar credenciales de Google Sheets",
+        "height": 224,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "2e8dd3f5-bf24-4592-9146-d32dd4969d91",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        48
+      ],
+      "id": "d514e3ad-0181-462f-b041-531a29a835ff",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Añadir usernames de las cuentas oficiales",
+        "height": 208,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1696,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "d44075c3-e03d-481a-a926-44e8a4615d53",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1216,
+        -400
+      ],
+      "id": "96519e14-26e3-4156-a4e8-d0cbf39b4d2b",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -816
+      ],
+      "id": "159b9861-7134-4650-a5b7-2b5fc3fbc38a",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Devuelve array de usuarios\nreturn [\n  {\n    \"username\": \"elonmusk\"\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1568,
+        -384
+      ],
+      "id": "a6db7454-d033-43cc-becb-89ebbcea6f0e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.x.com/2/users/by/username/{{ $json.username }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AAAAAAAAAAAAAAAAAAAAAAue7wEAAAAAatNSEM2hppGnAzV5TXGBxVNaGM0%3DElWE7joOeYGVz9EL0pPdO5SY8rDLloEwBgfqsnzkqP3jNZ9r1g"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -784,
+        -384
+      ],
+      "id": "3a27903f-b2e1-45ba-8f68-b0539d551fa9",
+      "name": "Get User ID"
+    },
+    {
+      "parameters": {
+        "url": "={{ 'https://api.twitter.com/2/users/' + $json.data.id + '/tweets' }}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "max_results",
+              "value": "10"
+            },
+            {
+              "name": "tweet.fields",
+              "value": "created_at,public_metrics,author_id"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer AAAAAAAAAAAAAAAAAAAAAAue7wEAAAAAatNSEM2hppGnAzV5TXGBxVNaGM0%3DElWE7joOeYGVz9EL0pPdO5SY8rDLloEwBgfqsnzkqP3jNZ9r1g"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2ae6e0dd-71c2-4a17-970c-3b529b83f225",
+      "name": "Get User Tweets",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -592,
+        -384
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const tweets = $input.all()[0].json.data || []; const username = $input.all()[0].json.username; const normalized = tweets.map(tweet => { return { username: username, tweet_id: tweet.id, text: tweet.text, created_at: tweet.created_at, retweets: tweet.public_metrics?.retweet_count || 0, likes: tweet.public_metrics?.like_count || 0, replies: tweet.public_metrics?.reply_count || 0, url: `https://twitter.com/${username}/status/${tweet.id}` }; }); return normalized;"
+      },
+      "id": "5067cf69-d6a6-4f2a-9c73-8cead0d8a88f",
+      "name": "Normalize Tweet Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -384
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        80,
+        -384
+      ],
+      "id": "0193f905-d8fb-49e2-8bde-659241c6b133",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FMG5PkuGV5-dJI5J0XffT4aB46RXkoFDrLZYl3WQVZM",
+          "mode": "list",
+          "cachedResultName": "Guiones_Twitter",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMG5PkuGV5-dJI5J0XffT4aB46RXkoFDrLZYl3WQVZM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FMG5PkuGV5-dJI5J0XffT4aB46RXkoFDrLZYl3WQVZM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Username": "={{ $('Get User ID').first().json.data.username }}",
+            "Guion": "={{ $json.output }}",
+            "User_ID": "={{ $('Get User ID').first().json.data.id }}",
+            "URL_TWiT": "={{ $('Edit Fields').first().json.URL }}",
+            "Twitter_ID": "={{ $('Edit Fields').first().json.Tweet_id }}",
+            "Fecha del Tweet": "={{ $('Edit Fields').first().json.Fecha_Creacion }}",
+            "Retweets": "={{ $('Edit Fields').first().json.Retweets }}",
+            "Tweet": "={{ $('Edit Fields').first().json.Tweet }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "User_ID",
+              "displayName": "User_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL_TWiT",
+              "displayName": "URL_TWiT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Twitter_ID",
+              "displayName": "Twitter_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha del Tweet",
+              "displayName": "Fecha del Tweet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Retweets",
+              "displayName": "Retweets",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tweet",
+              "displayName": "Tweet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Guion",
+              "displayName": "Guion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1648,
+        112
+      ],
+      "id": "4a4ea73d-ff7b-4da9-a33b-08975a0d67dd",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "Guiones listos para grabar de los posts de Twitter",
+        "message": "=Ha concluido exitosamente el analisis de los nuevos Tweets y estan listos los guiones para grabarlos , echale un vistazo >> https://docs.google.com/spreadsheets/d/1FMG5PkuGV5-dJI5J0XffT4aB46RXkoFDrLZYl3WQVZM/edit?gid=0#gid=0",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -1280,
+        -848
+      ],
+      "id": "af749a5f-8f7d-4a00-bda9-6c4bc7250db8",
+      "name": "Send a message",
+      "webhookId": "2a3e3622-a202-4b75-9e04-51178396eafa",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6341d2c6-900d-48cf-b430-a3062a1343a4",
+              "name": "Tweet_id",
+              "value": "={{ $('Normalize Tweet Data').item.json.tweet_id }}",
+              "type": "string"
+            },
+            {
+              "id": "0cd59f57-098f-4552-849b-290a122839d1",
+              "name": "Tweet",
+              "value": "={{ $('Normalize Tweet Data').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "a6052ca0-3b85-418e-93cc-a6c57ad1f50d",
+              "name": "Fecha_Creacion",
+              "value": "={{ $('Normalize Tweet Data').item.json.created_at }}",
+              "type": "string"
+            },
+            {
+              "id": "32b155e7-b098-4f8c-9d8f-e26b5b4ff92d",
+              "name": "Retweets",
+              "value": "={{ $('Normalize Tweet Data').item.json.retweets }}",
+              "type": "number"
+            },
+            {
+              "id": "0a62172e-9cf1-4761-95f3-4089a21831c4",
+              "name": "URL",
+              "value": "={{ $('Normalize Tweet Data').item.json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        -368
+      ],
+      "id": "92db9545-de9a-4710-b7e6-d87929bbf28b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para enriquecer el contenido del Tweet ",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "simplify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify_Output', ``, 'boolean') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        -80
+      ],
+      "id": "cfce71a1-81f1-40f2-9f22-584e1f316a6e",
+      "name": "Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "Vo1d7YNqDzHhU5Dh",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos a analizar : \nTweet : {{ $json.Tweet }}\n",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=***Rol: \nEres un agente profesional experto en creación de guiones para videos tipo reels y shorts, especializado en noticias y novedades sobre inteligencia artificial, con más de 10 años de experiencia en el sector.\n\n***Instrucción: \nAnaliza tweets recientes relacionados con inteligencia artificial, extrayendo la información más relevante, actual y noticiosa. A partir de estos tweets, crea guiones concisos, dinámicos y con un tono profesional que incluya un gancho atractivo para captar la atención del público objetivo en videos cortos (reels/shorts). Cada guion debe presentar la noticia o tendencia claramente, resaltar su importancia o novedad, y fomentar el interés para que los espectadores sigan pendientes del tema.\n\n***Pasos a seguir:\n-Filtra tweets recientes de fuentes confiables y relevantes sobre inteligencia artificial.\n-Identifica el mensaje principal y cualquier dato destacable o insight relevante en cada tweet.\n-Resume y transforma la información en un guion breve (idealmente entre 30 a 60 segundos de lectura en voz alta).\n-Construye un gancho inicial poderoso para atraer la atención desde los primeros segundos del video.\n-Mantén un tono profesional pero cercano, asegurando que el contenido sea claro, relevante y dinámico para formato corto.\n-Incluye una llamada a la acción implícita o explícita que fomente interacción o seguimiento del tema.\n\n***Objetivo final: Producir guiones efectivos y atractivos para reels/shorts que informen y enganchen a la audiencia sobre noticias actuales de inteligencia artificial basadas en tweets, manteniendo un estilo profesional y con gancho.\nReducción del alcance: El enfoque está limitado exclusivamente a tweets sobre inteligencia artificial y la creación de guiones para videos cortos tipo reels/shorts.\n\nNo se incluyen análisis extensos, guiones para formatos largos ni temas fuera del ámbito de IA o tweets.\n\nReglas Criticas :\n-Utiliza siempre la herramienta \"Perplexity\" para enriquecer los datos sobre la noticia del tweet y generar mejores guiones.\n-Nunca generes texto adicional solo los guiones , limitate a hacer eso.\n-Utiliza este ejemplo como estructura para generar los guiones : \nEjemplo :\n\"\"Guion 1:\nGancho: Última hora — SpaceX confirma el despliegue de 29 satélites Starlink.\nDesarrollo: El lanzamiento correspondió a la misión Starlink 6-110 desde Cape Canaveral; el Falcon 9 puso en órbita 29 unidades que se suman a una constelación global ya con más de 9.700 satélites. El primer escalón volvió a aterrizar con éxito, demostrando una vez más la capacidad de reutilización que acelera el despliegue masivo de Internet desde el espacio.\nCierre / CTA: Si te interesa cómo esto impacta la conectividad global, sigue para más actualizaciones de lanzamientos y tecnología espacial.\n\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1520,
+        -384
+      ],
+      "id": "794c1fe8-37cd-49a9-a1b8-ecc6a6b97582",
+      "name": "Creador_Guiones"
+    },
+    {
+      "parameters": {
+        "content": "Es IA ?",
+        "height": 304,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        944,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "32ca356e-600b-4b72-a70a-8fa1520db1ca",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "inputText": "= {{ $json.Tweet }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "IA",
+              "description": "=Todo lo referente con la inteligencia artificial(IA) y sus campos de estudio y aplicacion."
+            },
+            {
+              "category": "no IA",
+              "description": "=Todo lo que este fuera de este contexto -> inteligencia artificial(IA) y sus campos de estudio y aplicacion."
+            }
+          ]
+        },
+        "options": {
+          "enableAutoFixing": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        -368
+      ],
+      "id": "1420a069-dde8-4eaf-924d-532e63d68d6f",
+      "name": "Clasificador",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "Obtener ID y Tweets del username",
+        "height": 208,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "f7160b09-b466-44ce-9d6b-822bf3fc6521",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Limpiar respuesta del HTTP",
+        "height": 176,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "654d7077-595e-413a-96f7-c634070d5554",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1408,
+        240
+      ],
+      "id": "88c7cb11-a650-4a71-bf94-c50df6d00b36",
+      "name": "Schedule Trigger",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "Notificar cuando termine la ejecucion\nConectar Credenciales de Gmail",
+        "height": 240,
+        "width": 388,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1328,
+        -912
+      ],
+      "typeVersion": 1,
+      "id": "03c6be4e-5277-4a74-ab8b-83381ced2760",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Crear cuenta en Twitter Developer para obtener Bearer Token",
+        "height": 400,
+        "width": 644,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1072,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "62fbed45-9577-45a4-bfc8-f0ee1ea442f2",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Setear datos",
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "7b6cc329-2de9-450a-9472-4d2693411590",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Enriquecer Tweet para mejor Guion\nConectar Credenciales de Perplexity",
+        "height": 192,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1760,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "eae5dd0c-c52b-4234-9901-e80d78cb484c",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model",
+        "height": 224,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "2648f1bd-b0f6-4725-9d52-df0ca78ef402",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 912,
+        "width": 1216,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        880,
+        -672
+      ],
+      "typeVersion": 1,
+      "id": "bf07684f-bde3-420f-a8db-f05079b32e7f",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        48
+      ],
+      "id": "2bcf9712-191e-4f7d-85f6-fa5b61100f1c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -1264,
+        -672
+      ],
+      "id": "9b6884dc-eafa-458e-be4c-10587af3ede6",
+      "name": "Limit"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        -80
+      ],
+      "id": "7a50aca0-1fcd-4cdc-84fb-51d9e80f22c3",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "content": "📋 DOCUMENTACIÓN DEL WORKFLOW: AGENTE DE CONTENIDO IA PARA TWITTER\n🎯 IMPORTANCIA\nEste workflow automatiza la creación de contenido de video (reels/shorts) a partir de tweets sobre inteligencia artificial, permitiendo mantener un canal de noticias actualizado sin intervención manual. \nEs ideal para creadores de contenido, agencias de marketing o canales de noticias tech que necesitan producir guiones de video diariamente de forma escalable.\n📝 DESCRIPCIÓN\nSistema automatizado que extrae tweets recientes de cuentas específicas de Twitter/X, filtra solo contenido relacionado con Inteligencia Artificial, enriquece la información usando Perplexity AI \npara mayor contexto, genera guiones profesionales para videos cortos (30-60 segundos) con gancho inicial, almacena todo en Google Sheets listo para producción de video y notifica por email cuando el proceso termina.\n\n🛠️ PROBLEMAS QUE RESUELVE\n❌ Falta de tiempo para monitorear manualmente noticias de IA\n❌ Inconsistencia en la producción de contenido diario\n❌ Investigación manual lenta sobre cada noticia\n❌ Formato desestructurado de guiones sin gancho profesional\n❌ Pérdida de oportunidades de contenido viral por tardanza\n\n🔧 HERRAMIENTAS Y SERVICIOS UTILIZADOS\n🐦 Twitter/X API → Obtener tweets de usuarios | Requiere: Bearer Token (Developer Portal)\n🤖 OpenAI GPT → Clasificación de contenido IA | Requiere: OpenAI API Key\n💎 Google Gemini → Creación de guiones (backup) | Requiere: Google AI Studio API Key\n🔍 Perplexity AI → Enriquecimiento de noticias | Requiere: Perplexity API Key\n📊 Google Sheets → Almacenamiento de datos | Requiere: OAuth2 Google Account\n📧 Gmail → Notificaciones de finalización | Requiere: OAuth2 Gmail Account\n\n🚀 PASO A PASO: CONFIGURACIÓN Y CONEXIÓN\nPASO 1: Configurar Twitter/X API\n// Ir a developer.twitter.com\n// Crear proyecto y app nueva\n// Generar Bearer Token en \"Keys and Tokens\"\n// Copiar token y reemplazar en los nodos: Get User ID y Get User Tweets → Header Authorization\nPASO 2: Configurar OpenAI\n// Ir a platform.openai.com\n// Crear nueva API Key\n// En n8n: Settings → Credentials → Add Credential → OpenAI API\n// Guardar y seleccionar en nodo OpenAI Chat Model\nPASO 3: Configurar Google Gemini (Backup)\n// Ir a makersuite.google.com\n// Crear API Key en \"Get API Key\"\n// En n8n: Settings → Credentials → Google PaLM/Gemini API\n// Guardar y seleccionar en nodo Google Gemini Chat Model\nPASO 4: Configurar Perplexity\n// Ir a perplexity.ai/settings\n// Generar API Key en API section\n// En n8n: Settings → Credentials → Perplexity API\n// Guardar y seleccionar en nodo Perplexity\nPASO 5: Configurar Google Sheets\n// En n8n: Settings → Credentials → Google Sheets OAuth2\n// Seguir flujo de autenticación con cuenta Google\n// Crear spreadsheet en Google Drive\n// Copiar Document ID de la URL y pegar en nodo Append row in sheet\n// Seleccionar hoja de trabajo correspondiente\nPASO 6: Configurar Gmail\n// En n8n: Settings → Credentials → Gmail OAuth2\n// Autorizar con cuenta de Gmail deseada\n// Actualizar email destino en nodo Send a message \nPASO 7: Configurar Usuarios a Monitorear\n// Abrir nodo Code in JavaScript\n// Modificar array con usernames deseados:\nreturn [\n{ \"username\": \"elonmusk\" },\n{ \"username\": \"sama\" },\n{ \"username\": \"ylecun\" }\n];\nPASO 8: Activar Trigger Automático\n// Seleccionar nodo Schedule Trigger\n// Cambiar de Disabled a Enabled\n// Configurar horario deseado (actual: 16:00 diario)\n// Opcional: Mantener When clicking Execute workflow para pruebas manuales\n⚙️ FLUJO DE TRABAJO DETALLADO\n1️⃣ TRIGGER (Manual o Schedule 16:00)\n↓\n2️⃣ CODE → Define lista de usernames a monitorear\n↓\n3️⃣ LOOP OVER ITEMS → Itera por cada usuario\n↓\n4️⃣ GET USER ID → Obtiene ID numérico de Twitter\n↓\n5️⃣ GET USER TWEETS → Extrae últimos 10 tweets\n↓\n6️⃣ NORMALIZE TWEET DATA → Limpia y estructura datos\n↓\n7️⃣ LOOP OVER ITEMS1 → Itera por cada tweet\n↓\n8️⃣ EDIT FIELDS → Setea campos estructurados\n↓\n9️⃣ CLASIFICADOR (OpenAI) → ¿Es sobre IA?\n├─ SI → Continúa\n└─ NO → Descarta y vuelve al loop\n↓\n🔟 CREADOR_GUIONES (Gemini + Perplexity)\n├─ Perplexity enriquece contexto\n└─ Gemini crea guión profesional\n↓\n1️⃣1️⃣ APPEND ROW IN SHEET → Guarda en Google Sheets\n↓\n1️⃣2️⃣ LIMIT → Control de ejecución\n↓\n1️⃣3️⃣ SEND EMAIL → Notificación de finalización\n\n🎬 ESTRUCTURA DEL GUION GENERADO\nCada guión incluye:\n→ Gancho inicial (última hora/impacto)\n→ Desarrollo (contexto + datos clave)\n→ Cierre/CTA (llamada a la acción)\n\n📊 DATOS ALMACENADOS EN GOOGLE SHEETS\n// Username → Usuario de Twitter\n// User_ID → ID numérico\n// Tweet → Texto original\n// Tweet_ID → ID del tweet\n// URL_TWiT → Link directo\n// Fecha del Tweet → Timestamp\n// Retweets → Métrica de engagement\n// Guion → Script generado por IA",
+        "height": 2160,
+        "width": 1520,
+        "color": "#62257E"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2272,
+        -1520
+      ],
+      "typeVersion": 1,
+      "id": "10ebd801-bc62-40d3-8ecb-165597fda06f",
+      "name": "Sticky Note13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Clasificador",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Creador_Guiones",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get User ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User ID": {
+      "main": [
+        [
+          {
+            "node": "Get User Tweets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Tweets": {
+      "main": [
+        [
+          {
+            "node": "Normalize Tweet Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Tweet Data": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Clasificador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "Creador_Guiones",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creador_Guiones": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificador": {
+      "main": [
+        [
+          {
+            "node": "Creador_Guiones",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Creador_Guiones",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b30626d5-0278-47d5-949a-0c6c4ffe3861",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "XAFkrg8qGQNggmdC",
+  "tags": []
+}

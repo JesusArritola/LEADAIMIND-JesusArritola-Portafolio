@@ -1,0 +1,976 @@
+{
+  "name": "Agente_generador_de_KPI's",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        240
+      ],
+      "id": "674981b3-eae4-4c9c-8191-4db7f8fd46f8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M",
+          "mode": "list",
+          "cachedResultName": "KPI",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1017732730,
+          "mode": "list",
+          "cachedResultName": "Escrapeo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M/edit#gid=1017732730"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1616,
+        240
+      ],
+      "id": "46bcb2db-e12c-4ed8-9fe3-1f22bf0f03c0",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        1552,
+        1120
+      ],
+      "id": "20cbe270-ac06-4b2f-becb-37a3b9747a24",
+      "name": "Schedule Trigger1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "Escrapeo Semanal sobre restaurantes para automatizacion",
+        "height": 576,
+        "width": 1760,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1344,
+        736
+      ],
+      "typeVersion": 1,
+      "id": "93a81279-8bf2-43f4-9b4f-ec588a3213ed",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Analisis KPI",
+        "height": 608,
+        "width": 2144,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1344,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "588df0f3-dc0d-430c-a247-fb5b272039a4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// Contar totales\nconst totalRestaurantes = items.length;\nconst restaurantesConTelefono = items.filter(item => item.json.Telefono && item.json.Telefono.trim() !== '').length;\nconst restaurantesConURL = items.filter(item => item.json.URl && item.json.URl.trim() !== '').length;\n\n// Calcular KPIs\nconst tasaContacto = totalRestaurantes > 0 ? (restaurantesConTelefono / totalRestaurantes) * 100 : 0;\nconst tasaURLDisponible = totalRestaurantes > 0 ? (restaurantesConURL / totalRestaurantes) * 100 : 0;\n\n// Agrupar por ciudad\nconst restaurantesPorCiudad = {};\nitems.forEach(item => {\n  const ciudad = item.json.Ciudad || 'Sin ciudad';\n  restaurantesPorCiudad[ciudad] = (restaurantesPorCiudad[ciudad] || 0) + 1;\n});\n\nreturn [{\n  json: {\n    TotalRestaurantes: totalRestaurantes,\n    RestaurantesConTelefono: restaurantesConTelefono,\n    RestaurantesConURL: restaurantesConURL,\n    TasaContacto: Math.round(tasaContacto * 100) / 100,\n    TasaURLDisponible: Math.round(tasaURLDisponible * 100) / 100,\n    RestaurantesPorCiudad: restaurantesPorCiudad\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1936,
+        240
+      ],
+      "id": "28a1a17d-6682-4e84-9472-2c5d5fd09e87",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "196c94db-de0e-4293-b133-329861b8a126",
+              "name": "TotalRestaurantes",
+              "value": "={{ $('Code in JavaScript').item.json.TotalRestaurantes }}",
+              "type": "string"
+            },
+            {
+              "id": "df2dfe85-48ed-4f26-85cb-2483084f9e77",
+              "name": "RestaurantesConTelefono",
+              "value": "={{ $('Code in JavaScript').item.json.RestaurantesConTelefono }}",
+              "type": "string"
+            },
+            {
+              "id": "661caed4-837b-40a1-83bc-f6cde3793aab",
+              "name": "RestaurantesConUrl",
+              "value": "={{ $('Code in JavaScript').item.json.RestaurantesConURL }}",
+              "type": "string"
+            },
+            {
+              "id": "b5707fac-286f-415f-8e95-646606293529",
+              "name": "TasaContacto",
+              "value": "={{ $('Code in JavaScript').item.json.TasaContacto }}",
+              "type": "string"
+            },
+            {
+              "id": "8c090967-3f8e-461e-a170-006fddb1611b",
+              "name": "TasaUrlDisponible",
+              "value": "={{ $('Code in JavaScript').item.json.TasaURLDisponible }}",
+              "type": "string"
+            },
+            {
+              "id": "8e043390-e0c8-4512-aafa-fd622f4532d8",
+              "name": "RestaurantesPorCiudad",
+              "value": "={{ $('Code in JavaScript').item.json.RestaurantesPorCiudad }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        240
+      ],
+      "id": "62c4e594-9b32-43fc-a154-cef233cf70f2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Estos son los datos del escrapeo :\n Total de Restaurantes : {{ $json.TotalRestaurantes }}\n Restaurantes con numeros de telefono : {{ $json.RestaurantesConTelefono }}\n Restaurantes con URL : {{ $json.RestaurantesConUrl }}\n Tasa de Contacto : {{ $json.TasaContacto }}\n Tasa Url Disponibles : {{ $json.TasaUrlDisponible }}\n Restaurantes por ciudad : {{ $json.RestaurantesPorCiudad }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un Asistente Profesional en KPI(Key Performance Indicator) el cual esta encargado de analaisar los datos recibidos de la entrada que son los siguientes : \nTotal de Restaurantes : {{ $json.TotalRestaurantes }}\n Restaurantes con numeros de telefono : {{ $json.RestaurantesConTelefono }}\n Restaurantes con URL : {{ $json.RestaurantesConUrl }}\n Tasa de Contacto : {{ $json.TasaContacto }}\n Tasa Url Disponibles : {{ $json.TasaUrlDisponible }}\n Restaurantes por ciudad : {{ $json.RestaurantesPorCiudad }}\nSobre esos datos deberas crear un correo profesional notificando al usuario sobre las metricas de su nuevo escrapeo.\nDeberas usar un subject facil de identificar y que el usuario sepa que es sobre su KPI de escrapeo.\n\nEl body sera un breve mensaje en que le diras las metricas de ese nuevo escrapeo de la siguiente forma :\nEjemplo: enohrabuena sus datos son muy satisfactorios (para dar ese mensaje deberas mirar el total de restaurantes y comparar el resto de metricas para comrpobar la efectividad de su proceso).<br><br>\nDentro del body enviaras cada metrica con una oracion clara y directo por ejemplo : En el escrapeo hay 10 Restaurantes \n          Del total de 10 escrapeos hay 10 restaurantes con numero de telefono(entre parentesis deberas poner el porciento que cumple del total en este caso por ejemplo 100%).<br><br>\n          Asi sucesivamente con cada elemento recivido.....\n\nUtiliza 1 salto de linea para separar cada oracion.\n\nDeberas usar un tono profesional como si estuvieras enviando el mensaje a una empresa prestigiosa.\n\nNo te inventes informacion NUNCA, solo utiliza los datos brindados.\n\nSe claro y preciso no te tomes atribuciones que no esten en las indicaciones ni pongas texto de mas y manten el contexto.En el inicio del Correo no saludes solo pon una oracion sentimental demostrando si fue bueno o malo el escrapeo en base a los resultados.\n\nUtiliza separadores , saltos de lineas y emojis para hacer el correo mas eficiente.\n\nPara enviar el correo electronico vas a utilizar la herramnienta (Gmail)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2736,
+        240
+      ],
+      "id": "9ffe7c68-d6ae-4065-b81d-608314db2e7e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        528
+      ],
+      "id": "14d4e15c-7a0b-464a-b7c0-a6e2ebe8589b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/nwua9Gu5YrADL7ZDj/run-sync-get-dataset-items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer apify_api_bqofhC6DRvjD2mcSDsdzPRrAfuyz2G3KBXzO"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n    \"includeWebResults\": false,\n    \"language\": \"en\",\n    \"locationQuery\": \"New York, USA\",\n    \"maxCrawledPlacesPerSearch\": 10,\n    \"maxImages\": 0,\n    \"maxReviews\": 0,\n    \"maximumLeadsEnrichmentRecords\": 0,\n    \"scrapeContacts\": false,\n    \"scrapeDirectories\": false,\n    \"scrapeImageAuthors\": false,\n    \"scrapePlaceDetailPage\": false,\n    \"scrapeReviewsPersonalData\": true,\n    \"scrapeTableReservationProvider\": false,\n    \"searchStringsArray\": [\n        \"restaurant\"\n    ],\n    \"skipClosedPlaces\": false\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1936,
+        1072
+      ],
+      "id": "c126ef5a-8b90-461d-a1f4-085d58367f88",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M",
+          "mode": "list",
+          "cachedResultName": "KPI",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1017732730,
+          "mode": "list",
+          "cachedResultName": "Escrapeo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M/edit#gid=1017732730"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Titulo": "={{ $json.Titulo }}",
+            "Categoria": "={{ $json.Categoria }}",
+            "Direccion": "={{ $json.Direccion }}",
+            "Street": "={{ $json.Street }}",
+            "Ciudad": "={{ $json.Ciudad }}",
+            "Telefono": "={{ $json.Telefono }}",
+            "URl": "={{ $json.URl }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Categoria",
+              "displayName": "Categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Direccion",
+              "displayName": "Direccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Street",
+              "displayName": "Street",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Ciudad",
+              "displayName": "Ciudad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URl",
+              "displayName": "URl",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2544,
+        1072
+      ],
+      "id": "37396df3-ba93-4ace-9f00-026e9f1a7cae",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "onectar Credenciales de Google Sheet",
+        "height": 224,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2464,
+        1008
+      ],
+      "typeVersion": 1,
+      "id": "2aa8d83c-1ae5-482d-8951-3a8d6ece2156",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a231149-82d0-460a-b130-38fb9bbecd31",
+              "name": "Titulo",
+              "value": "={{ $('HTTP Request').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "01927cf0-4de5-43ff-8d9b-642ca3d92c5c",
+              "name": "Categoria",
+              "value": "={{ $('HTTP Request').item.json.categoryName }}",
+              "type": "string"
+            },
+            {
+              "id": "48f031bc-9733-4591-b290-9a22641fea82",
+              "name": "Direccion",
+              "value": "={{ $('HTTP Request').item.json.address }}",
+              "type": "string"
+            },
+            {
+              "id": "6aa94ebd-a40e-4d6e-99eb-69960176be38",
+              "name": "Street",
+              "value": "={{ $('HTTP Request').item.json.street }}",
+              "type": "string"
+            },
+            {
+              "id": "9a232932-21ee-42e4-9d5b-f59558a4873e",
+              "name": "Ciudad",
+              "value": "={{ $('HTTP Request').item.json.city }}",
+              "type": "string"
+            },
+            {
+              "id": "99d34cec-779c-4d4c-88df-31c518d7ef0b",
+              "name": "Telefono",
+              "value": "={{ $('HTTP Request').item.json.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "d966e38a-7560-4821-8292-61e0c8bfdf17",
+              "name": "URl",
+              "value": "={{ $('HTTP Request').item.json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2240,
+        1072
+      ],
+      "id": "f263dab5-9696-4867-ad46-639c0fd82ca8",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        1424,
+        512
+      ],
+      "id": "dc16be79-721f-406c-b856-b2dd295a6414",
+      "name": "Schedule Trigger",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M",
+          "mode": "list",
+          "cachedResultName": "KPI",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 215766406,
+          "mode": "list",
+          "cachedResultName": "ResumenKPI",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OWkYOjiRPfWq7wVhIjUSEGOck5fP1pkNZOFHho9y44M/edit#gid=215766406"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "TotalRestaurantes": "={{ $json.TotalRestaurantes }}",
+            "RestaurantesConTelefono": "={{ $json.RestaurantesConTelefono }}",
+            "RestaurantesConURL": "={{ $json.RestaurantesConURL }}",
+            "TasaContacto": "={{ $json.TasaContacto }}",
+            "TasaURLDisponible": "={{ $json.TasaURLDisponible }}",
+            "RestaurantesPorCiudad": "={{ $json.RestaurantesPorCiudad }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "TotalRestaurantes",
+              "displayName": "TotalRestaurantes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "RestaurantesConTelefono",
+              "displayName": "RestaurantesConTelefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "RestaurantesConURL",
+              "displayName": "RestaurantesConURL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TasaContacto",
+              "displayName": "TasaContacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TasaURLDisponible",
+              "displayName": "TasaURLDisponible",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "RestaurantesPorCiudad",
+              "displayName": "RestaurantesPorCiudad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2240,
+        240
+      ],
+      "id": "60c1106d-b0bc-4fca-8307-7fc530b433b8",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Llama esta herramienta para enviar correos cuando este listo con las metricas solicitadas.",
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        3120,
+        528
+      ],
+      "id": "943b45b3-1b87-4e37-8691-304afdc4d61b",
+      "name": "Gmail",
+      "webhookId": "bf85a089-4747-4321-bf43-18336dbfd025",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2832,
+        528
+      ],
+      "id": "796fd89c-6b78-4f0d-a1d3-4548ba6834e6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Setear y normalizar datos",
+        "height": 256,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2160,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "ef50fab9-34f1-421c-90e4-90594182d1a6",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Editar este http para cambiar los requisitos del escrapeo y el numero de leads por escrapeo.\nUtilizado Apify para esto",
+        "height": 384,
+        "width": 304,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1840,
+        928
+      ],
+      "typeVersion": 1,
+      "id": "d1e8a98e-2f19-4877-b121-25f04800cc50",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Guardar los datos en una hoja de sheets",
+        "height": 336,
+        "width": 368,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2416,
+        928
+      ],
+      "typeVersion": 1,
+      "id": "f4785ce7-6ace-4b3c-a802-7203c14c0373",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Utilizar Schedule para realizar el procesamiento cada determinado tiempo o usar otro trigger a necesidad",
+        "height": 256,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1456,
+        1040
+      ],
+      "typeVersion": 1,
+      "id": "d3e84890-a4ad-4fb3-915f-42883e6184da",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Utilizar Schedule para realizar el procesamiento cada determinado tiempo o usar otro trigger a necesidad",
+        "height": 272,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1344,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "85f37eb3-184a-41b5-9ee5-48abd14eab0c",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2480,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "1d5b179b-2fc6-4024-a720-55e8f3c638c6",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAi para Fallback",
+        "height": 192,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2752,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "e8182647-ad25-466f-a1e6-7629c3e1febe",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 224,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1568,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "85f0f79c-7164-483e-afd0-314ff98513df",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3040,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "f22afa61-ce4d-46c7-aabb-e194ec2909e0",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Editar para configurar metricas de los datos",
+        "height": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1872,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "e15edbe5-6ca2-4c87-9430-32ed6757ff66",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 224,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2176,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "97b80d05-7fd4-44f6-8c72-953456500016",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "Setear y normalizar los datos",
+        "height": 192,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2432,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "adac052c-cdc6-4932-b025-e155cb76c50d",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "📊 Workflow KPI – Automatización de escrapeo y métricas\n\n1️⃣ Obtiene datos de restaurantes (Apify + Google Sheets)  \n2️⃣ Procesa y calcula KPIs (JavaScript)  \n3️⃣ Normaliza y guarda resultados en Sheets  \n4️⃣ Genera reporte profesional con IA (Gemini + OpenAI)  \n5️⃣ Envía correo automático con métricas vía Gmail  \n\n👉 Resuelve el análisis manual de datos y entrega KPIs claros y accionables.\n",
+        "height": 224,
+        "width": 736,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3552,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "1e4a0029-ac0b-45b1-a2b8-11b4d5bb3f1b",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": " Descripción del Workflow: Key Performance Indicator KPI\n🚀 Función principal\nEste workflow automatiza el escrapeo de datos de restaurantes, calcula KPIs clave (contacto, URLs disponibles, distribución por ciudad) y genera un correo profesional con los resultados para notificar al usuario.\n\n👉 Resuelve el problema de tener que analizar manualmente grandes volúmenes de datos, transformándolos en métricas claras y accionables.\n\n🔄 Paso a paso de uso\nTrigger inicial\n\nManual Trigger: se ejecuta al dar clic en Execute Workflow.\n\n(Opcional) Schedule Trigger: puede programarse para correr automáticamente cada cierto tiempo.\n\nObtención de datos\n\nGoogle Sheets (Get row(s)): lee los registros de la hoja Escrapeo.\n\nHTTP Request (Apify): realiza el escrapeo de restaurantes en la ubicación configurada (ej. New York).\n\nLos datos incluyen: título, categoría, dirección, ciudad, teléfono y URL.\n\nProcesamiento de datos\n\nCode Node (JavaScript):\n\nCuenta el total de restaurantes.\n\nCalcula cuántos tienen teléfono y URL.\n\nGenera KPIs:\n\n📊 Tasa de Contacto (% con teléfono).\n\n🌐 Tasa de URL disponible (% con página web).\n\nAgrupa restaurantes por ciudad.\n\nNormalización de campos\n\nSet Nodes (Edit Fields / Edit Fields1): organizan los datos y métricas en formato limpio para guardarlos y usarlos en reportes.\n\nAlmacenamiento\n\nGoogle Sheets (Append row):\n\nGuarda los datos crudos del escrapeo en la hoja Escrapeo.\n\nRegistra las métricas calculadas en la hoja ResumenKPI.\n\nGeneración de reporte con IA\n\nAI Agent (Gemini + OpenAI):\n\nAnaliza las métricas.\n\nRedacta un correo profesional con los resultados del escrapeo.\n\nIncluye emojis, saltos de línea y frases claras para cada KPI.\n\nNotificación al usuario\n\nGmail Node: envía el correo con asunto y cuerpo generados por la IA.\n\nEl mensaje resume los KPIs y da una interpretación rápida de la efectividad del escrapeo.\n\n✨ Problema que resuelve\nAutomatiza la captura, análisis y reporte de KPIs de un proceso de escrapeo.\n\nEvita cálculos manuales y asegura que el usuario reciba un informe claro y profesional.\n\nPermite escalar el análisis a múltiples ciudades o categorías sin esfuerzo adicional.",
+        "height": 1392,
+        "width": 1440,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "559b156d-02b4-4c58-aa20-01959a860e83",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "Manual Trigger : Inicia el workflow de forma manual .\n\nGoogle Sheets  : Obtiene los datos del escrapeo guardados en la hoja Escrapeo y guarda los resultados del escrapeo y las metricas.\n\nSchedule Trigger : Permite programar la ejecución automática del workflow en intervalos definidos.\n\nHTTP Request (Apify) : Realiza el escrapeo de restaurantes desde la API de Apify según la ubicación y parámetros configurados.\n\nCode Node (JavaScript) : Procesa los datos para calcular KPIs (totales, tasas de contacto, URLs disponibles, agrupación por ciudad).\n\nSet (Edit Fields / Edit Fields1) : Normaliza y organiza los datos y métricas en formato limpio para usarlos en reportes.\n\nAI Agent : Analiza los KPIs y redacta un correo profesional con los resultados del escrapeo.\n\nGoogle Gemini Chat Model : Motor de IA que ayuda a generar y enriquecer el análisis de métricas.\n\nOpenAI Chat Model : Complementa el análisis y sirve como fallback para la generación de texto.\n\nGmail : Envía el correo final al usuario con los KPIs y conclusiones del escrapeo.",
+        "height": 400,
+        "width": 1024,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3520,
+        368
+      ],
+      "typeVersion": 1,
+      "id": "90272b3a-3d8a-46af-982c-7d12f04af53a",
+      "name": "Sticky Note17"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "044cfe80-8149-4b19-a85e-af8e8388b0fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "SmXFGPqeSdEKSVkv",
+  "tags": []
+}

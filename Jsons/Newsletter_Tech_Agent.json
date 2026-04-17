@@ -1,0 +1,743 @@
+{
+  "name": "Newsletter_Tech_Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "fieldToSplitOut": "rss",
+        "options": {}
+      },
+      "id": "2698cb54-2cb9-4bea-ae73-99f459614b80",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        896,
+        192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "546e480a-cf3f-4949-9349-e25f5d70be94",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        1328,
+        464
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "=# {{ $json.title }}\n{{ $json.content }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "title",
+                "value": "={{ $json.title }}"
+              },
+              {
+                "name": "createDate",
+                "value": "={{ $now.toISO() }}"
+              },
+              {
+                "name": "publishDate",
+                "value": "={{ $json.date }}"
+              },
+              {
+                "name": "link",
+                "value": "={{ $json.link }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "81f013b9-b6c5-4cf7-827f-2be052bdfbe5",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        1552,
+        368
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chunkSize": 3000,
+        "options": {}
+      },
+      "id": "cacac32f-594d-495b-94ba-934a2f43cc36",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        1728,
+        496
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "57a5c059-7ddf-4066-b5de-65ec04e04c13",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        784,
+        1136
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": 5
+            }
+          ]
+        }
+      },
+      "id": "2e77069b-dcbb-4d77-b6e7-394827d88d69",
+      "name": "Send Weekly Summary",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        112,
+        800
+      ],
+      "typeVersion": 1.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## 1. Guardar la informacion en una base de datos vectorial (Vector Store)",
+        "height": 600,
+        "width": 1560,
+        "color": 5
+      },
+      "id": "dc3d3e93-17ba-44ca-8519-5f6b9a1a5dbb",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        32
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2. Enviar resumen 1 vez por semana",
+        "height": 580,
+        "width": 1572,
+        "color": 6
+      },
+      "id": "c9861c8d-e4dd-4cc3-a6cb-415e30e33bc9",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        704
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Resume las noticias tecnológicas más relevantes publicadas en los últimos 7 días Hoy es {{ $now }}",
+        "options": {
+          "systemMessage": "=Escribe en Español claro, conciso y fácil de entender, como si estuvieras elaborando un boletín semanal de tecnología.\n\nPrioriza las noticias relacionadas con los siguientes temas: {{ $json.Interests }}.\nSi esos temas no están presentes, elige los eventos tecnológicos más impactantes, ampliamente difundidos y relevantes de la semana.\n\nPara cada noticia:\n\nProporciona un resumen breve e informativo (máximo 1–3 frases).\n\nIncluye el título del artículo y un enlace directo a la fuente original.\n\nEvita historias duplicadas.\n\nIncluye exactamente {{ $json['Number of news items to include'] }} noticias distintas.\n\nMantén un tono amigable pero profesional, adecuado para una audiencia amplia de entusiastas de la tecnología."
+        }
+      },
+      "id": "a3e91d1c-24b2-4d05-9495-961b09e573c4",
+      "name": "News reader AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        896,
+        800
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "Boletin de Noticias Semanales",
+        "message": "={{ $json.data }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "27c5f7a1-860e-43d7-b814-8a63573ab47e",
+      "name": "Send Newsletter",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        1520,
+        800
+      ],
+      "webhookId": "0de8b6e8-8611-48a9-ba25-1d023698f577",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "id": "416ef592-edda-42a6-bc3f-5676114d6d91",
+      "name": "Convert Response to an Email-Friendly Format",
+      "type": "n8n-nodes-base.markdown",
+      "position": [
+        1248,
+        800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Editar para escoger los titulos que te interesan.",
+        "height": 240,
+        "width": 220,
+        "color": 3
+      },
+      "id": "8771e5e6-82c7-4fb4-972e-5060792c0c0f",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        592,
+        752
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "018882ca-37c3-45af-944f-2081b0605065",
+              "name": "Interests",
+              "type": "string",
+              "value": "eink/epaper devices, AI, Linux, open source, automation, no-code, low-code, productivity, quantum computing, quantum resistant crypto, groundbreaking innovation"
+            },
+            {
+              "id": "4cfdafc1-47a4-41cc-9eb8-72880ea34511",
+              "name": "Number of news items to include",
+              "type": "string",
+              "value": "5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f5977a3c-6ba4-49d1-a4cf-844a1f5d3fc3",
+      "name": "Your topics of interest",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        656,
+        800
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": "news_store_key"
+      },
+      "id": "aeadaf94-facc-407a-b6de-3b4f33e050a1",
+      "name": "Store News Articles",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        1552,
+        192
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8c00469-890b-4b5b-8e2e-2ad9ec2d0815",
+              "name": "rss",
+              "type": "array",
+              "value": "=[\n  \"https://www.engadget.com/rss.xml\",\n  \"https://feeds.arstechnica.com/arstechnica/index\",\n  \"https://www.theverge.com/rss/index.xml\",\n  \"https://www.wired.com/feed/rss\",\n  \"https://www.technologyreview.com/topnews.rss\",\n  \"https://techcrunch.com/feed/\"\n]\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "083be7c3-8bfa-416b-addf-1ab62ba78903",
+      "name": "Set Tech News RSS Feeds",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        672,
+        192
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.rss }}",
+        "options": {
+          "ignoreSSL": false
+        }
+      },
+      "id": "3a5c18c6-ec46-45cc-a2aa-3c06bb18f64b",
+      "name": "Read RSS News Feeds",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        1104,
+        192
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "get_news",
+        "toolDescription": "LLamar esta herramienta para obtener las ultimas noticias nuevas ",
+        "memoryKey": "news_store_key",
+        "topK": 20
+      },
+      "id": "4c0c7612-c357-4680-90ec-d76700e44262",
+      "name": "Get News Articles",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        1008,
+        1008
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2eeca2ca-880a-4002-84be-006ac5f235b2",
+      "name": "Embeddings OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        1232,
+        1136
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Editar para cambiar los datos",
+        "height": 240,
+        "width": 220,
+        "color": 3
+      },
+      "id": "7881a39a-8457-4ca4-8a4b-b346222fff26",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        128
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Agente Ai Tech Newsletter :\n\nDeja que la IA lea las noticias tecnológicas por ti\nEste flujo de trabajo obtiene noticias a través de fuentes RSS de sitios web tecnológicos seleccionados, las almacena en una base de datos vectorial y utiliza un agente de IA para enviarte un boletín semanal personalizado, manteniéndote informado sin distracciones diarias.\n\nCómo funciona\nUn disparador programado diario obtiene artículos de múltiples fuentes RSS tecnológicas populares como Wired, TechCrunch y The Verge.\n\nLos artículos obtenidos son:\n\nNormalizados para extraer títulos, resúmenes y fechas de publicación.\n\nConvertidos a incrustaciones vectoriales mediante OpenAI y almacenados en memoria para consultas semánticas rápidas.\n\nUn disparador programado semanal activa el flujo de resumen de IA:\n\nSe le proporcionan a la IA tus intereses (por ejemplo, IA, juegos, gadgets) y el número deseado de elementos (por ejemplo, 15).\n\nConsulta la base vectorial para recuperar artículos relevantes y resume las historias más destacadas.\n\nEl resumen se convierte en un formato limpio y apto para correo electrónico y se envía a tu bandeja de entrada.\n\nCómo usarlo\nConecta tus cuentas de OpenAI y Gmail a n8n.\n\nPersonaliza la lista de fuentes RSS en el nodo “Set Tech News RSS Feeds”.\n\nActualiza tus intereses y el número de noticias deseadas en el nodo “Your Topics of Interest”.\n\nIngresa tu dirección de correo electrónico en el nodo \"Send Newsletter\".\n\nActiva el flujo de trabajo y deja que la automatización se ejecute según lo programado.\n\nRequisitos\nCredenciales de OpenAI para incrustaciones y resumen\n\nGmail (u otro servicio de correo electrónico) para enviar el boletín",
+        "height": 712,
+        "width": 1268,
+        "color": 6
+      },
+      "id": "a887e181-0a17-4e03-b648-b769ae26dad9",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1984,
+        704
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9f27ceb-c5f2-4997-8cb1-67576a7bb337",
+              "name": "title",
+              "type": "string",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "id": "4c4f9417-40f2-4fb0-9976-d09f5984680f",
+              "name": "content",
+              "type": "string",
+              "value": "={{ $json['content:encodedSnippet'] ?? $json.contentSnippet}}"
+            },
+            {
+              "id": "e1986bac-054e-4240-ba50-536dbcd27337",
+              "name": "date",
+              "type": "string",
+              "value": "={{ $json.isoDate}}"
+            },
+            {
+              "id": "9566e23c-ac30-4d66-abbd-889f322688b7",
+              "name": "link",
+              "type": "string",
+              "value": "={{ $json.link }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3da0c0c5-f06f-4eea-b5dd-95fb744ba193",
+      "name": "Set and Normalize Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1328,
+        192
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": ". Obtención diaria de noticias tecnológicas\nGet Articles Daily (Disparador programado): Todos los días, este nodo inicia el flujo.\nSet Tech News RSS Feeds: Define una lista de fuentes RSS de tecnología (como Wired, TechCrunch, The Verge, etc.).\nSplit Out: Separa cada URL de RSS para procesarlas individualmente.\nRead RSS News Feeds: Lee los artículos recientes de cada feed RSS.\nSet and Normalize Fields: Extrae y normaliza los campos importantes de cada noticia (título, resumen, fecha, enlace).\nEmbeddings OpenAI: Convierte el contenido de cada noticia en un “embedding” vectorial usando OpenAI, para facilitar búsquedas semánticas.\nDefault Data Loader: Prepara los datos para almacenarlos, añadiendo metadatos como título, fecha y enlace.\nRecursive Character Text Splitter: Divide textos largos en fragmentos más pequeños si es necesario.\nStore News Articles: Guarda los artículos procesados en una base de datos vectorial en memoria, permitiendo búsquedas inteligentes por IA.\n2. Envío semanal de resumen personalizado\nSend Weekly Summary (Disparador programado): Una vez por semana, este nodo inicia el flujo de resumen.\nYour topics of interest: Define tus intereses (por ejemplo, “AI, Linux, open source, productividad...”) y cuántas noticias quieres recibir.\nGet News Articles: Recupera de la base de datos vectorial los artículos más relevantes según tus intereses.\nNews reader AI: Un agente de IA (usando GPT-4o) resume las noticias más importantes de la semana, priorizando tus temas de interés y evitando duplicados.\nConvert Response to an Email-Friendly Format: Convierte el resumen generado por la IA a un formato HTML amigable para correo electrónico.\nSend Newsletter: Envía el resumen semanal a tu correo electrónico usando Gmail.\n3. Personalización y requisitos\nPuedes editar las fuentes RSS, tus intereses y el número de noticias desde los nodos correspondientes.\nEs necesario conectar tus credenciales de OpenAI y Gmail para que el flujo funcione correctamente",
+        "height": 480,
+        "width": 992,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1984,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "f8cfeb46-7f17-491d-9a30-b507f6f594b0",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OPenai",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1232,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "74a1eb50-4cd7-4348-9de9-0e15abe6a3da",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OPenai",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        704,
+        1104
+      ],
+      "typeVersion": 1,
+      "id": "04039f72-c8ef-4fc4-a26a-c1c78eec8ef9",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OPenai",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        1104
+      ],
+      "typeVersion": 1,
+      "id": "777f25cf-65e4-496e-868f-9cb2f00b2778",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        112,
+        608
+      ],
+      "id": "7fa406e4-c455-4b6f-885e-eaa2c44db6f7",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1456,
+        752
+      ],
+      "typeVersion": 1,
+      "id": "c348c515-b3e4-43f3-8d40-92fc039bd2a1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "7edcebc4-6f3c-4869-b6dd-08c55987d25a",
+      "name": "Get Articles Daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        112,
+        416
+      ],
+      "typeVersion": 1.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "Sustituir el trigger por uno de tipo schedule para hacerlo interactivo en un tiempo determinado y extraer noticias cada vez que desee.",
+        "height": 912,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "5b399a76-c309-4dac-a7d2-ebd79cd810f5",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Almacenar los datos en una Base de datos Vectorial.",
+        "height": 560,
+        "width": 368,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1520,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "e32e25d4-b0a3-4d3a-ba5f-29a430700ea7",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Read RSS News Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "News reader AI": {
+      "main": [
+        [
+          {
+            "node": "Convert Response to an Email-Friendly Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Store News Articles",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get News Articles": {
+      "ai_tool": [
+        [
+          {
+            "node": "News reader AI",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "News reader AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Get News Articles",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Store News Articles",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read RSS News Feeds": {
+      "main": [
+        [
+          {
+            "node": "Set and Normalize Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Weekly Summary": {
+      "main": [
+        []
+      ]
+    },
+    "Set Tech News RSS Feeds": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Your topics of interest": {
+      "main": [
+        [
+          {
+            "node": "News reader AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set and Normalize Fields": {
+      "main": [
+        [
+          {
+            "node": "Store News Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Response to an Email-Friendly Format": {
+      "main": [
+        [
+          {
+            "node": "Send Newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set Tech News RSS Feeds",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Your topics of interest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a536b4df-4cb7-4cb0-8537-33ecd7e0c485",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "8T6QUljxGE0Dhnm3",
+  "tags": []
+}

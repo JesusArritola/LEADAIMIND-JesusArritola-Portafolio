@@ -1,0 +1,768 @@
+{
+  "name": "Telegram_Sales_Agent_For_Business",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }} ",
+        "options": {
+          "systemMessage": "=Burger Asistente\nEres Pablo, el asistente virtual amigable y eficiente de Burger King en New Jersey, USA. Siempre:\n✅ Usa un lenguaje simple y educado\n✅ Envía respuestas en texto plano (SIN markdown *, _, `)\n✅ Usa solo 1–2 emojis por mensaje para dar calidez\n✅ Muestra la hora en {{ $now }}  (ejemplo, EST = UTC-5)\n✅ Asegúrate de que los registros de pedidos coincidan con el formato de Google Sheets\n\n🍔 MENÚ Y PRECIOS ([Burger])\n[CATEGORY_1]\n\nhamburguesa – [CURRENCY_SYMBOL][100]\n\n[ITEM_2] – [CURRENCY_SYMBOL][PRICE_2]\n\n[ITEM_3] – [CURRENCY_SYMBOL][PRICE_3]\n\n[CATEGORY_2]\n\n[helado] – [][60]\n\n[ITEM_5] – [CURRENCY_SYMBOL][PRICE_5]\n\nOtros\n\n[refresco] – [][25]\n\n[ITEM_7] – [CURRENCY_SYMBOL][PRICE_7]\n\n[ITEM_8] – [CURRENCY_SYMBOL][PRICE_8]\n\nCosto de entrega – [CURRENCY_SYMBOL][DELIVERY_FEE]\n\n📝 FLUJO DE PEDIDO\n1️⃣ Saluda al cliente:\n\"¡Hola! Soy Pablo de Burger King 😊 ¿Qué te gustaría ordenar hoy?\"\n\n2️⃣ Aclara los pedidos:\n\nPregunta por el tipo cuando mencionen categorías generales\n\nConfirma todos los combos y adicionales\n\n3️⃣ Confirma el pedido:\nResume así:\nTu pedido:\n1x [ITEM] – [CURRENCY_SYMBOL][PRICE]\n1x [ITEM] – [CURRENCY_SYMBOL][PRICE]\nEntrega – [CURRENCY_SYMBOL][DELIVERY_FEE]\nTOTAL: [CURRENCY_SYMBOL][TOTAL]\n💳 Pagar a: [YOUR_PAYMENT_DETAILS]\nResponde \"Pagado\" después de enviar el pago\n\n4️⃣ Recoge la información de entrega:\n\"¡Casi terminamos! Por favor envía:\nNombre completo\nNúmero de teléfono (para la entrega)\nDirección de entrega\"\n\n5️⃣ Cuando envíen la información de entrega:\nResponde: \"¡Gracias por proporcionar tus datos! Ahora estamos verificando tu pedido. Por favor envía la captura de pantalla del pago para confirmación 😊\"\n\n6️⃣ Cuando envíen la captura de pantalla del pago:\nResponde:\n⌛ ¡Gracias por tu pago! Verificando con [YOUR_PAYMENT_PROVIDER]... (2–3 mins) 😊\n(Este mensaje ocurre automáticamente cuando se detecta la captura de pantalla del pago)\n\n7️⃣ DECISIÓN HUMANO-EN-EL-CICLO:\nCuando el personal apruebe el pago a través del nodo Check Feedback:\n\nEl sistema enviará automáticamente:\n\"✅ ¡Pago confirmado! Tu pedido llegará a las [deliveryTime] 🚚\"\n(El tiempo de entrega es 1 hora desde ahora, ejemplo \"16:45\")\n\nEl sistema luego registrará automáticamente estos datos en Google Sheets:\nFormato: Order id|Customer Name|Chat ID|Phone Number|Delivery Address|Order info|Total Price|Payment Status|Order Status|Timestamp\nEjemplo: [PREFIX]-1712345678|John|1085503473|+1234567890|123 Main St|1x Burger|25.00|Confirmed|Preparing|10/07/2024 16:45\n\n8️⃣ Si el personal rechaza el pago:\nResponde:\n❌ Lo sentimos, no pudimos verificar tu pago. Por favor envía una captura más clara o inténtalo de nuevo.\n\n📌 RESPUESTAS DE ESTADO:\nCuando el usuario escriba \"Status?\":\n⏳ ¡Todavía verificando! Te notificaremos tan pronto como esté confirmado 💛\n\nCuando el usuario escriba \"Agent\":\nConectándote con @[YOUR_SUPPORT_HANDLE] 💬\n\nCuando el usuario pida FAQ o información sobre [YOUR_BUSINESS_NAME]:\n📍 Ubicación: [YOUR_ADDRESS]\n⏰ Horario: [YOUR_HOURS]\n📞 Contacto: [YOUR_PHONE]\n📧 Correo: [YOUR_EMAIL]\n\n📊 FORMATO DE SHEET (estricto):\nOrder id | Customer Name | Chat ID | Phone Number | Delivery Address | Order info | Total Price | Payment Status | Order Status | Timestamp\nFormato de Timestamp = MM/DD/YYYY HH:MM (24hr [YOUR_TIMEZONE])\n\nMANEJO DE APROBACIÓN\nSi $json.data.text es \"Approved\", entonces:\n\nCalcula el tiempo de entrega (1 hora desde la hora actual)\n\nEnvía: \"✅ ¡Pago confirmado! Tu pedido llegará a las [deliveryTime] 🚚\"\n\nRegistra los datos del pedido en Google Sheets, asegurándote de incluir el Chat ID ({{ $json.message.from.id }} o {{ $('Telegram Trigger').item.json.message.chat.id }})"
+        }
+      },
+      "id": "09b028f5-6dd2-4461-968f-6776b50cc021",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -688,
+        1408
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}  ",
+        "contextWindowLength": 10
+      },
+      "id": "6d1357b2-bcbb-42bf-a0ff-5e5f9de420bc",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -448,
+        2160
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "5f522294-7fa9-49b3-bef8-d0cff7aa36ca",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1264,
+        1488
+      ],
+      "webhookId": "dd966a62-ffb5-4c52-a830-5cf7e96e946a",
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1pBoUqHeAZ9CBh_p5A65XH3h16TjiKkEdMogK8TqFrBc",
+          "mode": "list",
+          "cachedResultName": "ORDER_DETAILS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pBoUqHeAZ9CBh_p5A65XH3h16TjiKkEdMogK8TqFrBc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1653392647,
+          "mode": "list",
+          "cachedResultName": "detalles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pBoUqHeAZ9CBh_p5A65XH3h16TjiKkEdMogK8TqFrBc/edit#gid=1653392647"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Order id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Order_id', ``, 'string') }}",
+            "Customer name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_name', ``, 'string') }}",
+            "Chat id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_id', ``, 'string') }}",
+            "Delivery Adress": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Delivery_Adress', ``, 'string') }}",
+            "Order info": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Order_info', ``, 'string') }}",
+            "Total Price": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Total_Price', ``, 'string') }}",
+            "Payment Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Payment_Status', ``, 'string') }}",
+            "Order status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Order_status', ``, 'string') }}",
+            "Timestamp": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Timestamp', ``, 'string') }}",
+            "phone number": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phone_number', ``, 'string') }}",
+            "timestamp": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('timestamp', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Order id",
+              "displayName": "Order id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer name",
+              "displayName": "Customer name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Chat id",
+              "displayName": "Chat id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Delivery Adress",
+              "displayName": "Delivery Adress",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Order info",
+              "displayName": "Order info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total Price",
+              "displayName": "Total Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Payment Status",
+              "displayName": "Payment Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Order status",
+              "displayName": "Order status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone number",
+              "displayName": "phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "55cb6208-f45c-4604-adf6-391f997f2dd7",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        -192,
+        2176
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }} ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3dc9c6fd-2509-416f-ad77-f20070e05634",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -368,
+        1408
+      ],
+      "webhookId": "4a058acc-6544-49bc-9981-c484756f0d42",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.data.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "approved",
+              "description": "admin approves the order"
+            },
+            {
+              "category": "declined",
+              "description": "admin declined the order"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5bf5e1e3-9dc2-400d-83db-d6c1e12116ac",
+      "name": "Check Feedback",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "position": [
+        -128,
+        1696
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Food Delivery Chatbot Template | Ready to Customize",
+        "height": 416,
+        "width": 1452,
+        "color": 6
+      },
+      "id": "b5cac007-0522-4cbd-93fb-4879902a289b",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1328,
+        752
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "932f8fa3-e992-4d0a-82c8-4ad1573bdd71",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        -656,
+        2144
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "message": "Payment received for order. Approve or decline?",
+        "responseType": "freeText",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3501c80b-0f32-48bd-a028-071ec0f37a24",
+      "name": "Admin Approval Request",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -368,
+        1696
+      ],
+      "webhookId": "d0ca05e5-391f-4f67-b00f-40e72a5de2aa",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "file": "={{ $json.message.photo[0].file_id }}",
+        "additionalFields": {
+          "caption": "={{ $('Telegram Trigger').item.json.message.caption }}"
+        }
+      },
+      "id": "3b81b3e5-917c-42a5-9966-93a8a1845fe9",
+      "name": "Forward Payment Screenshot",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -656,
+        1696
+      ],
+      "webhookId": "e8df6e57-dfef-424b-ac17-d32b8ecddfc8",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## AI Tools & Memory",
+        "height": 300,
+        "width": 664,
+        "color": 5
+      },
+      "id": "e2c55ff6-95a9-4e89-a5da-8cb1331b6e88",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        2016
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "02d9bd52-4f62-4f32-b0c3-a4723f913b46",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.message.photo[0] }} {{ $json.message.caption }}",
+              "rightValue": ""
+            },
+            {
+              "id": "d50f068a-c563-4a95-a6e6-2e3514028e28",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "cdf5af33-142f-4973-8e2c-94a2eec811a1",
+      "name": "Payment Screenshot Check",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -896,
+        1488
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "content": "Flujo de Verificacion de Pago",
+        "height": 228,
+        "width": 1316
+      },
+      "id": "a70146a2-18f2-4d94-9c5a-c4a281de9781",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        1648
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "❌ Sorry, we couldn't verify your payment. Please send a clearer screenshot or try again.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "c59d3f1e-ea48-41df-b462-a8c62c116060",
+      "name": "Payment Declined",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        256,
+        1712
+      ],
+      "webhookId": "74f30de0-1908-4640-b6c5-13325e770462",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Asistente IA",
+        "height": 344,
+        "width": 596,
+        "color": 3
+      },
+      "id": "1e709f11-738d-4e30-b606-1c0e1e179239",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        1296
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "🚀 Guía de Configuración Rápida\nRequisitos Previos\nInstancia de n8n (en la nube o autohospedada)\n\nToken de Bot de Telegram\n\nAcceso a la API de Google Sheets\n\nClave API de Google Gemini\n\nPaso 1: Reemplazar Marcadores de Posición\nBusca y reemplaza los siguientes marcadores en toda la plantilla:\n\nInformación del Negocio\n[YOUR_BUSINESS_NAME] → Nombre de tu restaurante/negocio de comida\n\n[ASSISTANT_NAME] → Nombre de tu bot (ejemplo: \"Alex\", \"Bella\", \"Chef Bot\")\n\n[YOUR_CITY] → Tu ciudad\n\n[YOUR_COUNTRY] → Tu país\n\n[YOUR_ADDRESS] → Dirección de tu negocio\n\n[YOUR_PHONE] → Teléfono de tu negocio\n\n[YOUR_EMAIL] → Correo electrónico de tu negocio\n\n[YOUR_HOURS] → Horario de operación (ejemplo: \"9AM - 11PM diario\")\n\nMoneda y Localización\n[YOUR_CURRENCY] → Nombre de tu moneda (ejemplo: \"USD\", \"EUR\", \"GBP\")\n\n[CURRENCY_SYMBOL] → Símbolo de tu moneda (ejemplo: \"$\", \"€\", \"£\")\n\n[YOUR_TIMEZONE] → Tu zona horaria (ejemplo: \"EST\", \"PST\", \"GMT\")\n\n[PREFIX] → Prefijo de ID de pedido (ejemplo: \"FB\" para \"Food Business\")\n\nElementos del Menú (Personaliza Completamente)\n[CATEGORY_1] → Categoría de comida (ejemplo: \"Hamburguesas\", \"Pizza\", \"Sándwiches\")\n\n[ITEM_1] hasta [ITEM_8] → Tus artículos del menú\n\n[PRICE_1] hasta [DELIVERY_FEE] → Tus precios\n\nAgrega o elimina categorías y artículos según sea necesario\n\nPago y Soporte\n[YOUR_PAYMENT_DETAILS] → Tu información de pago\n\n[YOUR_PAYMENT_PROVIDER] → Tu método de pago (ejemplo: \"Venmo\", \"PayPal\", \"Transferencia Bancaria\")\n\n[YOUR_SUPPORT_HANDLE] → Tu usuario de soporte en Telegram\n\nPaso 2: Configurar Credenciales\nBot de Telegram - Agrega tu token de bot a las credenciales de Telegram\n\nGoogle Sheets - Conecta tu cuenta de Google y crea/selecciona tu hoja de pedidos\n\nGoogle Gemini - Agrega tu clave API de Gemini\n\nID de Hoja - Reemplaza [YOUR_GOOGLE_SHEET_ID] con tu ID real de Google Sheet\n\nPaso 3: Personalizar Menú\nActualiza la sección del menú en el mensaje del sistema del Agente de IA con tus:\n\nCategorías de comida\n\nNombres de artículos y precios\n\nTarifas de entrega\n\nOfertas especiales o combos\n\nPaso 4: Probar y Desplegar\nImporta la plantilla en tu instancia de n8n\n\nPrueba el flujo de conversación con una cuenta de prueba de Telegram\n\nVerifica que el registro en Google Sheets funcione correctamente\n\nPrueba el flujo de aprobación de pagos\n\nActiva el flujo de trabajo\n\n💰 Ejemplos de Moneda\nVersión USD\n🍔 MENÚ Y PRECIOS (USD)\nHamburguesas\n\nHamburguesa Clásica – $12.99\n\nHamburguesa con Queso – $14.99\n\nHamburguesa Deluxe – $18.99\n\nTarifa de Entrega – $3.99\n\nVersión EUR\n🍔 MENÚ Y PRECIOS (EUR)\nHamburguesas\n\nHamburguesa Clásica – €11.50\n\nHamburguesa con Queso – €13.50\n\nHamburguesa Deluxe – €17.50\n\nTarifa de Entrega – €3.50\n\n📊 Estructura de Google Sheets\nLa plantilla registra automáticamente los pedidos con estas columnas:\n\nID de Pedido\n\nNombre del Cliente\n\nID de Chat\n\nNúmero de Teléfono\n\nDirección de Entrega\n\nInformación del Pedido\n\nPrecio Total\n\nEstado de Pago\n\nEstado del Pedido\n\nMarca de Tiempo\n\n🔧 Opciones de Personalización\nPersonalizaciones Simples\nArtículos del Menú - Agregar/eliminar/modificar cualquier artículo de comida\n\nPrecios - Actualizar según tu estructura de precios local\n\nMoneda - Cambiar a cualquier moneda mundial\n\nHorario de Negocio - Modificar horarios de operación\n\nÁreas de Entrega - Agregar restricciones de ubicación\n\nMétodos de Pago - Actualizar información de pago\n\nPersonalizaciones Avanzadas\nMúltiples Ubicaciones - Agregar lógica de selección de ubicación\n\nGestión de Inventario - Agregar seguimiento de stock\n\nCódigos Promocionales - Implementar sistemas de descuento\n\nMulti-idioma - Agregar detección de idioma y respuestas\n\nIntegración SMS - Agregar notificaciones por SMS\n\nRecibos por Correo - Integrar confirmación por correo electrónico\n\n📱 Flujo de Experiencia del Cliente\nEl cliente inicia chat con el bot\n\nEl bot saluda y muestra el menú\n\nEl cliente realiza el pedido\n\nEl bot confirma pedido y total\n\nEl cliente proporciona detalles de entrega\n\nEl cliente envía captura de pago\n\nEl administrador aprueba/rechaza el pago\n\nEl cliente recibe confirmación con tiempo de entrega\n\nEl pedido se registra en Google Sheets\n\n🛡️ Funciones de Seguridad\nVerificación humana de pagos\n\nSeguimiento de ID de chat para identificación de usuario\n\nRegistro de pedidos con marca de tiempo\n\nArchivo de capturas de pago\n\nControles de aprobación por administrador\n\n🎯 Perfecto Para\nRestaurantes\n\nCamiones de comida\n\nServicios de catering\n\nPanaderías\n\nCafeterías\n\nEntrega de comestibles\n\nServicios de preparación de comidas\n\nCualquier negocio relacionado con alimentos\n\n🆘 Notas de Soporte\nEsta plantilla requiere conocimientos básicos de n8n para la configuración\n\nSe requiere configuración de la API de Google Sheets\n\nSe requiere creación de Bot de Telegram\n\nLa personalización puede requerir algunas habilidades técnicas\n\n📈 Escalabilidad\nManeja múltiples clientes concurrentes\n\nMemoria de conversación por cliente\n\nVolumen ilimitado de pedidos\n\nFácil de agregar nuevos artículos al menú\n\nExpandible con funciones adicionales",
+        "height": 1712,
+        "width": 1272,
+        "color": 5
+      },
+      "id": "bd690089-8086-41c4-a9a3-e41f73f990b2",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2608,
+        752
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1056,
+        1280
+      ],
+      "id": "3efa97f2-834a-44e6-8036-8f4e130ced5f",
+      "name": "Send a chat action",
+      "webhookId": "be7adc4e-d150-45f5-9ffd-529a5184cedb",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1312,
+        1440
+      ],
+      "typeVersion": 1,
+      "id": "35f7f742-0b26-416b-a00a-ad0213b7df95",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        1360
+      ],
+      "typeVersion": 1,
+      "id": "6926e5fd-c657-4de1-bad8-0062f7080419",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        1648
+      ],
+      "typeVersion": 1,
+      "id": "f92ca5bb-43a6-484b-9bc4-0423cd43e3d2",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        1648
+      ],
+      "typeVersion": 1,
+      "id": "cd5c1ff6-4e65-4529-ab67-2c8f800f738f",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        208,
+        1664
+      ],
+      "typeVersion": 1,
+      "id": "1cd82da6-91b6-4886-a2f5-617a27b3e140",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 208,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        2112
+      ],
+      "typeVersion": 1,
+      "id": "31fc04aa-2633-4a9c-99e2-cd8f8df2ea2d",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 208,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        2112
+      ],
+      "typeVersion": 1,
+      "id": "b2f06e91-ed5b-472a-8698-f37ebd6f055f",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Utilizadas :\n-Telegram : Usado para iniciar la conversacion y recibir los datos del pedido.\n-IF : Usado para verificar la decision del usuario.\n-AI Agent : Usado para procesar toda la informacion recibida del usuario.\n-Text Clasifier : Usado para verificar la informacion y confirmar.\n-Google Sheets : Usado para guardar el pedido.\n-Simple Memory : Usado para tener contexto del chat.\n-Gemini Chat Model : Usado como chat model de el AI Agent.",
+        "height": 240,
+        "width": 736,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3360,
+        768
+      ],
+      "typeVersion": 1,
+      "id": "12fbc502-7505-49b9-91ae-7a91bd37184c",
+      "name": "Sticky Note12"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Feedback": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Payment Declined",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Payment Screenshot Check",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a chat action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Admin Approval Request": {
+      "main": [
+        [
+          {
+            "node": "Check Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Check Feedback",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payment Screenshot Check": {
+      "main": [
+        [
+          {
+            "node": "Forward Payment Screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forward Payment Screenshot": {
+      "main": [
+        [
+          {
+            "node": "Admin Approval Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f294f38-140c-45ac-8f35-c7be47920c3b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "JXzhoxcM3E9O14TU",
+  "tags": []
+}

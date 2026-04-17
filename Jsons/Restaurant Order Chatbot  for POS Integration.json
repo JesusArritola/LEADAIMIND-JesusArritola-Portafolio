@@ -1,0 +1,693 @@
+{
+  "name": "Restaurant Order Chatbot  for POS Integration",
+  "nodes": [
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "schemaType": "fromJson",
+        "jsonSchemaExample": "{\n  \"name\": \"Information Extractor\",\n  \"type\": \"n8n-nodes-base.informationExtractor\",\n  \"parameters\": {\n    \"extract\": [\n      {\n        \"name\": \"items\",\n        \"pattern\": \"(latte|coffee|tea|cappuccino)\"\n      },\n      {\n        \"name\": \"quantity\",\n        \"pattern\": \"\\\\d+\"\n      },\n      {\n        \"name\": \"table\",\n        \"pattern\": \"table number (\\\\d+)\"\n      }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "id": "a717e8d5-817f-475f-a1ec-441926fe9c5e",
+      "name": "Information Extractor",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "position": [
+        -176,
+        1088
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "79565271-2374-49ba-a8a4-440e92a32116",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -160,
+        1328
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "8a5dda0c-a567-4305-83a3-68d6fb573dd3",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.output.parameters.extract }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2a6a70f9-2edd-46b9-8018-d2fa7f23172a",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        144,
+        1136
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 796753854,
+          "mode": "list",
+          "cachedResultName": "DATOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=796753854"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Item": "={{ $json.item }}",
+            "Quantity": "={{ $json.quantity }}",
+            "Table No": "={{ $json.table }}",
+            "Timestamp": "={{ $now }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Table No",
+              "displayName": "Table No",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Quantity",
+              "displayName": "Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "afbb131d-58ea-4600-a941-eaf5bc03ab4d",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        864,
+        1008
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python"
+      },
+      "id": "aaef374f-2b79-462d-954b-ec4516848f9a",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        400,
+        1152
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "747e5753-b2dd-4188-b1b8-0e4e6671dc31",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        640,
+        1088
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {},
+      "id": "c1296f3c-5ddd-44ac-b99c-550ea90468ff",
+      "name": "Replace Me",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        832,
+        1248
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "e087a5b2-40a9-4c24-91e6-2576ed8dc8bc",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        464,
+        992
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "PARSER JSON.\n\nConvierte los datos textuales del pedido final como\nnombre del artículo\ncantidad\ny nombre de la mesa en un JSON.\n\nSi los datos no incluyen lo anterior, devuelve null.",
+        "height": 680,
+        "width": 340,
+        "color": 3
+      },
+      "id": "b6f8a783-4720-4275-8ec8-bf7ac83e397a",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        816
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Refinar/Dividir los JSON en múltiples elementos.\n\nSi los datos del elemento anterior no son nulos, el bloque de código personalizado divide los datos en múltiples elementos JSON dentro de una lista",
+        "height": 680,
+        "width": 460,
+        "color": 2
+      },
+      "id": "349595f0-56c1-400e-a0e7-ba2edd1c3686",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        128,
+        816
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Enviar cada elemento como un registro en Google Sheet\nCada elemento se recorre en bucle y produce un lote de 1 elemento que se agrega como fila en la hoja con marca de tiempo.",
+        "height": 680,
+        "width": 440,
+        "color": 5
+      },
+      "id": "e99f3ec2-ff8e-4706-aa6c-c182ed46e918",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        816
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "df5c1120-8e64-4418-8ca1-22c43522de3f",
+      "name": "Triggered on Restaurant Chat workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -432,
+        1088
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "id": "5515edc8-3ddb-4f10-956c-621cbd82b023",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -272,
+        320
+      ],
+      "webhookId": "d931c4a7-02f5-4359-918f-7ad3fae7b144",
+      "typeVersion": 1.1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Eres un asistente de restaurante educado y eficiente.\n\nTu trabajo es tomar los pedidos de los clientes, verificar los detalles del pedido, corregir cualquier error y confirmar el pedido.\n\nSigue estos pasos:\n\nSaludo y solicitud del pedido  \nSi el cliente te saluda (ej. \"Hola\", \"Buenas tardes\"), responde con:\n\"¡Hola! ¿Cómo puedo ayudarte hoy? ¿Qué te gustaría pedir?\"\n\nInterpretación y comprensión del pedido  \nAcepta pedidos en formatos flexibles, como:\n\n\"1 latte, 2 café, mesa número 5\"\n\n\"latte 2, pepsi 1, mesa 3\"\n\n\"1 capuchino\"\n\n\"1 té mesa 4\"\n\nTu objetivo es extraer lo siguiente:\n\nNombres de los artículos (ej. latte, café, chocolate, té, pepsi)\n\nCantidades (deben ser numéricas)\n\nNúmero de mesa (debe ser numérico)\n\nVerificación y manejo de información faltante o incorrecta  \nPara cada artículo en el pedido:\n\nSi falta el nombre del artículo, responde:\n\"Lo siento, falta el nombre del artículo. ¿Qué te gustaría pedir?\"\n\nSi falta la cantidad, responde:\n\"¿Cuántos [artículo] te gustaría pedir?\"\n\nSi falta el número de mesa, responde:\n\"¿Podrías darme el número de mesa, por favor?\"\n\nSi hay errores de ortografía en el nombre del artículo, sugiere correcciones. Ejemplo:\n\"¿Quisiste decir chocolate en lugar de chocolat? Por favor confirma.\"\n\nUsa coincidencia difusa para detectar variaciones comunes y errores tipográficos.\n\nConfirmación final  \nUna vez recopilados todos los detalles necesarios, presenta un resumen del pedido así:\n\nAquí está el resumen de tu pedido:\n\n1 latte\n\n2 café\nNúmero de mesa: 5\n¿Confirmo este pedido?\n\nAl confirmar: Usa la herramienta  \nCuando el usuario confirme, usa la herramienta ConfirmOrder para enviar el mensaje final de confirmación en este formato:\n\nGracias por confirmar. Tu pedido será preparado en breve. ¡Disfruta tu estancia con nosotros!\n\nDetalles del pedido:\n\nartículo cantidad\n\nlatte 1\n\ncafé 2\n\nAñadido a la mesa número 5\n\nAsegúrate de que los valores numéricos (cantidades y números de mesa) se extraigan correctamente, incluso si aparecen al inicio o al final. Siempre confirma con el usuario si hay alguna duda.\n\nAsegurate de darle una estimacion de tiempo para su entrega con una estimacion de unos 30 minutos por ejemplo:\n[{{ $now.format(\"HH:mm\") }} + 30 ]\n\nAsegurate de que si el cliente pide un numero de mesa que ya tiene reservacion se le va a informar y por ningun motivo podras guardar su pedido con ese numero de mesa asi que deberas pedirle otra mesa para esto utiliza la herramienta \"Verificar Mesa\"."
+        }
+      },
+      "id": "aa3578fc-d557-42c9-bb34-c1cf2b63a309",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        128,
+        336
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {
+          "responseFormat": "text"
+        }
+      },
+      "id": "0ba2d173-d2e6-4fe1-9bcf-6d8aed0e672f",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -176,
+        576
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Esta herramienta envía la salida de texto generada por el nodo AI Agent a otro flujo de trabajo de n8n para manejo o automatización adicional.",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{$workflow.id}}",
+          "mode": "id",
+          "cachedResultUrl": "/workflow/=%7B%7B$workflow.id%7D%7D"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "e012f0d3-7a82-4eb4-b9b9-03700d682971",
+      "name": "Call n8n Workflow Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        528,
+        640
+      ],
+      "notesInFlow": false,
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 15
+      },
+      "id": "4cdf0b4e-6a78-42e3-b214-6471657ab40c",
+      "name": "Last 5 conversations Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -16,
+        672
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "content": "Chat Bot Ordenes Restaurante",
+        "height": 300,
+        "width": 340,
+        "color": 7
+      },
+      "id": "83e3c75c-6d88-4347-b2ea-430bf2be3bf9",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        208
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Llamar al SubWF",
+        "color": 5
+      },
+      "id": "718dd08e-f4ce-4376-8340-fd0f879c09c9",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        608
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Este flujo de trabajo automatiza el proceso de gestión de datos del POS (Punto de Venta) del restaurante, facilitando el manejo fluido de pedidos, el seguimiento de clientes, la gestión de inventario y la generación de informes de ventas. Recupera los detalles de los pedidos, procesa la información de pago, actualiza el inventario y genera informes de ventas en tiempo real, todo integrado en un sistema centralizado que mejora las operaciones del restaurante.\n\nEl flujo de trabajo integra varios sistemas, incluyendo un terminal POS para recopilar datos de pedidos, pasarelas de pago para procesar transacciones, herramientas de gestión de inventario para actualizar existencias y herramientas de informes como Google Sheets o una base de datos interna para generar informes de ventas y rendimiento.\n\n¿Quién necesita la automatización del POS de restaurantes?\nEste flujo de trabajo de automatización POS es ideal para propietarios de restaurantes, gerentes y personal que buscan optimizar sus operaciones:\n\nPropietarios de Restaurantes – Automatizar el procesamiento de pedidos, rastrear ventas y monitorear inventario para garantizar operaciones fluidas.\n\nGerentes – Acceder a datos de ventas en tiempo real e informes de rendimiento para tomar decisiones informadas.\n\nPersonal – Reducir el trabajo manual, enfocándose en brindar un mejor servicio al cliente mientras el sistema maneja pedidos y pagos.\n\nEquipos de Inventario – Actualizar automáticamente los niveles de inventario según los pedidos y el uso de ingredientes.\n\nSi necesitas una solución POS confiable y automatizada para gestionar pedidos, pagos, inventario e informes de restaurantes, este flujo de trabajo minimiza errores humanos, aumenta la eficiencia y ahorra tiempo valioso.\n\n¿Por qué usar este flujo de trabajo?\n\nAutomatización de extremo a extremo – Automatiza todo, desde la entrada de pedidos hasta las actualizaciones de inventario y los informes de ventas.\n\nIntegración fluida – Conecta POS, sistemas de pago, gestión de inventario y herramientas de informes para un flujo de datos sin interrupciones.\n\nDatos en tiempo real – Proporciona informes actualizados sobre ventas, niveles de stock y estados de pedidos.\n\nEscalable y eficiente – Admite múltiples ubicaciones, múltiples usuarios y altos volúmenes de pedidos.\n\nPaso a paso: cómo este flujo de trabajo gestiona los datos del POS\n\nRecopilar pedidos – Recupera detalles de pedidos del sistema POS, incluyendo información del cliente, artículos pedidos y detalles de pago.\n\nActualizar inventario – Disminuye los niveles de inventario según los artículos vendidos, asegurando que los conteos de stock sean siempre precisos.\n\nGenerar informes – Compila datos de ventas, ingresos e inventario en informes en tiempo real y los almacena en Google Sheets o una base de datos interna.\n\nRastrear datos de clientes – Mantiene un registro de los detalles de clientes e historial de pedidos para un mejor servicio e información de marketing.\n\nPersonalización: adapta a tus necesidades\n\nMúltiples sistemas POS – Ajusta el flujo de trabajo para trabajar con diferentes sistemas o terminales POS según la configuración de tu restaurante.\n\nInformes personalizados – Modifica el formato de los informes o incluye métricas específicas de ventas (ejemplo: totales diarios, artículos más vendidos, rendimiento de empleados).\n\nGestión de inventario – Ajusta las actualizaciones de inventario para incluir alertas cuando el stock alcance niveles críticos o necesite reabastecimiento.\n\nIntegración con software contable – Conéctalo con plataformas como QuickBooks para el seguimiento financiero automatizado.\n\n🔑 Requisitos previos\n\nIntegración del sistema POS – Asegúrate de que el sistema POS pueda exportar datos de pedidos en un formato compatible.\n\nAPI de pasarela de pago – Configura las claves API necesarias para el procesamiento de pagos (ejemplo: Stripe, PayPal).\n\nHerramientas de gestión de inventario – Usa software de inventario o bases de datos que puedan actualizar automáticamente los niveles de stock.\n\nHerramientas de informes – Usa Google Sheets o una base de datos interna para almacenar y generar informes de ventas e inventario.\n\n🚀 Instalación y configuración\n\nConfigurar credenciales\n\nConfigura credenciales API para pasarelas de pago y herramientas de gestión de inventario.\n\nImportar flujo de trabajo\n\nImporta el flujo de trabajo en tu plataforma de automatización (ejemplo: n8n, Zapier).\n\nVincula sistema POS, pasarela de pago y sistemas de gestión de inventario.\n\nProbar y ejecutar\n\nProcesa un pedido de prueba para asegurarte de que los datos fluyan correctamente en cada paso.\n\nVerifica que las actualizaciones de inventario y los informes se generen como se espera.\n\n⚠ Importante\n\nPrivacidad de datos – Asegura el cumplimiento de las regulaciones de protección de datos (ejemplo: GDPR, PCI DSS) al manejar datos de pago y pedidos de clientes.\n\nTiempo de inactividad del sistema – Supervisa el rendimiento del sistema para garantizar que el flujo de trabajo funcione sin interrupciones durante las horas pico.\n\nResumen\nEste flujo de trabajo de automatización POS para restaurantes integra la gestión de pedidos, el procesamiento de pagos, las actualizaciones de inventario y los informes en tiempo real, permitiendo operaciones eficientes en restaurantes. Ya sea que administres una sola ubicación o una cadena de restaurantes, esta solución optimiza las tareas diarias, reduce errores y proporciona información valiosa, ahorrando tiempo y mejorando la satisfacción del cliente. 🚀",
+        "height": 1696,
+        "width": 1776,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1120,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "c2736f95-8d72-4bcf-be41-9a686942740e",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 796753854,
+          "mode": "list",
+          "cachedResultName": "DATOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=796753854"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        192,
+        624
+      ],
+      "id": "f3c8acbc-d2d0-4dfc-8b1e-d8a928e98c42",
+      "name": "Verificar Mesa",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Chat Trigger",
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "08b6698d-7baa-42cf-aad0-59fe80e980ff",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Opnai",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        528
+      ],
+      "typeVersion": 1,
+      "id": "ac80bbff-195d-4a76-854f-5c2ce9ea979c",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        592
+      ],
+      "typeVersion": 1,
+      "id": "06a6d46d-bbac-4d14-bbc3-f875dc550eb2",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Iniciar SubWF",
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        1072
+      ],
+      "typeVersion": 1,
+      "id": "e75882d3-db5e-40b4-b0b6-12eae2e70cce",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Opnai",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -240,
+        1312
+      ],
+      "typeVersion": 1,
+      "id": "306dbc88-89a1-4db1-a80a-ea4bd29652be",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        976
+      ],
+      "typeVersion": 1,
+      "id": "e1304334-c82c-41ec-9195-6283d7c7b8fe",
+      "name": "Sticky Note11"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Last 5 conversations Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Triggered on Restaurant Chat workflow": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Mesa": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c528726c-f888-4c79-92d1-e1c179374843",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "pRZoQKxRV7sEFvjb",
+  "tags": []
+}

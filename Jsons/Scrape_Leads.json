@@ -1,0 +1,309 @@
+{
+  "name": "Scrape_Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/nwua9Gu5YrADL7ZDj/run-sync-get-dataset-items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer apify_api_bqofhC6DRvjD2mcSDsdzPRrAfuyz2G3KBXzO"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n    \"includeWebResults\": false,\n    \"language\": \"en\",\n    \"locationQuery\": \"New York, USA\",\n    \"maxCrawledPlacesPerSearch\": 10,\n    \"maxImages\": 0,\n    \"maxReviews\": 0,\n    \"maximumLeadsEnrichmentRecords\": 0,\n    \"scrapeContacts\": false,\n    \"scrapeDirectories\": false,\n    \"scrapeImageAuthors\": false,\n    \"scrapePlaceDetailPage\": false,\n    \"scrapeReviewsPersonalData\": true,\n    \"scrapeTableReservationProvider\": false,\n    \"searchStringsArray\": [\n        \"restaurant\"\n    ],\n    \"skipClosedPlaces\": false\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        32,
+        0
+      ],
+      "id": "032e4f07-0cc0-4d82-ba70-ba9ca69a7692",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a231149-82d0-460a-b130-38fb9bbecd31",
+              "name": "Titulo",
+              "value": "={{ $('HTTP Request').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "01927cf0-4de5-43ff-8d9b-642ca3d92c5c",
+              "name": "Categoria",
+              "value": "={{ $('HTTP Request').item.json.categoryName }}",
+              "type": "string"
+            },
+            {
+              "id": "48f031bc-9733-4591-b290-9a22641fea82",
+              "name": "Direccion",
+              "value": "={{ $('HTTP Request').item.json.address }}",
+              "type": "string"
+            },
+            {
+              "id": "6aa94ebd-a40e-4d6e-99eb-69960176be38",
+              "name": "Street",
+              "value": "={{ $('HTTP Request').item.json.street }}",
+              "type": "string"
+            },
+            {
+              "id": "9a232932-21ee-42e4-9d5b-f59558a4873e",
+              "name": "Ciudad",
+              "value": "={{ $('HTTP Request').item.json.city }}",
+              "type": "string"
+            },
+            {
+              "id": "99d34cec-779c-4d4c-88df-31c518d7ef0b",
+              "name": "Telefono",
+              "value": "={{ $('HTTP Request').item.json.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "d966e38a-7560-4821-8292-61e0c8bfdf17",
+              "name": "URl",
+              "value": "={{ $('HTTP Request').item.json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        0
+      ],
+      "id": "f04d68f3-a6d4-4426-b675-1e783fefee5e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "Escrapeo a traves de Apify\nIr a Apify API https://docs.apify.com/api/v2/act-run-sync-get-dataset-items-post metodo post en Actor Runs Introdution.\nEsta configurado para devolver solo 10 valores.",
+        "height": 464,
+        "width": 272,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "63c9836d-15c8-46f8-a67a-b43106b8d697",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Escoger datos",
+        "height": 352,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "43d4ca24-5e00-4b60-9518-4a28111eb8af",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Guardar datos",
+        "height": 400,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "9d5bcd3a-d5aa-4c31-ab3e-e12be7f8d399",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1eNcZ_p42jYln6YRAEub7Gqr6oUF95VCTKv-4ltdvDqU",
+          "mode": "list",
+          "cachedResultName": "Lead_Unlimted_online",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eNcZ_p42jYln6YRAEub7Gqr6oUF95VCTKv-4ltdvDqU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1eNcZ_p42jYln6YRAEub7Gqr6oUF95VCTKv-4ltdvDqU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        576,
+        0
+      ],
+      "id": "b09b956c-81fb-48a5-8bbe-ed893cd6d36e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Usadas :\n-HTTP Request : Usado para acceder a un actor de apify y realizar el escrapeo.\n-Set : Usado para seleccionar los campos de interes para guardar en el google sheet.\n-Google Sheets : Usado para guardar los leads.",
+        "height": 256,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "a7d47fbc-c00e-47ba-a7a8-415d85e0f72d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Scrape_Leads : \nDescripcion : \nAutomatizacion para realizar scrape a traves de apify y conseguir leads de forma rapida y sencilla.\n\nFuncionalidad : \nGenerar gran cantidad de leads para el negocio.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que genera una x cantidad de leads con solo un clic.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Escalabilidad : Es un sistema completamente escalable a la necesidad.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 320,
+        "width": 752,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "e95e5967-bd60-41b9-b1b1-ff91c0772632",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "trigger",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "b18ec251-deb0-40b5-875c-4ab14f5874cd",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "onectar Credenciales de Google Sheet",
+        "height": 224,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "eb8128a9-c662-4e04-9ee0-a2d945ab2063",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        0
+      ],
+      "id": "7e56cd33-a137-48fb-9bb0-2025b9aed020",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9821f80b-f616-448b-8554-317f4098fd78",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "mJ00vMnEQOhmLlzf",
+  "tags": []
+}

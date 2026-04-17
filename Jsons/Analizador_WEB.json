@@ -1,0 +1,326 @@
+{
+  "name": "Analizador_WEB",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "¿Listo para mejorar tu sitio web ?",
+        "formDescription": "Envianos tu enlace de sitio web y nos encargamos del resto",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "URL",
+              "placeholder": "Ingresa tu enlace de sitio web",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "placeholder": "ejemplo@gmail.com",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -240,
+        -48
+      ],
+      "id": "26900ce7-0396-49eb-a643-c9bb72975cc8",
+      "name": "On form submission",
+      "webhookId": "1763bef2-5225-46be-803e-daaa265b5105"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.URL }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        112,
+        -64
+      ],
+      "id": "9c875b0f-71d4-4e9b-8d58-1ea620c87337",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.data }}"
+            },
+            {
+              "role": "system",
+              "content": "=Eres un agente analizador de sitios web. Tu tarea es recibir una URL y/o HTML de la página objetivo, analizar su contenido, estructura, SEO y experiencia de usuario, y devolver un **correo HTML listo para enviar** que resuma hallazgos, problemas prioritarios y recomendaciones accionables. Sigue estrictamente el formato de salida especificado en OUTPUT_SCHEMA. No incluyas explicaciones fuera del HTML. No incluyas scripts ni estilos inline peligrosos.\n\nHerramientas :\n-Utiliza la herramienta \"Perplexity\" para enriquecer esos datos extraidos de la web antes de darle formato para enviar.\n\nUSER: Analiza esta página:\nURL: {{ $('On form submission').item.json.URL }}\nHTML: {{ $json.data }}\nOBJETIVO: Proveer un email profesional dirigido a {{ $('On form submission').item.json.Correo }} (ej. CEO, Product Manager, Desarrollador) que:\n- Resuma en 3 frases el estado general.\n- Liste **Problemas críticos** (prioridad alta) con evidencia y ubicación (selector CSS o fragmento).\n- Liste **Mejoras recomendadas** con pasos concretos y estimación de esfuerzo (bajo/medio/alto).\n- Incluya **Checklist técnico** (SEO, accesibilidad, performance) con métricas y comandos/tests sugeridos.\n- Proponga **Asuntos de correo** (3 opciones) y un **CTA** final.\n\nCONSTRAINTS:\n- Usa lenguaje claro, profesional y directo.\n- Máximo 700 palabras en el cuerpo del email.\n- Evita jerga innecesaria; cuando uses términos técnicos, añade una breve aclaración en una sola frase.\n- No incluyas imágenes embebidas; si recomiendas imágenes, indica nombre y tamaño sugerido.\n- No uses JavaScript ni formularios en el HTML de salida.\n- Sanitiza cualquier contenido extraído de la página para evitar inyección de HTML.\n\nOUTPUT_SCHEMA: Devuelve **solo** un bloque HTML válido que cumpla:\n- `<html><head><meta charset=\"utf-8\"><style>...</style></head><body>...</body></html>`\n- Dentro del `<body>` incluye:\n  - `<h1>` con el título del email.\n  - `<p class=\"summary\">` con las 3 frases resumen.\n  - `<h2>Problemas críticos</h2>` seguido de una `<ul>` con items `<li>` que contengan: **Título corto**, **evidencia** (texto o selector), **impacto**, **prioridad**.\n  - `<h2>Recomendaciones</h2>` con una `<ol>` numerada; cada item debe tener **acción**, **pasos** y **estimación**.\n  - `<h2>Checklist técnico</h2>` con una tabla simple `<table>` de métricas (ej. LCP, CLS, Lighthouse score, WCAG issues).\n  - `<h2>Asuntos sugeridos</h2>` con una lista de 3 asuntos.\n - Usa clases CSS simples y estilos embebidos en `<style>` para tipografía y espaciado; evita fuentes externas.\n- No incluyas comentarios HTML ni metadatos innecesarios."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        512,
+        -16
+      ],
+      "id": "78ce7570-364a-4b6c-9a3b-847a40edc0d1",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('On form submission').item.json.Correo }}",
+        "subject": "=Analisis para el sitio {{ $('On form submission').item.json.URL }}",
+        "message": "={{ $json.output[0].content[0].text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1264,
+        -80
+      ],
+      "id": "08490ce4-0279-4c91-a717-38b7df125ba6",
+      "name": "Send a message",
+      "webhookId": "3dc867f6-1783-48d0-81a9-f2dafa5b55bb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Brief Cliente",
+        "height": 208,
+        "width": 272,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -352,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "0f51ca21-8d13-4ea4-9b5a-733b828d576f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Obtener datos sitio web",
+        "height": 240,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -16,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "ce291b54-a596-4848-9dea-6b77c55a0592",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con IA para analizar y proponer mejoras para el sitio web.",
+        "height": 656,
+        "width": 592,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        368,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "46e4222a-bb39-41c1-9974-0885610db218",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Perplexity para enriquecer los datos.",
+        "height": 224,
+        "width": 352,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "0a528b81-e103-43f9-8085-64d0217aaca9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Enviar propuesta de mejora",
+        "height": 336,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1136,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "0f713e28-0f6a-4156-bc05-43c5f426b03b",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 240,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1168,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "955769cb-683f-4c94-891e-499d5df674ad",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        704,
+        288
+      ],
+      "id": "dcd4e801-1d0d-4773-97f1-37b8d55f08c0",
+      "name": "Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "Vo1d7YNqDzHhU5Dh",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Descripción\nFlujo automatizado que recibe un formulario con URL y correo, extrae el HTML del sitio, enriquece el análisis con Perplexity, genera un email HTML profesional mediante un modelo LLM y lo envía por Gmail. Ideal para ofrecer auditorías rápidas de sitios web sin infraestructura previa.\n\nImportancia\nAcelera la entrega de propuestas y auditorías a clientes potenciales. ⚡\n\nAutomatiza tareas repetitivas: captura, análisis y envío en un solo pipeline. 🔁\n\nPermite validar la idea antes de invertir en base de datos o infra realtime. ✅\n\nFunción objetivo\nProveer un correo HTML listo para enviar que resuma hallazgos, problemas críticos y recomendaciones accionables a partir de la URL enviada por el usuario, manteniendo formato seguro y profesional.\n\nNodos usados\nOn form submission (formTrigger) — captura URL y Correo desde el formulario. 📝\n\nHTTP Request — obtiene el HTML de la URL proporcionada. 🌐\n\nPerplexity — enriquece y complementa la información extraída (consulta externa). 🔎\n\nMessage a model (OpenAI) — genera el HTML del email siguiendo el esquema y restricciones. 🤖\n\nSend a message (Gmail) — envía el email generado al destinatario indicado. ✉️\n\nSticky Notes — documentación y recordatorios dentro del WF. 🗒️\n\nCómo usar\nPublica el formulario y comparte el enlace con prospectos.\n\nCuando un usuario envíe URL + correo, el flujo ejecuta: fetch HTML → enriquecer con Perplexity → LLM genera email → Gmail envía.\n\nVerifica el correo enviado en la cuenta Gmail conectada y ajusta el prompt si necesitas otro tono o más/menos detalle.\n\nPara producción: añade persistencia (DB) y un sistema realtime cuando tengas usuarios concurrentes. 🔧",
+        "height": 768,
+        "width": 1088,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1632,
+        -608
+      ],
+      "typeVersion": 1,
+      "id": "1f5716ba-68b4-476d-a5ad-73966f4dec6b",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "URL": "https://v0-leadaimind.vercel.app/#contacto",
+          "Correo": "jesusmiguela546@gmail.com",
+          "submittedAt": "2026-02-18T14:27:20.643-05:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f9f05370-6316-4c90-9678-cc759aa56b5c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "kWtrO5ytE10pU0eaJSOuQ",
+  "tags": []
+}

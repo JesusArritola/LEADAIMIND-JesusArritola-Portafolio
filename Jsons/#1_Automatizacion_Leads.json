@@ -1,0 +1,313 @@
+{
+  "name": "#1_Automatizacion_Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Automatizacion SIn Limites",
+        "formDescription": "Bienvenido a nuestra comunidad de automatizaciones.Expon brevemente tu problema, nosotros te brindamos la solucion.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre_Completo",
+              "placeholder": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Apellido",
+              "placeholder": "Last_Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "fieldType": "email",
+              "placeholder": "Email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Descripcion del Problema",
+              "fieldType": "textarea",
+              "placeholder": "Description",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Presupuesto",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "0 a 1000 dolares"
+                  },
+                  {
+                    "option": "1000 a 2000 dolares"
+                  },
+                  {
+                    "option": "mas de 2000 dolares"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8d40e48f-d0d9-4610-9636-48173d8f322f",
+      "name": "On form submission",
+      "webhookId": "c4df7151-9fef-4b7a-aa00-53728ff2b8f3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Problema }}",
+        "options": {
+          "systemMessage": "=Eres un agente especialista en resolver las problematicas de los usuarios y enviar correos personalizados a cada uno de ellos proponiendoles una solucion precisa y eficiente a sus problemas.\n\nHerramienta:\n-Gmail\n\n##Reglas:\n1-Deberas usar un tono profesional y directo pero sin ser \n2-Nunca inventes informacion que no sea proporcionada mediante el formulario.\n3-Debes ser sumamente profesional a la hora de realizar el correo antes de enviarlo.\n4-Te aseguraras de que la solucion sea muy buena y que pueda resolver el problema expuesto.\n5-Con el problema mandado por el susuario elabora una solucion y no preguntes nada mas , utiliza solo los elementos proporcionados.\n6-Siempre incluiras al final del correo el nombre de la empresa en este caso \"DipusAI\"\n7-Siempre utilitzaras saltos de linea cuando sea necesario.Por ejemplo a la hora de listar elementos, etc.\n8-El correo debe tener una estructura profesional.Por Ejemplo :\n\nHola ,  {{ $json.Nombre }} {{ $json.Apellido }}:<br/><br/>\n\nEspero te encuentres bien.He analizado tu problema a profundidad y tengo una solucion que podria ser muy util<br/><br/> \"Aqui deberas poner la propuesta de solucion efectiva para resolver el problema\"{{ $json.Problema }}\" siempre teniendo en cuenta el {{ $json.Presupuesto }} que dispone para automatizar su servicio\".<br/><br/>\n\nSaludos, DipusAI\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        656,
+        0
+      ],
+      "id": "efebaf5d-0661-474c-aa8c-33e5e1b5f716",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        512,
+        256
+      ],
+      "id": "14a3a530-e631-49b6-ac2c-adbc0978db0e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Correo }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        256
+      ],
+      "id": "57cefc91-1673-4818-a3fc-67e4426886dd",
+      "name": "Gmail",
+      "webhookId": "238acc24-6d4e-4a6a-a500-b17f08db5e74",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0696a0fb-7124-48f3-85a0-f7d32820f4fb",
+              "name": "Nombre",
+              "value": "={{ $json.Nombre_Completo }}",
+              "type": "string"
+            },
+            {
+              "id": "24360423-808c-48f7-a086-62da18cb185a",
+              "name": "Apellido",
+              "value": "={{ $json.Apellido }}",
+              "type": "string"
+            },
+            {
+              "id": "50cb042d-5e89-4fbd-b128-e7b1d6da837f",
+              "name": "Correo",
+              "value": "={{ $json.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "c38ef4b5-ad88-4729-914c-5fbae55e192d",
+              "name": "Problema",
+              "value": "={{ $json['Descripcion del Problema'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4ba6f413-b3b5-4f68-b8c8-ed7dfc9a8a85",
+              "name": "Presupuesto",
+              "value": "={{ $json.Presupuesto }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        0
+      ],
+      "id": "ff5e1db1-f43a-4a53-941c-1afb4ab051be",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Gmail",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "8e21bfea-eef4-4aa7-86b7-82210e106f3e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Formulario local , Se puede usar otros nodos como webhook.",
+        "height": 224,
+        "width": 336,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "76a00853-f333-43c7-9a2b-341f4be52b09",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Automatizacion de Leads :\nEsto es una automatizacion que permite enviar correos personalizados a los usuarios una vez completado el formulario y expuesto su problema.\n\n\n### Funcionalidades\nEnviar correos personalizados a cada usuario.\n\n\n### Beneficios\n\n- **Ahorro de Tiempo**: Automatiza el envío de correos manual.\n- **Accesibilidad**: Permite a la empresa o compañía acceder desde cualquier lugar para automatizar el envio de correos personalizados y de forma automatica para proponer soluciones a los problemas del usuario.\n- **Interacción Eficiente**: Facilita la comunicación y organización mediante una interfaz conversacional.\n\n### Recomendaciones\n\n- Asegúrate de manejar los datos de los usuarios de manera segura y cumplir con las regulaciones de privacidad.\n- Realiza actualizaciones periódicas para mejorar la funcionalidad y la seguridad .\n\n",
+        "height": 464,
+        "width": 800,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "9fd1df32-996a-4a51-a758-b0657685f751",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Herramintas Utilizadas :\n-n8n Formulario : Usada para obetner la informacion del usuario.\n-Google Gemini Chat : Puede ser sustituida por otro modelo de AI chat.\n-Gmail : Usado para enviar correo al usuario que completo el formulario.",
+        "height": 224,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        432
+      ],
+      "typeVersion": 1,
+      "id": "dbf354f3-0d57-47b4-b4f3-25be4872c730",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Gemini",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        224
+      ],
+      "typeVersion": 1,
+      "id": "ae5a5fc4-bebe-4c4e-a1e5-bdb4c8b2cb11",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2a1d2f20-dd2a-4de1-af21-cb633b3a8e78",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "fKJ0MfifrB86i1Ud",
+  "tags": []
+}

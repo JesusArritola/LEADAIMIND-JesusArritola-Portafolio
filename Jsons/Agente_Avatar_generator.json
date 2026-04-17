@@ -1,0 +1,462 @@
+{
+  "name": "Agente_Avatar_generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a2404874-071b-4560-a793-e7ed3bf8eda4",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -592,
+        1328
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2844c85e-913e-43fe-ab63-4094ccae233b",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        576,
+        1216
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "content": "Obtener descripcion del avatar.\nDefinir y Obtener Script (Guion).",
+        "height": 400,
+        "width": 944,
+        "color": 7
+      },
+      "id": "10851f4c-6748-4b41-bdb4-53142c234aeb",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        1088
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento de los datos y generacion de los videos con los datos proporcionados",
+        "height": 688,
+        "width": 1520,
+        "color": 6
+      },
+      "id": "09777244-6a63-49f8-8749-70734fced422",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        896
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1I7FSFb0H48f-qnRzD7fsVoCT7TNrkC-oJa83Z4pItSk",
+          "mode": "list",
+          "cachedResultName": "Avatar_Generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I7FSFb0H48f-qnRzD7fsVoCT7TNrkC-oJa83Z4pItSk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 915575571,
+          "mode": "list",
+          "cachedResultName": "Script",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I7FSFb0H48f-qnRzD7fsVoCT7TNrkC-oJa83Z4pItSk/edit#gid=915575571"
+        },
+        "options": {}
+      },
+      "id": "eddb45a5-a25c-4edc-8b44-2f40d822cc70",
+      "name": "Get Script",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -144,
+        1328
+      ],
+      "typeVersion": 4.7,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1I7FSFb0H48f-qnRzD7fsVoCT7TNrkC-oJa83Z4pItSk",
+          "mode": "list",
+          "cachedResultName": "Avatar_Generator",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I7FSFb0H48f-qnRzD7fsVoCT7TNrkC-oJa83Z4pItSk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Script",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I7FSFb0H48f-qnRzD7fsVoCT7TNrkC-oJa83Z4pItSk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "bf1b0348-4b3c-4622-905e-9baf355416b8",
+      "name": "Get Avatar Description",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -320,
+        1328
+      ],
+      "typeVersion": 4.7,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "63d755e8-17df-4f38-a23d-b7c963a8f990",
+      "name": "Move on to next snippet",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        1648,
+        1312
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "=Video.mp4",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "id": "2d1064e4-e1bb-440b-ab67-4b525a24f4b1",
+      "name": "Upload video file",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1392,
+        1232
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        800,
+        976
+      ],
+      "id": "72f3f133-e4ef-409a-b63e-db529cb63c7d",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Usadas :\n-Manual Trigger : Usado para comenzar el WF.\n-Set : Usado para seleccionar la informacion.\n-Google Sheets : Usado para extraer la informacion del avatar y obtener el guion.\n-Generate a video from Gemini : Usado para gener el video del avatar.\n-Loop Over Items : Usado para realizar el proceso de creacion de avatar para cada item almacenado dentro del Google Sheets.\n-Google Drive : Usado para guardar los videos creados.",
+        "height": 256,
+        "width": 624,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        1664
+      ],
+      "typeVersion": 1,
+      "id": "4a5789d6-8a7c-4389-a664-0113ec91fe6f",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Generador de Avatar From Google Sheets Scripts : \nDescripcion : \nEs un flujo automatizado que permite generar videos de avatar a traves de un script y una descripcion determinada y almacenarlos en google drive.\n\nFuncionalidad : \nPermite generar videos predeterminado para su uso posterior en diferentes plataformas o ads.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que se pueden realizar videos de avatar predeterminados facilmente.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas permitiendo crear un sistema aun mas robusto y utilizable.\n-Escalabilidad : Es un sistema completamente escalable segun la empresa y los requisitos requeridos.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 320,
+        "width": 752,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        1648
+      ],
+      "typeVersion": 1,
+      "id": "91b328fe-8f31-467a-ba4d-ebc99ac64ca7",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "modelId": {
+          "__rl": true,
+          "value": "models/veo-3.0-generate-001",
+          "mode": "list",
+          "cachedResultName": "models/veo-3.0-generate-001"
+        },
+        "prompt": "=El video comienza con una toma media del avatar descrito a continuación.\nTiene un fondo marrón detrás, con relámpagos sutiles que aparecen y desaparecen lentamente en el fondo, pero están desenfocados para no llamar la atención.\n\nAvatar:\n{{ $json.Descripcion }}\n\nElla dice lo siguiente:\n\n{{ $json.Framing }}",
+        "options": {
+          "sampleCount": 1,
+          "durationSeconds": 6,
+          "aspectRatio": "16:9",
+          "personGeneration": "allow_all",
+          "binaryPropertyOutput": "data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        1232
+      ],
+      "id": "63df82ee-affb-469c-883d-fa206580bcb9",
+      "name": "Generate a video1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "216a0a13-7232-45e0-b4e3-d9cbb45eac5e",
+              "name": "Script",
+              "value": "={{ $('Get Script').item.json['Script Avatar'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1acfc7d0-229b-4492-8377-fba74adebd20",
+              "name": "descripcion",
+              "value": "={{ $('Get Avatar Description').item.json['Descripcion avatar'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        1328
+      ],
+      "id": "c49d382b-1f50-437b-b93d-b2ed9a741ce3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "content": "Trigger Manual",
+        "height": 240,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        1248
+      ],
+      "typeVersion": 1,
+      "id": "e29bda77-d30d-4eb7-9032-f70f303c9d1a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 192,
+        "width": 416,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        1296
+      ],
+      "typeVersion": 1,
+      "id": "1ac9250c-da51-4952-99fd-89c88c153914",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Datos del Sheets",
+        "height": 192,
+        "width": 224,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        1296
+      ],
+      "typeVersion": 1,
+      "id": "9395d132-3e35-42b2-90b6-3148c0977755",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1024,
+        1184
+      ],
+      "typeVersion": 1,
+      "id": "c005a548-a4ce-4d9c-bc45-5a3930612fcd",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1328,
+        1184
+      ],
+      "typeVersion": 1,
+      "id": "824dfa4a-460b-49dd-bdb9-3222a2a513b4",
+      "name": "Sticky Note8"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get Script": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate a video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload video file": {
+      "main": [
+        [
+          {
+            "node": "Move on to next snippet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Avatar Description": {
+      "main": [
+        [
+          {
+            "node": "Get Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Move on to next snippet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Avatar Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate a video1": {
+      "main": [
+        [
+          {
+            "node": "Upload video file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bc28e2ca-1de1-4c87-8317-31fa0ea6625d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "sZvggS32rt4n06Jq",
+  "tags": []
+}

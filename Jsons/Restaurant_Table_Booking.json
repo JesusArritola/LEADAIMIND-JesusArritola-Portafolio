@@ -1,0 +1,703 @@
+{
+  "name": "Restaurant_Table_Booking",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "id": "14050512-6b07-4c4f-b9cd-affe6ffa1846",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        608,
+        -80
+      ],
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 796753854,
+          "mode": "list",
+          "cachedResultName": "DATOS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=796753854"
+        },
+        "options": {}
+      },
+      "id": "b132425b-b9a1-43dc-83b7-92c59b04e1e4",
+      "name": "Get Table Information",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        976,
+        368
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1906173075,
+          "mode": "list",
+          "cachedResultName": "DISPONIBILIDAD",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=1906173075"
+        },
+        "options": {}
+      },
+      "id": "3b608a43-e297-4d7d-944c-8af0346f09c5",
+      "name": "Get Table Availability",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1136,
+        384
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1571920402,
+          "mode": "list",
+          "cachedResultName": "RESERVACIONES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=1571920402"
+        },
+        "options": {}
+      },
+      "id": "6bf85210-cfa2-4ef9-929b-c010984ccf2d",
+      "name": "Get Table Reservations",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1312,
+        368
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "fe6f0ed0-8cd1-4271-9b7b-5811ddd8585a",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        528,
+        288
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1571920402,
+          "mode": "list",
+          "cachedResultName": "RESERVACIONES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=1571920402"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Reservation ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Reservation_ID', ``, 'string') }}",
+            "Slot ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slot_ID', ``, 'string') }}",
+            "Table ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table_ID', ``, 'string') }}",
+            "Customer Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Name', ``, 'string') }}",
+            "Contact": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Contact', ``, 'string') }}",
+            "Party Size": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Party_Size', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+            "Booked AT": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Booked_AT', ``, 'string') }}",
+            "Requested Features": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Requested_Features', ``, 'string') }}",
+            "Notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Reservation ID",
+              "displayName": "Reservation ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Slot ID",
+              "displayName": "Slot ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Table ID",
+              "displayName": "Table ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Party Size",
+              "displayName": "Party Size",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Booked AT",
+              "displayName": "Booked AT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Requested Features",
+              "displayName": "Requested Features",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "cba93536-2411-4476-b68f-fffb98d0b7a4",
+      "name": "Update Reservations",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1680,
+        384
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1571920402,
+          "mode": "list",
+          "cachedResultName": "RESERVACIONES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=1571920402"
+        },
+        "startIndex": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Row_Number', ``, 'number') }}"
+      },
+      "id": "7a753188-48cb-4d94-9b51-050e5f10585c",
+      "name": "Cancel Reservations",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1856,
+        384
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "63737827-0d77-442d-9c7f-93e9ede6fd59",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        400,
+        304
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Role#\nEres un asistente de IA profesional y amable que ayuda a los clientes a hacer, modificar o cancelar reservas de restaurante a través del chat.\n\nInteractúas con múltiples herramientas conectadas a Google Sheets y una calculadora para procesar las solicitudes de manera precisa y confiable.\n\nFecha y hora actual: {{ $now }}\nUsa esto para:\n\nRechazar solicitudes de reserva para horarios pasados\n\nSugerir opciones de horario como \"esta noche\", \"mañana\" o \"este fin de semana\"\n\nRegistrar la marca de tiempo cuando se hace una reserva\n\nHERRAMIENTAS A LAS QUE TIENES ACCESO:\n\nHerramientas de búsqueda de datos:\n\nGet Table Information → contiene características de las mesas: capacidad, permitido fumar, cerca de la ventana, al aire libre, silla alta y notas\n\nGet Table Availability → contiene Slot ID, Fecha, Hora, Table ID, Capacidad y Estado (Disponible / Reservado)\n\nGet Table Reservations → contiene todos los registros de reservas con Reservation ID, Slot ID, Table ID, nombre del cliente, contacto, etc.\n\nHerramienta de memoria:\n\nSimple Memory → recuerda mensajes anteriores del usuario para conversaciones de varios turnos\n\nHerramienta de cálculo:\n\nCalculator → usada solo para calcular el próximo Reservation ID:\n\nDebes extraer el Reservation ID más alto de la hoja de Reservas\n\nSumar +1 para obtener el nuevo ID único para la nueva reserva\n\nHerramientas de escritura/modificación:\n\nUpdate Reservations → añadir una nueva fila de reserva usando los datos recopilados\n\nUpdate Table Availability → Actualizar con los datos del usuario una vez hecha su reservacion.\n\nCancel Reservations → eliminar una fila de reserva usando nombre y contacto\n\nTAREAS QUE PUEDES REALIZAR\n\nHacer una nueva reserva\n\nPregunta al usuario:\n\n¿Cuántos invitados?\n\n¿Qué fecha y hora?\n\n¿Alguna preferencia de asiento? (ej. fumar, cerca de la ventana, al aire libre, silla alta)\n\nLuego:\n\nBuscar en Table Information para filtrar mesas según preferencias y capacidad\n\nVerificar en Table Availability:\n\nCoincidir Fecha y Hora\n\nTable ID\n\nEl estado debe ser Disponible\n\nSeleccionar una fila válida y extraer su Slot ID\n\nNo modificar ni incrementar Slot ID — siempre usar tal cual del sheet\n\nPreguntar al usuario su nombre y número de teléfono\n\nUsar la herramienta Calculator para:\n\nEncontrar el máximo Reservation ID actual\n\nSumar +1 para obtener el nuevo ID único de reserva\n\nUsar Update Reservations para añadir una nueva fila con:\n\nReservation ID (de la calculadora)\n\nSlot ID (de la hoja de disponibilidad)\n\nTable ID\n\nNombre y contacto del cliente\n\nTamaño del grupo\n\nEstado = Confirmado\n\nCaracterísticas solicitadas (según preferencias)\n\nNotas (si las hay)\n\nBooked At = {{ $now }}\n\nUsar Update Table Availability para marcar el slot (por Slot ID) como Reservado\n\nConfirmar la reserva al usuario con un mensaje cálido y claro\n\nActualizar una reserva existente\n\nSi el usuario quiere cambiar su reserva:\n\nPreguntar su nombre y número de teléfono\n\nUsar Get Table Reservations para encontrar la fila correspondiente\n\nPreguntar qué quiere cambiar (ej. hora, número de invitados, asiento)\n\nBuscar un nuevo slot usando Table Availability (misma lógica que al reservar)\n\nExtraer el nuevo Slot ID (no generar uno)\n\nActualizar la fila de reserva:\n\nUsar Update Reservations para modificar Slot ID, hora, mesa, preferencias, etc.\n\nActualizar Table Availability:\n\nMarcar el Slot ID antiguo como Disponible\n\nMarcar el nuevo Slot ID como Reservado\n\nConfirmar los detalles actualizados al usuario\n\nSi no se encuentra la reserva:\n\nResponder: \"No pude encontrar una reserva con ese nombre y contacto. ¿Podrías verificar los detalles?\"\n\nCancelar una reserva\n\nPreguntar el nombre y número de teléfono del cliente\n\nUsar Get Table Reservations para encontrar la fila correspondiente\n\nSi se encuentra:\n\nUsar Cancel Reservations para eliminar la fila\n\nUsar Update Table Availability para marcar el Slot ID asociado como Disponible\n\nConfirmar la cancelación\n\nSi no se encuentra coincidencia:\n\nDecir: \"No pude encontrar una reserva con esos detalles. ¿Quieres que lo intente de nuevo?\"\n\nDIRECTRICES DE COMPORTAMIENTO\n\nNunca permitir reservas en el pasado (comparar todas las solicitudes con {{ $now }})\n\nSiempre extraer Slot ID de la hoja de disponibilidad — nunca generar o cambiarlo\n\nSolo incrementar Reservation ID usando la herramienta Calculator\n\nSiempre asegurar que el mismo Slot ID usado en Reservations se actualice en Availability\n\nResponder en un tono amable, seguro y profesional\n\nPreguntar por información faltante de manera clara y útil\n\nRESPUESTAS DE EJEMPLO\n\n\"He reservado la Mesa E2 para 2 invitados esta noche a las 8:00 PM. Es al aire libre y cerca de la ventana.\"\n\n\"Tu reserva ha sido actualizada a las 7:30 PM en la Mesa A1.\"\n\n\"Tu reserva para Sarah Khan a las 8:00 PM ha sido cancelada. ¡Esperamos verte pronto!\"\n\n*****IMPORTANTE****:\nAsume que si la hoja de google sheet (¨Get Table Information¨) esta vacia sin informacion sobre las mesas puedes hacer cualquier reservacion que te pida el usuario.\nCada vez que se realice una reserva esa debe incluirse de igual forma en la tabla de Disponibilidad a traves de la herramienta (\"Update Table Availabilty\") para luego saber la disponibilidad real del restaurante.\n\nEres Julian, el Concierge de Reservas. Tu trabajo es asegurar reservas fluidas, precisas y encantadoras para todos los clientes."
+        }
+      },
+      "id": "dabca680-3996-42d6-941a-82cd4387b3b5",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1056,
+        -80
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU",
+          "mode": "list",
+          "cachedResultName": "SALES_BUSINESS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1906173075,
+          "mode": "list",
+          "cachedResultName": "DISPONIBILIDAD",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KyYtcF1Wzvt3ot5zTCwCG9kk0SkCDqJFFJlW8pviPHU/edit#gid=1906173075"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Slot ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Slot_ID__using_to_match_', ``, 'string') }}",
+            "Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Date', ``, 'string') }}",
+            "Time": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Time', ``, 'string') }}",
+            "Table ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table_ID', ``, 'string') }}",
+            "Capacity": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Capacity', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Slot ID"
+          ],
+          "schema": [
+            {
+              "id": "Slot ID",
+              "displayName": "Slot ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Table ID",
+              "displayName": "Table ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Capacity",
+              "displayName": "Capacity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "6b10ec26-af39-44aa-8df2-7d2331c12555",
+      "name": "Update Table Availabilty",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        1504,
+        368
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Handle Reservation",
+        "height": 272,
+        "width": 544,
+        "color": 4
+      },
+      "id": "a5e2a634-148d-4907-bf0d-17378f5b9de6",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1456,
+        224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Get Reservation Data",
+        "height": 336,
+        "width": 528
+      },
+      "id": "0b9add09-aed5-47f5-b408-05c177a53b58",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        928,
+        224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## AI Tools",
+        "height": 272,
+        "width": 544,
+        "color": 5
+      },
+      "id": "b2c366ca-20a3-49ab-bc49-99a621893493",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        224
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "0ce346ed-2e18-40da-9134-d0d446f215d6",
+      "name": "Calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "position": [
+        528,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Restaurant Table Reservation AI Agent",
+        "height": 384,
+        "width": 1616,
+        "color": 6
+      },
+      "id": "9222f3f3-67b9-4b72-b5ea-16215ad1dede",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        -160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "description": "=Usa esta herramienta para pensar antes de ejecutar cada accion y para asegurarte de que los datos devueltos cumplen con lo pedido por el usuario."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        320
+      ],
+      "id": "111a3373-a25a-488c-a0cb-2fc5f726eef3",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "content": "📌 Descripción del Workflow: Restaurant Table Booking\n🚀 ¿Qué hace?\nEste workflow automatiza la gestión de reservas de mesas en restaurantes a través de un chat interactivo con IA.\nPermite a los clientes hacer, modificar o cancelar reservas en tiempo real, validando disponibilidad y actualizando los registros en Google Sheets.\n\n🔄 Nodos usados y su importancia\nWhen chat message received 💬\nActiva el flujo cuando un cliente envía un mensaje en el chat.\n👉 Punto de entrada para todas las interacciones.\n\nAI Agent (Julian, el Concierge) 🤖\nEl “cerebro” del sistema: interpreta las solicitudes del cliente, consulta las herramientas y responde de forma profesional y amable.\n👉 Gestiona reservas nuevas, modificaciones y cancelaciones.\n\nOpenAI Chat Model 🧠\nMotor de lenguaje que ayuda al agente a comprender y generar respuestas naturales.\n\nSimple Memory 🗂️\nGuarda el contexto de la conversación para manejar diálogos de varios turnos.\n👉 Permite recordar datos del cliente durante la interacción.\n\nThink Tool 💡\nNodo de razonamiento que asegura que las decisiones del agente sean coherentes antes de ejecutar acciones.\n\nCalculator 🔢\nCalcula el próximo Reservation ID único sumando +1 al último ID existente.\n👉 Garantiza que cada reserva tenga un identificador único.\n\nGet Table Information 📑\nRecupera características de las mesas (capacidad, fumar, ventana, exterior, etc.).\n👉 Filtra opciones según preferencias del cliente.\n\nGet Table Availability 📅\nConsulta fechas, horas y estado de las mesas (Disponible/Reservado).\n👉 Valida que la reserva no sea en el pasado y que haya disponibilidad real.\n\nGet Table Reservations 📋\nObtiene todas las reservas existentes para localizar, modificar o cancelar.\n\nUpdate Reservations ✍️\nRegistra una nueva reserva o actualiza una existente en la hoja de Google Sheets.\n\nUpdate Table Availability 🔄\nCambia el estado de un slot a “Reservado” o “Disponible” según la acción realizada.\n👉 Mantiene sincronizada la disponibilidad real del restaurante.\n\nCancel Reservations ❌\nElimina una reserva existente en la hoja de Google Sheets.\n👉 Libera la mesa y actualiza disponibilidad.\n\n✨ Utilidad\nAutomatiza la gestión de reservas sin intervención humana.\n\nEvita errores manuales en disponibilidad y duplicación de reservas.\n\nOfrece una experiencia de cliente fluida y profesional vía chat.\n\nCentraliza toda la información en Google Sheets para fácil control.\n\n🛠️ Problema que resuelve\nElimina la necesidad de llevar reservas manualmente en papel o llamadas.\n\nAsegura que las mesas disponibles se actualicen en tiempo real.\n\nPermite modificar y cancelar reservas de forma confiable.\n\nMejora la experiencia del cliente con un asistente virtual que responde rápido y con precisión.",
+        "height": 1296,
+        "width": 1728,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2112,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "81012066-601f-47f4-a3d4-49900026c412",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cancel Reservations": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Reservations": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Table Information": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Table Reservations": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Table Availabilty": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Table Availability": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "76b65371-5ebf-48dd-84a8-85aad039cff0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "gEoTIMXFsewlttco",
+  "tags": []
+}

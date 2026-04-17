@@ -1,0 +1,262 @@
+{
+  "name": "Respuesta_Automatica_Gmails",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        0
+      ],
+      "id": "a775465d-8c0c-4fcc-add7-9fc3b5009879",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un asistente de correos profesional.",
+        "options": {
+          "systemMessage": "=Eres un asistente de correo profesional.\nGenera una respuesta educada, clara y concisa en el mismo idioma del remitente.\nMantén un tono formal pero cercano.\nSi el correo es spam, no generes respuesta.\nCorreo original:\n{{ $json.snippet }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        112,
+        0
+      ],
+      "id": "06827aa3-1f31-4816-aff9-c158d18054e6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        528,
+        0
+      ],
+      "id": "5bc5319b-645b-4098-84ea-84920a05b351",
+      "name": "Wait",
+      "webhookId": "d086af6c-5441-4b3b-94b4-eb2671213ba7"
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "={{ $('Gmail Trigger').item.json.Subject }} Respuesta",
+        "message": "={{ $json.output }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        864,
+        0
+      ],
+      "id": "1ea6b25f-ba75-436b-a0fa-855dd03886fe",
+      "name": "Send a message",
+      "webhookId": "27102fb1-d6e3-42d1-82d5-d4ec8b4dc23d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "8fb7f3a6-09d9-4e09-96ed-f69538cf3dc5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 176,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "9205f17e-6ca8-4981-ad54-9818d3f64dc4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 192,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        784,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "f9631134-c241-487f-91c3-58fd0aeacfa3",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Tiempo de espera especifico para que parezca mas humano",
+        "height": 208,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        464,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "daa8a14a-276b-44a4-8b97-a63669a26236",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "respuesta Automatica Gmails : \nDescripcion : \nSistema autoamtizado para enviar respuestas automaticas de gmails personalizadas.\n\nFuncionalidad :\nPermite automatizar tus respuestas de correos recibidos.\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que elabora los mensajes y los envia de forma automatica.\n-Facil de implementar : Permite implementarlo facilmente configurando alguno parametros.\n-Escalabilidad : Permite escalar y hacerlo mas complejo y efectivo segun necesidad.",
+        "height": 320,
+        "width": 384,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "6cbfdf68-f3c7-4918-b259-9ff36302cd1d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas : \n-Gmail : Usado para recibir y enviar correos personalizados.\n-AI Agent : Usado para interpretar el gmail recibido y generar una respuesta .\n-Wait : Usado para esperar un tiempo determinado antes de enviar el mensaje y hacerlo parecer mas humano.",
+        "height": 288,
+        "width": 416,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -928,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "c88b738e-aa89-48cb-83ea-d99e7572455d",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        256
+      ],
+      "id": "473778d8-425c-4c06-afd2-6399f56e3e37",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "25342900-8559-4cef-8b0b-d9ac6e47016d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "0srCXBVdEwcK4L85",
+  "tags": []
+}

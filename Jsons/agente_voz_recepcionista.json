@@ -1,0 +1,312 @@
+{
+  "name": "agente_voz_recepcionista",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "={{ $json.body.args.nombre }}",
+              "fecha": "={{ $json.body.args.fecha }}",
+              "hora": "={{ $json.body.args.hora }}",
+              "servicio": "={{ $json.body.args.servicio }}",
+              "telefono": "={{ $json.body.args.telefono }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -528,
+        192
+      ],
+      "name": "Set Variables",
+      "id": "ab3c44e8-ca04-4306-8d83-30debff40123"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos usuario : \n",
+        "options": {
+          "systemMessage": "=Eres el \"Orquestador de Citas\" de Barber_King. Eres un agente de backend, no un asistente de chat. Tu función es procesar datos y ejecutar acciones de forma lógica y eficiente.\n\nTAREA PRINCIPAL:\nRecibirás los datos de una llamada telefónica procesados por ElevenLabs en formato JSON (nombre, telefono, servicio, fecha, hora). Debes gestionar la agenda y confirmar la cita.\n\nPASOS DE EJECUCIÓN:\n1.  **Validación:** Asegúrate de que todos los campos obligatorios (nombre, telefono, servicio, fecha, hora) estén presentes en el input.\n2.  **Verificación de Disponibilidad:** Utiliza la herramienta de Google Calendar (o herramienta de agenda disponible) para buscar si ya existe un evento programado en la fecha y hora indicadas.\n3.  **Acción:**\n    *   **Si está DISPONIBLE:**\n        *   Guarda los datos del cliente (si tienes una herramienta de CRM/Base de datos disponible).\n        *   Utiliza la herramienta para CREAR el evento en el calendario con el resumen: \"{servicio} - {nombre}\".\n        *   Devuelve un mensaje de éxito.\n    *   **Si está OCUPADO:**\n        *   NO crees el evento.\n        *   NO guardes nada en CRM.\n        *   Devuelve un mensaje de rechazo amable ofreciendo cambiar el horario.\n\nFORMATO DE RESPUESTA OBLIGATORIO:\nDebes responder ÚNICAMENTE con un objeto JSON estricto. No uses Markdown, no uses bloques de código, no incluyas texto adicional.\n\nEstructura del JSON de éxito:\n{\n  \"confirmacion\": true,\n  \"mensaje\": \"Perfecto. Tu cita para {servicio} el {fecha} a las {hora} está confirmada.\"\n}\n\nEstructura del JSON de fallo:\n{\n  \"confirmacion\": false,\n  \"mensaje\": \"Lo siento, ese horario ya está ocupado. ¿Te parece si probamos otro día u hora?\"\n}\n\n\n\n\nUtiliza la herramienta \"Crear_Evento\" para agendar la cita con el cliente y notificarle cuando se cree el evento.\n\nUtiliza la herramienta \"Disponibilidad\" para saber la disponibilidad antes de agendar la cita , si no hay disponibilidad Responde con NO y si hay disponibilidad Responde con SI.\n\nUtiliza la herramienta \"Guardar_Usuarios\" para guardar toda la informacion del cliente."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -256,
+        176
+      ],
+      "id": "8358a885-9222-4ba6-b585-57a6d969ab83",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        480
+      ],
+      "id": "475beb7b-8b5e-42f2-90fd-b3e553bf63cd",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        432,
+        160
+      ],
+      "id": "36fa0096-995c-466c-8cf0-5bb1fd76f516",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "barberia-agendar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -720,
+        192
+      ],
+      "name": "Webhook",
+      "id": "27af5e87-b589-40a2-bdcc-8def5a18b1d7",
+      "webhookId": "5fa6166b-2bf8-496e-bc0e-403f6d088cf1"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        576
+      ],
+      "id": "ee87b18e-c1d3-44cc-a36d-b605cc5e0bda",
+      "name": "Crear_Evento",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -176,
+        560
+      ],
+      "id": "10b115bf-bceb-4f3f-965f-cbf2727dbf86",
+      "name": "Disponibilidad",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1P04fu9bzQnmc9Dvht-Cw-2OUTisijJsKIGkP4hdZJSo",
+          "mode": "list",
+          "cachedResultName": "Clientes_Barber_King",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P04fu9bzQnmc9Dvht-Cw-2OUTisijJsKIGkP4hdZJSo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1P04fu9bzQnmc9Dvht-Cw-2OUTisijJsKIGkP4hdZJSo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telefono', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        544
+      ],
+      "id": "86599b91-e1fd-490e-b32a-c3dc0078e330",
+      "name": "Guardar_Usuarios",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear_Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disponibilidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar_Usuarios": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "11d4418b-ed9f-419a-b061-173306b29bdd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "iSWTQTtkdzgihWQt",
+  "tags": []
+}

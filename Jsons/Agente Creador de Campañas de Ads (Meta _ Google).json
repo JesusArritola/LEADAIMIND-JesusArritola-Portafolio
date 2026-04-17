@@ -1,0 +1,1460 @@
+{
+  "name": "Agente Creador de Campañas de Ads (Meta / Google)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Agente Creador de Campañas de Ads (Meta / Google)",
+        "formDescription": "Completa los campos para la nueva campaña de ADS",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Producto_Servicio",
+              "placeholder": "Escribe la descripcion del producto/servicio",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Objetivo",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Leads"
+                  },
+                  {
+                    "option": "Ventas"
+                  },
+                  {
+                    "option": "Trafico"
+                  },
+                  {
+                    "option": "Reconocimiento"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Presupuesto",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Menos de 1000"
+                  },
+                  {
+                    "option": "1000 a 3000"
+                  },
+                  {
+                    "option": "Mas de 5000"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Geografia",
+              "placeholder": "Escribe tu ubicacion",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Idioma",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Español"
+                  },
+                  {
+                    "option": "Ingles"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "CTA Deseado",
+              "placeholder": "Escribe un CTA Gancho",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Plazo",
+              "placeholder": "30/60/90 dias , etc...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Plataforma",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Google"
+                  },
+                  {
+                    "option": "Meta"
+                  },
+                  {
+                    "option": "Google y Meta"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "fieldType": "email",
+              "placeholder": "ejemplo@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Escribe tu nombre",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "path": "f6128e5b-b3de-4da3-8745-c781f9f8bd9c"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        6128,
+        -1152
+      ],
+      "id": "f12c2496-6c70-4d88-aa0b-21c18550a75a",
+      "name": "On form submission",
+      "webhookId": "f6128e5b-b3de-4da3-8745-c781f9f8bd9c"
+    },
+    {
+      "parameters": {
+        "content": "Brief Cliente",
+        "height": 272,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6016,
+        -1232
+      ],
+      "typeVersion": 1,
+      "id": "995a742f-aa04-47ab-8af4-45cdf571949d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Brief nueva campaña de ADS : \nNegocio : {{ $json.Negocio }}\nProducto_Servicio : {{ $json.Producto_Servicio }}\nObjetivo : {{ $json.Objetivo }}\nPresupuesto : {{ $json.Presupuesto }}\nGeografia : {{ $json.Geografia }}\nIdioma : {{ $json.Idioma }}\nCTA : {{ $json['CTA Deseado'] }}\nPlazo : {{ $json.Plazo }}\nPlataforma : {{ $json.Plataforma }}\n",
+        "options": {
+          "systemMessage": "=Eres un experto en Meta Ads y Google Ads con 10+ años de experiencia.\n\nINSTRUCCIONES:\nGenera una estructura completa de campaña publicitaria en formato JSON con:\n\n1. **Configuración General:**\n   - Objetivo de campaña (mapea a {{ $json.Objetivo }}\n   - Tipo de optimización recomendada\n   - Estrategia de puja sugerida\n\n2. **Adsets Recomendados (3-5 adsets):**\n   Para cada adset:\n   - Nombre del adset\n   - Segmentación detallada (edad, género, intereses, comportamientos)\n   - Audiencias lookalike sugeridas\n   - Presupuesto diario sugerido\n   - Ubicaciones recomendadas\n\n3. **Creativos Sugeridos:**\n   - Formatos recomendados (imagen, video, carrusel, UGC)\n   - Especificaciones técnicas\n   - Concepto creativo para cada formato\n   - Elementos visuales clave\n\n4. **Calendario:**\n   - Duración recomendada\n   - Fases de la campaña (lanzamiento, optimización, escala)\n\nRESPONDE SOLO CON JSON VÁLIDO. No agregues texto adicional.\n\nFormato esperado:\n{\n  \"configuracion_general\": {\n    \"objetivo_campana\": \"...\",\n    \"tipo_optimizacion\": \"...\",\n    \"estrategia_puja\": \"...\"\n  },\n  \"adsets\": [\n    {\n      \"nombre\": \"...\",\n      \"segmentacion\": {\n        \"edad\": \"...\",\n        \"genero\": \"...\",\n        \"intereses\": [],\n        \"comportamientos\": [],\n        \"ubicacion\": \"...\"\n      },\n      \"audiencias_lookalike\": [],\n      \"presupuesto_diario\": 0,\n      \"ubicaciones\": []\n    }\n  ],\n  \"creativos\": [\n    {\n      \"formato\": \"...\",\n      \"especificaciones\": \"...\",\n      \"concepto\": \"...\",\n      \"elementos_clave\": []\n    }\n  ],\n  \"calendario\": {\n    \"duracion_dias\": 0,\n    \"fases\": []\n  }\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        7136,
+        -1680
+      ],
+      "id": "76f392dd-0923-494b-b12d-fbf28a28c12b",
+      "name": "Estructura_Campaña"
+    },
+    {
+      "parameters": {
+        "content": "Setear los Datos del Brief",
+        "height": 208,
+        "width": 304,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6416,
+        -1200
+      ],
+      "typeVersion": 1,
+      "id": "bc662676-3a88-4f04-be23-e90b93d05a2f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12dddf3b-c7e1-4c54-a1fb-2a3f163d7edd",
+              "name": "Negocio",
+              "value": "={{ $json.Negocio }}",
+              "type": "string"
+            },
+            {
+              "id": "632953f3-9a37-4dd7-b75c-477ab4d96962",
+              "name": "Producto_Servicio",
+              "value": "={{ $json.Producto_Servicio }}",
+              "type": "string"
+            },
+            {
+              "id": "bc49b896-f35a-4966-9b2f-778863a6a7d3",
+              "name": "Objetivo",
+              "value": "={{ $json.Objetivo }}",
+              "type": "string"
+            },
+            {
+              "id": "8d2a66e8-39c6-4fb6-9284-7a9a94dafcff",
+              "name": "Presupuesto",
+              "value": "={{ $json.Presupuesto }}",
+              "type": "string"
+            },
+            {
+              "id": "3fc6be8f-4441-43a5-8c18-3cb31cf192db",
+              "name": "Geografia",
+              "value": "={{ $json.Geografia }}",
+              "type": "string"
+            },
+            {
+              "id": "59ad5dd5-6968-4d3a-b388-91f2f57523fd",
+              "name": "Idioma",
+              "value": "={{ $json.Idioma }}",
+              "type": "string"
+            },
+            {
+              "id": "a9d97cac-5ea0-4fb5-ac40-d1674880b2ec",
+              "name": "Idioma",
+              "value": "={{ $json.Idioma }}",
+              "type": "string"
+            },
+            {
+              "id": "7e2c4e8b-b0d4-4153-a7aa-83067e32176a",
+              "name": "CTA Deseado",
+              "value": "={{ $json['CTA Deseado'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0f5e13ff-fd63-4ec3-afbe-9007e41364c9",
+              "name": "Plazo",
+              "value": "={{ $json.Plazo }}",
+              "type": "string"
+            },
+            {
+              "id": "75519fc7-b851-466b-b9eb-28dc0396d871",
+              "name": "Plataforma",
+              "value": "={{ $json.Plataforma }}",
+              "type": "string"
+            },
+            {
+              "id": "1e8b89bc-a009-413b-a246-773d9cc3bb18",
+              "name": "Correo",
+              "value": "={{ $json.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "236b4412-18b3-421d-ac89-4cae798c734e",
+              "name": "Nombre",
+              "value": "={{ $json.Nombre }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6512,
+        -1152
+      ],
+      "id": "e113e419-c264-4f65-990d-a66cca20a355",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 3000,
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        7024,
+        -1488
+      ],
+      "id": "d0e198f6-51e6-4cfe-b4b8-fb7505582ec9",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Eres un copywriter experto en ads de alto rendimiento para  {{ $('Edit Fields').item.json.Plataforma }}.\n\nBRIEF:\n- Negocio: {{ $('Edit Fields').item.json.Negocio }}\n- Producto/Servicio: {{ $('Edit Fields').item.json.Producto_Servicio }}\n- Objetivo: {{ $('Edit Fields').item.json.Objetivo }}\n- CTA: {{ $('Edit Fields').item.json['CTA Deseado'] }}\n- Idioma: {{ $('Edit Fields').item.json.Idioma }}\n\nTAREA:\nGenera 6 variaciones de copy publicitario, cada una con:\n\n1. **Gancho (Hook):** Primera línea que captura atención (40-60 caracteres)\n2. **Cuerpo (Body):** Mensaje principal con beneficios (100-150 palabras)\n3. **CTA:** Llamado a la acción claro\n\nFORMATOS A CREAR:\n- 2 copys orientados a dolor/problema\n- 2 copys orientados a beneficio/resultado\n- 2 copys con prueba social/urgencia\n\nRESTRICCIONES:\n- Lenguaje {{ $('Edit Fields').item.json.Idioma }}\n- Tono conversacional y persuasivo\n- Enfocado en {{ $('Edit Fields').item.json.Objetivo }}\n- Sin emojis excesivos (máximo 2 por copy)\n\nRESPONDE EN JSON:\n{\n  \"copys\": [\n    {\n      \"id\": 1,\n      \"enfoque\": \"dolor|beneficio|prueba_social\",\n      \"gancho\": \"...\",\n      \"cuerpo\": \"...\",\n      \"cta\": \"...\",\n      \"notas\": \"Por qué este copy funciona\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 2500,
+          "temperature": 0.8
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        7136,
+        -1216
+      ],
+      "id": "63e0785b-acc3-4f4d-ab31-4004da9318fc",
+      "name": "Generar Copys",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        7920,
+        -1024
+      ],
+      "id": "f9f8da8c-bf7e-4e94-871c-96df8d8e3654",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=*Prompt:**\n```\nEres un director creativo especializado en ads visuales de alto rendimiento.\n\nCONTEXTO DE LA CAMPAÑA:\n{{ $json.Producto_Servicio }}\n\nPRODUCTO/SERVICIO:\n{{ $json.Producto_Servicio }}\n\nTAREA:\nPara cada formato creativo sugerido en la estructura, genera un brief detallado para el diseñador/video editor con:\n\n1. **Concepto Visual:**\n   - Idea principal\n   - Mood/Estilo\n   - Referencias\n\n2. **Elementos Obligatorios:**\n   - Textos a incluir\n   - Colores sugeridos\n   - Tipografía recomendada\n\n3. **Especificaciones Técnicas:**\n   - Dimensiones exactas\n   - Formato de archivo\n   - Duración (si es video)\n\n4. **Instrucciones de Ejecución:**\n   - Paso a paso para el diseñador\n   - Variaciones sugeridas (A/B testing)\n\nRESPONDE EN JSON:\n{\n  \"creativos\": [\n    {\n      \"formato\": \"imagen|video|carrusel\",\n      \"concepto_visual\": \"...\",\n      \"elementos_obligatorios\": {\n        \"textos\": [],\n        \"colores\": [],\n        \"tipografia\": \"...\"\n      },\n      \"especificaciones_tecnicas\": {\n        \"dimensiones\": \"...\",\n        \"formato_archivo\": \"...\",\n        \"duracion\": \"...\"\n      },\n      \"instrucciones\": \"...\",\n      \"variaciones\": []\n    }\n  ]\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        7136,
+        -864
+      ],
+      "id": "cc032c39-d8f3-4f73-8d7f-2af63b804fcb",
+      "name": "GENERAR BRIEF DE CREATIVOS",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from merge\nconst items = $input.all();\n\n// Access brief data from first item json property\nconst brief = items[0].json;\n\n// Parse estructura from output field of first item, handling both string and object types\nlet estructura;\nif (typeof items[0].json.output === 'string') {\n  try {\n    estructura = JSON.parse(items[0].json.output);\n  } catch (e) {\n    estructura = { calendario: { duracion_dias: 30 }, adsets: [] };\n  }\n} else {\n  estructura = items[0].json.output || { calendario: { duracion_dias: 30 }, adsets: [] };\n}\n\n// Convert Presupuesto dropdown text to numeric value\nlet presupuestoTotal;\nif (brief.Presupuesto === 'Menos de 1000') {\n  presupuestoTotal = 800;\n} else if (brief.Presupuesto === '1000 a 3000') {\n  presupuestoTotal = 2000;\n} else if (brief.Presupuesto === 'Mas de 5000') {\n  presupuestoTotal = 5000;\n} else {\n  presupuestoTotal = 2000; // default\n}\n\nconst duracionDias = estructura.calendario?.duracion_dias || 30;\nconst numAdsets = estructura.adsets?.length || 3;\n\n// Calculate presupuestoDiario by dividing presupuestoTotal by duracionDias\nconst presupuestoDiario = presupuestoTotal / duracionDias;\n\n// Calculate presupuestoPorAdset by dividing presupuestoDiario by numAdsets\nconst presupuestoPorAdset = presupuestoDiario / numAdsets;\n\n// Map distribucion_adsets with nombre, presupuesto_diario, presupuesto_total, and porcentaje for each adset\nconst distribucion_adsets = (estructura.adsets || []).map((adset, index) => ({\n  nombre: adset.nombre,\n  presupuesto_diario: Math.round(presupuestoPorAdset * 100) / 100,\n  presupuesto_total: Math.round(presupuestoPorAdset * duracionDias * 100) / 100,\n  porcentaje: Math.round((100 / numAdsets) * 100) / 100\n}));\n\n// Set cpm_estimado to 8 if Plataforma includes 'meta', otherwise 12\nconst cpm_estimado = (brief.Plataforma || '').toLowerCase().includes('meta') ? 8 : 12;\n\n// Set ctr_objetivo to 2 if Objetivo includes 'ventas', otherwise 3\nconst ctr_objetivo = (brief.Objetivo || '').toLowerCase().includes('ventas') ? 2 : 3;\n\n// Create recomendaciones\nconst recomendaciones = {\n  presupuesto_total: presupuestoTotal,\n  duracion_dias: duracionDias,\n  presupuesto_diario_total: Math.round(presupuestoDiario * 100) / 100,\n  presupuesto_por_adset: Math.round(presupuestoPorAdset * 100) / 100,\n  distribucion_adsets: distribucion_adsets,\n  metricas_esperadas: {\n    cpm_estimado: cpm_estimado,\n    ctr_objetivo: ctr_objetivo,\n    impresiones_estimadas: Math.round((presupuestoTotal / cpm_estimado) * 1000)\n  },\n  recomendaciones: [\n    \"Comenzar con 50% del presupuesto en los primeros 7 días para testear\",\n    \"Pausar adsets con CPM >$15 después de 3 días\",\n    \"Escalar los ganadores en un 20% cada 3 días\",\n    \"Mantener mínimo $10/día por adset para datos significativos\"\n  ]\n};\n\n// Return json object with spread brief, estructura, and presupuesto recomendaciones\nreturn {\n  json: {\n    ...brief,\n    estructura,\n    presupuesto: recomendaciones\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8208,
+        -1280
+      ],
+      "id": "0fd651db-c031-41da-9693-bdaa88888c13",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Merge').first().json.Negocio }}_{{ $('Merge').first().json.Producto_Servicio }}-{{ $json.Nombre }}-",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {
+          "folderColorRgb": "#04DA00"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        8336,
+        -480
+      ],
+      "id": "ecdba56e-c201-40a3-b47b-a73d6acbe709",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tYQ8UOgeWrLzdwlnPF5ZnSaP-PlOfCoGrraWiiu_ocE",
+          "mode": "list",
+          "cachedResultName": "ADS_BRIEF",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tYQ8UOgeWrLzdwlnPF5ZnSaP-PlOfCoGrraWiiu_ocE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tYQ8UOgeWrLzdwlnPF5ZnSaP-PlOfCoGrraWiiu_ocE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Negocio",
+              "displayName": "Negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Producto_Servicio",
+              "displayName": "Producto_Servicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Objetivo",
+              "displayName": "Objetivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Presupuesto",
+              "displayName": "Presupuesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Geografia",
+              "displayName": "Geografia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Idioma",
+              "displayName": "Idioma",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CTA Deseado",
+              "displayName": "CTA Deseado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Plazo",
+              "displayName": "Plazo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Plataforma",
+              "displayName": "Plataforma",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        8544,
+        -1040
+      ],
+      "id": "0a1dec4e-ce29-4d23-9967-b84503bbeca0",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Convert Content",
+        "height": 208,
+        "width": 288,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8176,
+        -800
+      ],
+      "typeVersion": 1,
+      "id": "9ce6b2fe-b78d-4de3-af9f-3a83d7831e4d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Convert Content ",
+        "height": 224,
+        "width": 288,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8096,
+        -1344
+      ],
+      "typeVersion": 1,
+      "id": "5ee029e8-e3a5-4c68-ae70-faf31b97c6a8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from merge\nconst items = $input.all();\n\n// Access brief data from first item (Edit Fields output)\nconst brief = items[0].json;\n\n// Get copys data from second item\nlet copys = [];\ntry {\n  const copysOutput = items[1]?.json?.output;\n  if (copysOutput && copysOutput[0]?.content?.[0]?.text) {\n    const parsedData = JSON.parse(copysOutput[0].content[0].text);\n    copys = parsedData.copys || [];\n  }\n} catch (e) {\n  // Fallback to empty array if parsing fails\n  copys = [];\n}\n\n// Generate current date\nconst currentDate = new Date().toISOString().split('T')[0];\n\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Copys - ${brief.Negocio}</title>\n    <style>\n        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }\n        h1 { color: #1a73e8; border-bottom: 3px solid #1a73e8; padding-bottom: 10px; }\n        h2 { color: #5f6368; margin-top: 30px; }\n        .copy-card { background: #f8f9fa; padding: 20px; margin: 20px 0; border-left: 4px solid #1a73e8; border-radius: 5px; }\n        .gancho { font-weight: bold; font-size: 1.2em; color: #1a73e8; margin-bottom: 10px; }\n        .cuerpo { line-height: 1.6; margin: 15px 0; }\n        .cta { background: #1a73e8; color: white; padding: 10px 20px; display: inline-block; border-radius: 5px; margin-top: 10px; }\n        .meta { color: #5f6368; font-size: 0.9em; font-style: italic; margin-top: 10px; }\n    </style>\n</head>\n<body>\n    <h1>📝 Copys Publicitarios - ${brief.Negocio}</h1>\n    <p><strong>Producto:</strong> ${brief.Producto_Servicio}</p>\n    <p><strong>Objetivo:</strong> ${brief.Objetivo}</p>\n    <p><strong>Fecha:</strong> ${currentDate}</p>\n\n    <h2>✨ Variaciones de Copy</h2>\n\n    ${copys.length > 0 ? copys.map((copy, index) => `\n        <div class=\"copy-card\">\n            <h3>Copy #${copy.id} - ${copy.enfoque.toUpperCase()}</h3>\n            <div class=\"gancho\">🎯 ${copy.gancho}</div>\n            <div class=\"cuerpo\">${copy.cuerpo}</div>\n            <div class=\"cta\">👉 ${copy.cta}</div>\n            <div class=\"meta\">💡 ${copy.notas}</div>\n        </div>\n    `).join('') : '<p>No se generaron copys.</p>'}\n\n    <h2>📊 Recomendaciones de Uso</h2>\n    <ul>\n        <li>Testear los copys orientados a \"dolor\" primero para audiencias frías</li>\n        <li>Usar copys de \"beneficio\" para retargeting</li>\n        <li>Rotar copys cada 3-5 días para evitar fatiga de audiencia</li>\n        <li>Combinar con diferentes creativos para maximizar variaciones</li>\n    </ul>\n</body>\n</html>\n`;\n\nreturn {\n    json: {\n        htmlContent: html,\n        fileName: `Copys_${brief.Negocio}_${currentDate}.html`\n    }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8256,
+        -736
+      ],
+      "id": "66920a65-a84f-421e-a7d8-60f0ea5b693a",
+      "name": "Limpiar"
+    },
+    {
+      "parameters": {
+        "folderId": "={{ $('Edit Fields1').first().json.id }}",
+        "title": "={{ $json.data[1].name }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        9344,
+        -432
+      ],
+      "id": "c90c1465-b4d5-48c4-a8d2-fe2720ed9617",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "O37pRRxzqnV83upz",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2ccc6d1b-af02-4e8c-a0eb-b0a68a9b9602",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "0b09481f-b82d-4071-b7be-4413a8d8f195",
+              "name": "mimeType",
+              "value": "={{ $json.mimeType }}",
+              "type": "string"
+            },
+            {
+              "id": "cab88d48-7fc8-416e-8299-64b874617afa",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f1125142-c8a5-49ce-9ae1-c1f91c6b5ccb",
+              "name": "kind",
+              "value": "={{ $json.kind }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        8880,
+        -480
+      ],
+      "id": "a8e31c11-aac0-4e59-84e1-50dacc1ad7fc",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        9200,
+        -720
+      ],
+      "id": "06b6ee60-acd4-451a-9dbe-a690718afa33",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "locationChoice": "location",
+              "text": "={{ $('Limpiar').first().json.htmlContent }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        9568,
+        -432
+      ],
+      "id": "7cb011ef-a9f7-457a-921a-2a003182c0fc",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "O37pRRxzqnV83upz",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        9472,
+        -720
+      ],
+      "id": "c2bd5c89-0b6a-4eda-82b1-6f36757c6319",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {},
+      "id": "e6844c06-3b41-4f31-8afb-6fc076137a22",
+      "name": "Limit to 1",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        7888,
+        -480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "Estructura_campaña",
+              "value": "={{ $('Estructura_Campaña').first().json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "Generar_Copys",
+              "value": "={{ $('Generar Copys').first().json.output[0].content[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "Brief_Creativos",
+              "value": "={{ $('GENERAR BRIEF DE CREATIVOS').first().json.output[0].content[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        8016,
+        -1696
+      ],
+      "id": "15885a1a-12d4-44f4-9924-002379140ae8",
+      "name": "Prompts"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        8464,
+        -1568
+      ],
+      "id": "431eed29-6ffb-4828-ba25-f85b973d97ce",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        7776,
+        -1520
+      ],
+      "id": "eb977086-9173-479b-be8a-1979fc8be51f",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9456,
+        -1264
+      ],
+      "id": "31570f18-cd29-4cbb-8875-b72516438e93",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos de la campaña:\n\nProducto/Servicio: {{ $json.raw_input[0].json.data[3].Producto_Servicio }}\nObjetivo: {{ $json.raw_input[0].json.data[3].Objetivo }}\nPresupuesto: {{ $json.raw_input[0].json.data[3].Presupuesto }}\nGeografía: {{ $json.raw_input[0].json.data[3].Geografia }}\nIdioma: {{ $json.raw_input[0].json.data[3].Idioma }}\nCTA Deseado: {{ $json.raw_input[0].json.data[3]['CTA Deseado'] }}\nPlazo: {{ $json.raw_input[0].json.data[3].Plazo }}\nPlataforma: {{ $json.raw_input[0].json.data[3].Plataforma }}\nNombre: {{ $json.raw_input[0].json.data[3].Nombre }}\nCorreo: {{ $json.raw_input[0].json.data[3].Correo }}\n\n---\n\nEstructura de Campaña:\n{{ $json.raw_input[0].json.data[0]['Estructura_campaña'] }}\n\n---\n\nCopys Generados:\n{{ $json.raw_input[0].json.data[0].Generar_Copys }}\n\n---\n\nBrief de Creativos:\n{{ $json.raw_input[0].json.data[0].Brief_Creativos }}\n\n---\n\nAnálisis de Presupuesto y KPIs:\nPresupuesto_Total : {{ $json.raw_input[0].json.data[3].presupuesto.presupuesto_total }}\nDuracion_Dias{{$json.raw_input[0].json.data[3].presupuesto.duracion_dias }}\nPresupuesto_Diario  : {{ $json.raw_input[0].json.data[3].presupuesto.presupuesto_diario_total }}\nPresupuesto_Adset{{ $json.raw_input[0].json.data[3].presupuesto.presupuesto_por_adset }}\n\nRecomendaciones:\n{{ $json.raw_input[0].json.data[3].presupuesto.recomendaciones[0] }}\n{{ $json.raw_input[0].json.data[3].presupuesto.recomendaciones[1] }}\n{{ $json.raw_input[0].json.data[3].presupuesto.recomendaciones[2] }}\n{{ $json.raw_input[0].json.data[3].presupuesto.recomendaciones[3] }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Eres un estratega de marketing digital experto en campañas publicitarias de Meta Ads y Google Ads.\n\nTu tarea es analizar toda la información de la campaña proporcionada y crear un resumen ejecutivo profesional en formato HTML limpio y bien estructurado.\n\nEl HTML debe incluir:\n\n1. **Encabezado Principal**\n   - Título de la campaña\n   - Información del cliente (nombre, correo)\n   - Fecha de creación\n\n2. **Resumen Ejecutivo**\n   - Objetivo de la campaña\n   - Plataforma(s) seleccionada(s)\n   - Presupuesto total y duración\n   - Geografía e idioma\n\n3. **Estructura de Campaña**\n   - Configuración general (objetivo, optimización, estrategia de puja)\n   - Adsets recomendados con segmentación detallada\n   - Calendario y fases\n\n4. **Copys Publicitarios**\n   - Resumen de las 6 variaciones generadas\n   - Destacar los mejores ganchos y CTAs\n\n5. **Brief de Creativos**\n   - Formatos recomendados\n   - Especificaciones técnicas clave\n   - Conceptos visuales principales\n\n6. **Análisis de Presupuesto y KPIs**\n   - Distribución de presupuesto por adset\n   - Métricas esperadas (CPM, CTR, impresiones)\n   - Recomendaciones de optimización\n\n7. **Próximos Pasos**\n   - Acciones inmediatas recomendadas\n   - Timeline de implementación\n\nESTILO DEL HTML:\n- Diseño profesional y limpio\n- Colores corporativos (azul #1a73e8 como principal)\n- Tipografía legible (Arial, sans-serif)\n- Secciones bien delimitadas con bordes y espaciado\n- Tablas para datos numéricos\n- Listas para información estructurada\n- Responsive y listo para enviar por Gmail\n\nIMPORTANTE:\n- Devuelve SOLO el código HTML completo\n- No incluyas explicaciones adicionales\n- El HTML debe ser válido y estar listo para usar\n- Incluye estilos CSS inline para compatibilidad con clientes de correo\n- Mantén un tono profesional pero accesible\n- Resalta los datos más importantes visualmente\n- -Siempre deberas usar esta sintaxis para la fecha del : Fecha de generación: {{ new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) }}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        9552,
+        -1568
+      ],
+      "id": "e3d9d2a2-c4e1-4232-8be3-961056bc8c69",
+      "name": "Correo_Resumidor"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        8672,
+        -1568
+      ],
+      "id": "fb4af190-84e5-4bed-aa68-cb8a6c82b060",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  json: {\n    raw_input: $input.all()\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        8992,
+        -1568
+      ],
+      "id": "1dd95b1f-4cd1-492e-bcef-879056a052ee",
+      "name": "Arreglar_Agregate"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').first().json.Correo }}",
+        "subject": "={{ $json.output.Subject }}",
+        "message": "={{ $json.output.Body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        10256,
+        -1488
+      ],
+      "id": "2682c479-e1e5-43e5-b6d5-2d6164881f06",
+      "name": "Send a message",
+      "webhookId": "58aba7a2-a5d1-4403-9ecb-9335e1f986e7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Subject\": \"asunto del correo\",\n\t\"Body\": \"cuerpo del correo\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        9728,
+        -1216
+      ],
+      "id": "59bcc10d-b081-43b4-80f3-4a65ccffd6ee",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 1120,
+        "width": 784,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6848,
+        -1728
+      ],
+      "typeVersion": 1,
+      "id": "cbb35029-97e0-405d-997f-a77b74372609",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Setear los Datos del Brief",
+        "height": 208,
+        "width": 304,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7920,
+        -1744
+      ],
+      "typeVersion": 1,
+      "id": "6e49caf6-a2d9-4e8c-9cba-75b2589947ee",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets para guardar los datos.",
+        "height": 208,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8432,
+        -1088
+      ],
+      "typeVersion": 1,
+      "id": "6dd4e355-15ca-417a-a52f-0d18fcb8e4d5",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Setear los Datos del Brief",
+        "height": 208,
+        "width": 304,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8768,
+        -544
+      ],
+      "typeVersion": 1,
+      "id": "327ef1c4-22e3-4323-bc7c-9bf627b23d20",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive para guardar los Documentos.",
+        "height": 240,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8224,
+        -544
+      ],
+      "typeVersion": 1,
+      "id": "1e0dac55-08aa-4bf2-952d-35e9492d2d74",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Crear Docuemnto y Guardar los datos dentro de la misma carpeta de Google Drive.",
+        "height": 288,
+        "width": 448,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9248,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "a5815b68-221f-443a-8180-72ceed35a610",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Resumidor de Datos IA",
+        "height": 560,
+        "width": 624,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9360,
+        -1648
+      ],
+      "typeVersion": 1,
+      "id": "4cd08fd0-a0f2-4687-bea7-1247539e41d5",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencioales de Chat Model",
+        "height": 192,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        9360,
+        -1312
+      ],
+      "typeVersion": 1,
+      "id": "4db240ea-78e8-435e-a7c9-b8a68f109a8d",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credencioales de Gmail.",
+        "height": 208,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        10160,
+        -1536
+      ],
+      "typeVersion": 1,
+      "id": "bbccf2c5-53b3-44ee-90fc-9662a1c43a76",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Convert Content ",
+        "height": 224,
+        "width": 288,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        8896,
+        -1616
+      ],
+      "typeVersion": 1,
+      "id": "33f6c79a-261c-4c93-b94d-9007d8ccc2ca",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "🚀 Workflow: Agente IA Creador de Campañas de Ads (Meta & Google)\nEste flujo de trabajo es un sistema de automatización de marketing digital de extremo a extremo. Su función principal es transformar un brief inicial (ingresado vía formulario) en una estrategia publicitaria completa, generando automáticamente estructuras de campaña, textos publicitarios (copys), briefs creativos, cálculos de presupuesto y un informe ejecutivo final.\n\n✨ Importancia y Valor\n🤖 Automatización Inteligente: Elimina la necesidad de redactar estrategias y copys desde cero, utilizando modelos avanzados (GPT-4o y Gemini) para asegurar calidad y creatividad.\n⏱️ Ahorro de Tiempo Masivo: Lo que normalmente tomaría horas de planificación y cálculo, se realiza en cuestión de segundos.\n📊 Gestión Automática de Archivos: Organiza automáticamente la información en Google Sheets (base de datos), crea carpetas en Google Drive y genera documentos visuales para el cliente.\n🎯 Precisión en los KPIs: Realiza cálculos matemáticos complejos para distribuir presupuestos diarios y estimar impresiones sin errores humanos.\n🛠️ Problema que Resuelve\nCuello de botella en la creación: Agiliza el proceso de brainstrorming y estructuración de campañas para agencias o marketers.\nDificultad en la distribución de presupuesto: Calcula automáticamente cuánto dinero invertir por Adset y por día según el presupuesto total y la duración.\nDesorganización de deliverables: Centraliza toda la entrega (estructura, copys, brief creativo y reporte) en un solo correo electrónico y carpetas organizadas en la nube.\nRedacción variada: Genera múltiples ángulos de venta (dolor, beneficio, prueba social) para facilitar las pruebas A/B.\n🧩 Nodos Clave Utilizados\n📝 On form submission: El punto de entrada que captura los datos del cliente (producto, objetivo, presupuesto, etc.).\n✏️ Edit Fields (Set): Normaliza y limpia los datos recibidos del formulario para que la IA los entienda perfectamente.\n🧠 Agentes y Modelos IA:\nEstructura_Campaña (GPT-4o): Genera la JSON con Adsets y segmentación.\nGenerar Copys (OpenAI): Crea los textos de los anuncios.\nGENERAR BRIEF DE CREATIVOS (OpenAI): Da instrucciones a diseñadores.\nCorreo_Resumidor (Google Gemini): Unifica todo en un reporte HTML profesional.\n⚡ Code (JavaScript): Nodo lógico que calcula la distribución financiera (presupuesto diario, por Adset) basándose en la estructura generada por la IA.\n🔗 Merge: Combina los datos del formulario con los resultados de la IA.\n📂 Google Workspace:\nGoogle Sheets: Guarda el registro histórico.\nGoogle Drive: Crea la carpeta del cliente.\nGoogle Docs: Crea y actualiza el documento visual.\n📧 Send a message (Gmail): Envía el informe final al correo del cliente.\n🔗 Paso a Paso: Conexión del Flujo\nInicio 🚦: Conecta el nodo \"On form submission\" al nodo \"Edit Fields\". Esto asegura que los datos del formulario se limpien y etiqueten correctamente antes de procesarlos.\nBifurcación IA 🧠: Desde \"Edit Fields\", conecta salidas a los tres nodos de IA en paralelo (\"Estructura_Campaña\", \"Generar Copys\", \"GENERAR BRIEF DE CREATIVOS\"). Esto permite que se generen simultáneamente para ganar velocidad.\nUnificación de Datos 🔗: Conecta las salidas de los tres nodos IA Y la salida de \"Edit Fields\" hacia el nodo \"Merge\". Este nodo junta el brief original con las respuestas de la IA.\nCálculo Lógico 🧮: Conecta \"Merge\" al nodo \"Code in JavaScript2\". Aquí es donde se hace la magia matemática para dividir el presupuesto según los días y Adsets sugeridos.\nAlmacenamiento y Visualización 💾: Desde el nodo \"Code in JavaScript2\", se ramifica la conexión hacia:\n\"Append row in sheet\" (Para guardar los datos crudos).\n\"Limpiar\" (Prepara el HTML) -> \"Create a document\" (Crea el doc).\nGestión de Archivos 📂: Conecta \"Limit to 1\" (para evitar duplicados) a \"Create folder\" en Drive, y conecta esto a la creación del Documento para que todo vaya a la misma carpeta.\nGeneración del Correo Final 📨:\nUsa los nodos \"Prompts\" y \"Aggregate\" para compilar toda la información (Brief + Estructura + Copys + Cálculos).\nPasa estos datos al Agente \"Correo_Resumidor\" (conectado a Google Gemini).\nFinalmente, conecta la salida del Resumidor al nodo \"Structured Output Parser\" y este al nodo \"Send a message\" para hacer el despacho del correo al cliente.\n\n\n",
+        "height": 864,
+        "width": 1680,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4224,
+        -1584
+      ],
+      "typeVersion": 1,
+      "id": "1a5242f2-2035-4a55-b223-7b05badb591a",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 192,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6896,
+        -1552
+      ],
+      "typeVersion": 1,
+      "id": "8c8b79e5-5e76-451e-b20f-4a23681fa2cd",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 192,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7104,
+        -1280
+      ],
+      "typeVersion": 1,
+      "id": "bfb6c10c-ca48-44f6-9dc4-09935c5d100b",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 192,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7088,
+        -928
+      ],
+      "typeVersion": 1,
+      "id": "b132fb60-b1b1-4726-a6bb-912cba785f8c",
+      "name": "Sticky Note17"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Estructura_Campaña",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generar Copys",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GENERAR BRIEF DE CREATIVOS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Estructura_Campaña",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estructura_Campaña": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Copys": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "GENERAR BRIEF DE CREATIVOS": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Limpiar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Limit to 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit to 1": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prompts": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Correo_Resumidor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Arreglar_Agregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Arreglar_Agregate": {
+      "main": [
+        [
+          {
+            "node": "Correo_Resumidor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Correo_Resumidor": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Correo_Resumidor",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "f4d7e709-43d6-492b-ac81-716555f7e257",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "ZgUEWuvGXeUOjrAN9UrhF",
+  "tags": []
+}

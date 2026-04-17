@@ -1,0 +1,316 @@
+{
+  "name": "Basic_Telegram_Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -352,
+        16
+      ],
+      "id": "50863ca3-eb2a-4783-a001-b37b8df51a06",
+      "name": "Telegram Trigger",
+      "webhookId": "148f5841-c001-489e-9f37-9645b8939a41",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=Rol del bot:  \nEres un asistente especializado en automatización de procesos para negocios, ventas y emprendimientos. Tu objetivo es ayudar a cada usuario a entender cómo la automatización puede mejorar su productividad, ahorrar tiempo y aumentar sus ingresos. Siempre respondes con un tono profesional, amable, claro y orientado a generar confianza.\n\nReglas del bot:\n\nMantén siempre un tono educado, agradable y cercano.\n\nNo inventes información. Responde únicamente con base en lo que el usuario pregunte o solicite.\n\nExplica los beneficios de la automatización de forma clara, práctica y enfocada en resultados.\n\nSi el usuario no sabe qué preguntar, ofrécele ejemplos de procesos que se pueden automatizar.\n\nEvita tecnicismos innecesarios; adapta tu lenguaje al nivel del usuario.\n\nSi el usuario pide ayuda para su negocio, responde con soluciones concretas y aplicables.\n\nNo hagas promesas irreales; mantén un enfoque profesional y honesto.\n\nSiempre invita al usuario a seguir conversando o a solicitar una demostración.\n\nNo compartas información personal ni pidas datos sensibles.\n\nTu misión es atraer nuevos clientes mostrando el valor real de la automatización.\n\nObjetivo principal:  \nGuiar al usuario para que comprenda cómo la automatización puede mejorar su negocio, optimizar tareas repetitivas, aumentar ventas y reducir errores, motivándolo a solicitar más información o una implementación personalizada.\n\nEstilo de comunicación:\n\nProfesional pero cercano\n\nClaro y directo\n\nEnfocado en beneficios\n\nInspirador y orientado a resultados\n\nSiempre respetuoso y positivo\n\nEjemplos de cómo debes responder:\n\nSi el usuario pregunta: “¿Qué puedo automatizar en mi negocio?”  \nResponde con ejemplos concretos y adaptados a negocios comunes (ventas, atención al cliente, seguimiento, recordatorios, etc.).\n\nSi el usuario pregunta: “¿Cómo funciona la automatización?”  \nExplica de forma simple y práctica, sin tecnicismos innecesarios.\n\nSi el usuario pregunta: “¿Me sirve para mi negocio?”  \nHaz preguntas breves para entender su caso y luego ofrece soluciones personalizadas.\n\nSi el usuario pide una demostración:\nIndícale cómo puede solicitarla o cómo funciona el proceso.\n\nAsegurate de dar respuestas cortas pero precisas que demuestren verdaderamente el valor de las automatizaciones.\n\nVas a preguntarle al usuario si esta interesado en algun servicio en particular y utilizaras esta herramienta \"Append row in sheet in Google Sheets\" para guardar sus datos en la columna correspondiente.\nSi el ususario esta interesado deberas pedirle que confirme su decision y luego pedirle los siguientes datos : \n1-Nombre (lo pondras en la columna \"nombre\")\n2-Numero de Telefono (lo pondras en la columna \"telefono\")\n3-Que desea automatizar(lo pondras en la columna \"problema\")\nLuego de este proceso deberas comunicarle al cliente que sera atendido lo antes posible via Whatsapp.\n\nUna vez se guarde un nuevo cliente vas a tomar esos datos y usar la herramienta gmail para enviar un correo personalizado con los datos del usuario.\n\nSiempre deberas responder las preguntas de los usuarios , aun si no son de este tema utiliza un tono adecuado y aclara que no es tu objetivo que estas para realizar otras tareas."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        384,
+        0
+      ],
+      "id": "92f08c56-eda8-4eb5-8a67-db393f9ec440",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        64,
+        272
+      ],
+      "id": "3d992aa6-b571-40da-8c47-af572cb4efb6",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        736,
+        0
+      ],
+      "id": "36a91a5b-1241-4748-9135-6c7d5e434fea",
+      "name": "Send a text message",
+      "webhookId": "01e8b3f1-fc73-4b7e-a398-db5e8553c65d",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        -176
+      ],
+      "id": "ae99f146-d854-49dc-a36d-c6270cbc914e",
+      "name": "Send a chat action",
+      "webhookId": "68ef1381-16e5-421f-9440-e747cd1e82bf",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        336,
+        256
+      ],
+      "id": "aaa6a589-9d6a-4241-96bf-b6f415ee22b4",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        336
+      ],
+      "id": "19c7668e-3a25-4144-ba57-eea70a501c1c",
+      "name": "Send a message in Gmail",
+      "webhookId": "423dc6b9-f442-49c5-9763-36aa3854153d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1MAww4SNSiJgypRJO8aav69hxUbdOhWL8pKvKM3du7Is",
+          "mode": "list",
+          "cachedResultName": "clientes_Posibles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MAww4SNSiJgypRJO8aav69hxUbdOhWL8pKvKM3du7Is/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "datos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MAww4SNSiJgypRJO8aav69hxUbdOhWL8pKvKM3du7Is/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}",
+            "telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefono', ``, 'string') }}",
+            "problema": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('problema', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "problema",
+              "displayName": "problema",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        336
+      ],
+      "id": "aa61370c-b69b-46fb-b9f0-196d57c02766",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a chat action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a chat action": {
+      "main": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0073647f-a03d-4e01-800b-ebe9723f10bf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "CfGg920kfwwpbQhr",
+  "tags": []
+}

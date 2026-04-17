@@ -1,0 +1,1071 @@
+{
+  "name": "paso 1_WF_Empowering",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Dándote la Luz - Cuestionario de Negocio",
+        "formDescription": "Responde estas preguntas para recibir tu plan de negocio personalizado. Tómate tu tiempo, la calidad de tus respuestas determinará la calidad de tu plan.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "1. CONTEXTO - ¿En qué país/ciudad estás?",
+              "placeholder": "Ej: Miami, Florida, USA",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Tu negocio sería local, online o mixto?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Local (presencial)"
+                  },
+                  {
+                    "option": "Online (100% digital)"
+                  },
+                  {
+                    "option": "Mixto (ambos)"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "2. PUNTO DE PARTIDA - ¿Tienes ya el negocio o estás empezando?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Estoy empezando desde cero"
+                  },
+                  {
+                    "option": "Tengo una idea desarrollada"
+                  },
+                  {
+                    "option": "Ya tengo el negocio funcionando"
+                  },
+                  {
+                    "option": "Tengo el negocio pero quiero pivotear"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Cuánto dinero puedes invertir hoy sin endeudarte? (USD)",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "$0 - Solo tiempo"
+                  },
+                  {
+                    "option": "$100 - $500"
+                  },
+                  {
+                    "option": "$500 - $1,000"
+                  },
+                  {
+                    "option": "$1,000 - $5,000"
+                  },
+                  {
+                    "option": "$5,000 - $10,000"
+                  },
+                  {
+                    "option": "Más de $10,000"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Cuántas horas reales semanales puedes dedicarle?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Menos de 5 horas (tengo otro trabajo)"
+                  },
+                  {
+                    "option": "5-10 horas (medio tiempo)"
+                  },
+                  {
+                    "option": "10-20 horas (compromiso serio)"
+                  },
+                  {
+                    "option": "20-40 horas (dedicación principal)"
+                  },
+                  {
+                    "option": "40+ horas (tiempo completo)"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿En qué tienes experiencia o habilidad principal?",
+              "fieldType": "textarea",
+              "placeholder": "Describe tus habilidades, experiencia laboral, estudios o talentos naturales...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "3. TIPO DE NEGOCIO - ¿Qué tipo de negocio quieres crear?",
+              "fieldType": "textarea",
+              "placeholder": "Describe tu idea de negocio lo más claro posible...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Qué problema específico resolvería tu negocio?",
+              "fieldType": "textarea",
+              "placeholder": "¿Qué dolor o necesidad de tus clientes vas a resolver?",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "4. PROYECCIÓN - ¿Cómo te gustaría que se vea el negocio en 2-3 años?",
+              "fieldType": "textarea",
+              "placeholder": "Describe tu visión: ingresos, equipo, clientes, estilo de vida...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Qué tipo de negocio buscas?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Autoempleo - Yo soy el negocio"
+                  },
+                  {
+                    "option": "Negocio escalable - Que funcione sin mí"
+                  },
+                  {
+                    "option": "No estoy seguro aún"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "5. ORDEN Y EJECUCIÓN - ¿Estás dispuesto a separar tus finanzas personales del negocio?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Sí, desde el día 1"
+                  },
+                  {
+                    "option": "Sí, pero no sé cómo hacerlo"
+                  },
+                  {
+                    "option": "Prefiero empezar mezclado y luego separar"
+                  },
+                  {
+                    "option": "No lo había considerado"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Cómo imaginas conseguir tus primeros clientes?",
+              "fieldType": "textarea",
+              "placeholder": "Redes sociales, referidos, publicidad, puerta a puerta, etc...",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tu nombre",
+              "placeholder": "¿Cómo te llamas?",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tu email",
+              "fieldType": "email",
+              "placeholder": "Para enviarte tu plan",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "path": "84b264cd-7d50-409e-aec1-6aa183b8fa06"
+        }
+      },
+      "id": "7636b913-71f7-476b-9dd6-05ef828509ef",
+      "name": "Formulario Dándote la Luz",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        3888
+      ],
+      "webhookId": "84b264cd-7d50-409e-aec1-6aa183b8fa06"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "session-id",
+              "name": "sessionId",
+              "value": "={{ $now.toMillis() }}-{{ $json['Tu email'].replace(/[^a-zA-Z0-9]/g, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "user-data",
+              "name": "userData",
+              "value": "={{ JSON.stringify($json) }}",
+              "type": "string"
+            },
+            {
+              "id": "prompt-context",
+              "name": "promptContext",
+              "value": "=INFORMACIÓN DEL CLIENTE:\n\n📍 CONTEXTO:\n- Ubicación: {{ $json['1. CONTEXTO - ¿En qué país/ciudad estás?'] }}\n- Tipo de negocio: {{ $json['¿Tu negocio sería local, online o mixto?'] }}\n\n🚀 PUNTO DE PARTIDA:\n- Estado actual: {{ $json['2. PUNTO DE PARTIDA - ¿Tienes ya el negocio o estás empezando?'] }}\n- Capital disponible: {{ $json['¿Cuánto dinero puedes invertir hoy sin endeudarte? (USD)'] }}\n- Tiempo disponible: {{ $json['¿Cuántas horas reales semanales puedes dedicarle?'] }}\n- Experiencia/Habilidades: {{ $json['¿En qué tienes experiencia o habilidad principal?'] }}\n\n💼 TIPO DE NEGOCIO:\n- Idea de negocio: {{ $json['3. TIPO DE NEGOCIO - ¿Qué tipo de negocio quieres crear?'] }}\n- Problema que resuelve: {{ $json['¿Qué problema específico resolvería tu negocio?'] }}\n\n🎯 PROYECCIÓN:\n- Visión 2-3 años: {{ $json['4. PROYECCIÓN - ¿Cómo te gustaría que se vea el negocio en 2-3 años?'] }}\n- Modelo deseado: {{ $json['¿Qué tipo de negocio buscas?'] }}\n\n📊 ORDEN Y EJECUCIÓN:\n- Finanzas separadas: {{ $json['5. ORDEN Y EJECUCIÓN - ¿Estás dispuesto a separar tus finanzas personales del negocio?'] }}\n- Estrategia de clientes: {{ $json['¿Cómo imaginas conseguir tus primeros clientes?'] }}\n\n👤 Nombre: {{ $json['Tu nombre'] }}\n📧 Email: {{ $json['Tu email'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e2481955-8b12-4bbd-8242-9755efc05122",
+              "name": "Nombre",
+              "value": "={{ $json['Tu nombre'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0859b39b-e505-4e9a-b762-b6c206646273",
+              "name": "email",
+              "value": "={{ $json['Tu email'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f5f17d6f-c40f-45ea-8ba8-1ab7ea8b74ae",
+      "name": "Preparar Datos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        3888
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "cb66c28a-fdbb-42d9-a783-8a2e8543d44b",
+      "name": "OpenAI GPT-4o",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        4288
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "summary-output",
+              "name": "=summaryText",
+              "value": "={{ $json.html }}",
+              "type": "string"
+            },
+            {
+              "id": "7de352fe-c9a3-4e3a-ab29-1e03875eca3c",
+              "name": "Subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "session-forward",
+              "name": "sessionId",
+              "value": "={{ $('Preparar Datos').item.json.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "user-data-forward",
+              "name": "userData",
+              "value": "={{ $('Preparar Datos').item.json.userData }}",
+              "type": "string"
+            },
+            {
+              "id": "user-email",
+              "name": "userEmail",
+              "value": "={{ JSON.parse($('Preparar Datos').item.json.userData)['Tu email'] }}",
+              "type": "string"
+            },
+            {
+              "id": "user-name",
+              "name": "userName",
+              "value": "={{ JSON.parse($('Preparar Datos').item.json.userData)['Tu nombre'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "240e66e0-679b-42a8-be9e-471efa345a3f",
+      "name": "Preparar Sumario",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3216,
+        4080
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw",
+          "mode": "list",
+          "cachedResultName": "Formulario_Dandote_la_Luz",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json['Tu nombre'] }}",
+            "Correo": "={{ $json['Tu email'] }}",
+            "Pais": "={{ $json['1. CONTEXTO - ¿En qué país/ciudad estás?'] }}",
+            "Como sera el negocio": "={{ $json['¿Tu negocio sería local, online o mixto?'] }}",
+            "Punto de Partida": "={{ $json['2. PUNTO DE PARTIDA - ¿Tienes ya el negocio o estás empezando?'] }}",
+            "Inversion": "={{ $json['¿Cuánto dinero puedes invertir hoy sin endeudarte? (USD)'] }}",
+            "Tiempo a Dedicar": "={{ $json['¿Cuántas horas reales semanales puedes dedicarle?'] }}",
+            "Experiencia": "={{ $json['¿En qué tienes experiencia o habilidad principal?'] }}",
+            "Tipo de Negocio": "={{ $json['3. TIPO DE NEGOCIO - ¿Qué tipo de negocio quieres crear?'] }}",
+            "Punto de Dolor": "={{ $json['¿Qué problema específico resolvería tu negocio?'] }}",
+            "Proyeccion": "={{ $json['4. PROYECCIÓN - ¿Cómo te gustaría que se vea el negocio en 2-3 años?'] }}",
+            "Negocio Buscado": "={{ $json['¿Qué tipo de negocio buscas?'] }}",
+            "Orden y Ejecucion": "={{ $json['5. ORDEN Y EJECUCIÓN - ¿Estás dispuesto a separar tus finanzas personales del negocio?'] }}",
+            "Primeros Clientes": "={{ $json['¿Cómo imaginas conseguir tus primeros clientes?'] }}",
+            "Estado": "Gratuito"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Pais",
+              "displayName": "Pais",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Como sera el negocio",
+              "displayName": "Como sera el negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Punto de Partida",
+              "displayName": "Punto de Partida",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inversion",
+              "displayName": "Inversion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tiempo a Dedicar",
+              "displayName": "Tiempo a Dedicar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Experiencia",
+              "displayName": "Experiencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo de Negocio",
+              "displayName": "Tipo de Negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Punto de Dolor",
+              "displayName": "Punto de Dolor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Proyeccion",
+              "displayName": "Proyeccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Negocio Buscado",
+              "displayName": "Negocio Buscado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Orden y Ejecucion",
+              "displayName": "Orden y Ejecucion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primeros Clientes",
+              "displayName": "Primeros Clientes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        992,
+        4416
+      ],
+      "id": "974e7b22-54e0-40e8-8a2d-7264f867b26e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        4304
+      ],
+      "id": "346f4fe3-27fe-457d-b63c-2e51004b07e8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.userEmail }}",
+        "subject": "={{ $json.Subject }}",
+        "message": "={{ $json.summaryText }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3504,
+        3840
+      ],
+      "id": "6f0a07ea-3250-41dc-8157-d30839723358",
+      "name": "Send a message",
+      "webhookId": "dfa66b1f-e758-4e54-940c-28b8113ebe66",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Preparar Datos').item.json.promptContext }}\n\n---\n\nGenera el SUMARIO INICIAL del plan de negocio (versión gratuita). Este es un adelanto que debe ser valioso pero dejar al cliente queriendo más.",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un experto consultor de negocios con 20+ años de experiencia ayudando a emprendedores hispanos. Tu nombre es \"El Consultor de Dándote la Luz\".\n\n🎯 TU MISIÓN:\nAnalizar la información del cliente y generar un plan de negocio REALISTA, PRÁCTICO y ACCIONABLE. Nada de fantasías ni promesas vacías.\n\n📋 FORMATO DEL SUMARIO INICIAL (GRATIS):\nDebe tener EXACTAMENTE esta estructura:\n\n---\n🧠 Tu Plan de Negocio – Dándote la Luz\nPara: [Nombre del cliente]\n\n## 1. Tu Punto de Partida\n✅ **Lo que tienes hoy:**\n[Lista de recursos reales: capital, tiempo, habilidades]\n\n⚠️ **Tus limitaciones reales:**\n[Ser honesto pero constructivo]\n\n💡 **Tipo de negocio viable para ti AHORA:**\n[Recomendación específica basada en sus recursos]\n\n## 2. Vista Previa de tu Proyección\n[2-3 párrafos sobre hacia dónde podría ir el negocio - suficiente para intrigar pero no el plan completo]\n\n---\n📄 **¿Quieres el plan completo?**\nPor solo $15 USD recibirás:\n✓ Proyección realista detallada a 2-3 años\n✓ Plan de construcción paso a paso\n✓ Guía de finanzas desde el día 1\n✓ Sistema de operaciones mínimo viable\n✓ Estrategia de marketing personalizada\n✓ Tus próximos 90 días con 5 pasos concretos\n✓ PDF profesional descargable\n---\n\n🚫 REGLAS ABSOLUTAS:\n1. NO uses lenguaje de coach motivacional vacío\n2. NO prometas resultados específicos de dinero\n3. SÍ sé directo sobre limitaciones y riesgos\n4. SÍ da valor real incluso en la versión gratuita\n5. El tono debe ser de mentor experimentado, no de vendedor\n6. Usa español neutro/latinoamericano\n7. Sé específico al contexto del país/ciudad del cliente\n8-Nunca Agregues comilla ni elementos similares al output.\n\n####IMPORTANTE#### :\nDevuelve el resultado en HTML válido.\nNO uses markdown.\nUsa solo:\n<h1>, <h2>, <p>, <ul>, <li>, <strong>, <hr>\n\n\n\n###Base de Conocimiento#### : \nUtiliza esta base de conocimiento como guia para crear el plan gratuito -> : \n🎙️ GUÍA COMPLETA: PODCAST BARBERSHOP\nCómo Montar y Maximizar una Barbería en Miami, Florida\n\n📈 CONTEXTO DEL MERCADO 2024-2025\n📊 Industria de Barberías en EE.UU.\n    • Valor del mercado: $5.8 billones en 2024\n    • Crecimiento anual: 1.7%\n    • Fuerza laboral: ~1.2 millones de barberos profesionales\n📊 Mercado Global de Grooming Masculino\n    • Valor 2024: $61.62 billones\n    • Proyección 2032: $85.53 billones\n    • CAGR: 4.08%\n\n🥇 ETAPA 1 — PUNTO DE PARTIDA (REALIDAD)\nInformación básica\n1. Recursos\nAbrir con:\n¿Con Qué Cuentas para empezar tu negocio? ¡DEBATE ABRE!\n• Dinero\n• Tiempo\n• Conocimientos o experiencia, ¿Habilidades útiles?\n• Networking (Red y contexto)\n• ¿Seguirías dedicándole tiempo, sangre y sudor aunque no te dé dinero? ¿Es algo que te apasiona?\n• ¿Necesito un Partner? (DEBATIR)\nUna vez identificado tus Fortalezas y limitaciones o desventajas, y evaluando tus capacidades en cuanto a estos puntos que mencionamos, ¡llega el momento de la gran decisión y acción!\n¡Empezar!\n\nPROYECCIÓN\nEl Negocio que vamos a estar construyendo y analizando hoy es:\nLa BarberShop o Barberías convencionales\nIntentando maximizar o construir un Negocio/Modelo de Negocio donde podamos exprimir al máximo y maximizar las ganancias y la calidad del Servicio, por supuesto.\nAquí ya sin repetirlo estaríamos en la Fase Proyección!\nAsumimos en este punto que ya has analizado y tienes las condiciones necesarias o lo que te puede tomar comenzar (Con qué cuentas - Section)\n\n¿Qué tipo de negocio quieres montar?\nEl Negocio de barbería en el que nos enfocamos hoy es en las Barbershops Físicas, o Locales de Barberías.\n• Público Objetivo\n• ¿Cómo ves tu Negocio? ¿Qué sello te gustaría ponerle? (Estéticamente o como concepto)\n• Visión del negocio\n• ¿Cómo te gustaría que se vea el negocio en 2-3 años?\n📊 Proyección realista a 2-3 años:\n    • Ingresos anuales esperados: $100,000 - $200,000\n    • Margen de ganancia neto: 15-25% si se gestiona bien\n    • Tasa de clientes recurrentes objetivo: 60-70%\n    • Ingreso promedio por barbería: ~$73,500/año\n\n¿Local?\n• ¿Cómo elegir el Local?\n• Estudio de Zona\n• ¿Nicho?\n• ¿Etnia?\n\n¿Finanzas?\nHablar sobre los temas Financieros y de Negocio sin entrar en detalles. Aquí hablamos de cómo Maximizar las ganancias en este Negocio, qué innovaciones podemos hacer, lluvia de ideas, etc.\nIdeas para maximizar ingresos en Barbería:\n• Coffee Machine\n• Car wash\n• Entretenimiento\n• Líneas de productos\n• ATM Machine\n• Vending Machine\n• Membresías\nA largo plazo: Franquicias... Una Marca\n\n🥉 ETAPA 3 — PLANIFICACIÓN (CONSTRUCCIÓN REAL)\nAquí ahora sí vamos a poner los Pies en el piso y ver cuánto y qué necesitamos necesariamente para realizar todo lo que hemos tertuliado.\n¿Local?\n(En este apartado ya asentaríamos las preguntas con datos estadísticos, logísticos sobre cómo y por qué)\n• Responder las preguntas Previas con Datos\n• LEGAL (Bases legales para mi negocio)\n• Estudio de Zona\n• ¿Cómo elegir el Local?\n\n📋 REQUISITOS LEGALES EN FLORIDA (DATOS EXACTOS)\n📊 Licencia de Barbero en Florida:\n    • Requiere: 1,200 horas de formación (600 teóricas + 600 prácticas)\n    • Examen estatal: $100 - $200\n    • Licencia inicial: $60 - $200\n    • Renovación: cada 2 años (antes del 31 de julio años pares)\n    • Costo renovación: $70 (o $95 si es tarde)\n    • Educación continua: 2 horas cada 2 años\n📊 Requisitos del Local (Barbershop):\n    • Mínimo 100 pies cuadrados de espacio (sin contar baño)\n    • Máximo 1 barbero por 100 pies cuadrados\n    • Baño con lavabo dentro del local o a 300 pies máximo\n    • Paredes permanentes si colinda con otro negocio\n    • Inspección obligatoria antes de abrir\n📊 Registro del Negocio:\n    • Florida Division of Corporations (sunbiz.org)\n    • EIN del IRS (gratis)\n    • Florida Department of Revenue (impuestos)\n    • DBPR - Licencia de Barbershop\n    • LLC en Florida: $125 para formar\n\nRenta del Local\nDepósito de seguridad: $6,000 - $20,000 (3-6 meses de renta)\nRenta mensual en Miami:\n   • Promedio: $41-55 por pie cuadrado/año\n   • Para un espacio de 1,000-1,500 pies cuadrados: $3,400 - $6,900/mes\n   • Zonas premium (Design District, Brickell): hasta $300/pie cuadrado\n   • Zonas residenciales/emergentes: $20-40/pie cuadrado\n\nRenovación y Acondicionamiento\nRango: $8,000 - $30,000\nIncluye:\n   • Pintura y acabados\n   • Pisos resistentes\n   • Sistema de iluminación profesional\n   • Plomería y electricidad\n   • Climatización (HVAC)\n   • Señalización exterior: $300 - $1,000+\n\n3. Mobiliario y Equipamiento\nMuebles básicos: $15,000 - $30,000\n   • Sillas de barbero: $500 - $2,500 cada una (necesitas 3-6)\n   • Estaciones de trabajo: $200 - $1,000 cada una\n   • Lavabos/backwash: $200 - $800 cada uno\n   • Recepción y sala de espera: $1,000 - $3,000\n   • Espejos, almacenamiento, toalleros: $500 - $1,500\nHerramientas y equipos: $2,000 - $5,000\n   • Máquinas de corte (clippers)\n   • Tijeras profesionales\n   • Navajas de afeitar\n   • Secadores de cabello\n   • Esterilizadores\n   • Kit completo por barbero: ~$500-700\n\n4. Inventario Inicial de Productos\nProductos de uso: $500 - $2,000\n   • Shampoos, acondicionadores\n   • Cremas de afeitar, after-shave\n   • Geles, ceras, pomadas\n   • Toallas, capas, brochas\nProductos para venta retail (opcional): $1,000 - $5,000\n\n5. Licencias y Permisos en Florida\nLicencia de negocio: $100 - $400\nRenovación anual: $60 - $200\nCertificado de ocupación: $250+\nInspecciones (salud, bomberos): incluidas o adicionales\nLicencias de barbero: Cada barbero debe tener licencia estatal\n   • Requiere 1,200 horas de formación en Florida\n\n6. Seguros\nSeguro de responsabilidad general: $600 - $1,500 por trimestre\nSeguro profesional: variable según cobertura\nTotal mensual estimado: $200 - $500\n\n💰 REQUISITOS EN CUANTO A $$ (RESUMEN COMPLETO)\n📊 Inversión Total Requerida:\n    • Rango mínimo: $50,000 - $150,000\n    • Rango óptimo (completamente operacional): $88,000 - $219,000\n    • Franquicias/operaciones grandes: hasta $282,000+\n📊 Desglose de Capital:\n    • Depósito del local (3-6 meses): $10,200 - $41,400\n    • Renovación/acondicionamiento: $8,000 - $30,000\n    • Mobiliario y equipamiento: $17,000 - $35,000\n    • Inventario inicial: $1,500 - $7,000\n    • Licencias y permisos: $500 - $1,000\n    • Seguros (primer trimestre): $600 - $1,500\n    • Capital de trabajo (3-6 meses): $20,000 - $50,000\n    • Imprevistos (10-20%): $8,800 - $43,800\n📊 División Sugerida:\n    • Crédito/Financiamiento: 40-60% del total\n    • Capital propio (Cash): 40-60% del total\n    • Recomendación: Tener mínimo 3 meses de gastos operativos en efectivo\n\n🔹 A. FINANZAS — INSTITUCIONALIZACIÓN\nFinanzas\n📊 ¿Cómo Registro Mi Negocio?\n    • 1. Registrar en Florida Division of Corporations (sunbiz.org)\n    • 2. Obtener EIN del IRS (gratis, online)\n    • 3. Registrar con Florida Department of Revenue\n    • 4. Obtener licencia de Barbershop del DBPR\n📊 ¿Cómo Creo mi Empresa?\n    • LLC (Recomendado): $125 para formar en Florida\n    • Sole Proprietorship: Gratis pero sin protección personal\n    • Partnership: Para socios, más complejo\n📊 ¿Cómo Abro mis Cuentas Bancarias?\n    • Necesitas: EIN, Artículos de Organización (LLC), ID personal\n    • Bancos recomendados: Chase, Bank of America, Wells Fargo\n    • Cuenta de negocios separada de personal (obligatorio)\n📊 Opciones de Crédito:\n    • SBA Loans: 7(a) para pequeños negocios\n    • Líneas de crédito bancarias\n    • Microcréditos para startups\n    • Financiamiento de equipos\n\nEstructura / Modelo de Negocio:\n📊 Sistema de Porcentaje (%):\n    • Comisiones típicas: 30% - 70% de las ganancias del barbero\n    • Ejemplo: Barbero genera $1,000/semana × 50% = $500 para el shop\n    • Pros: Incentiva al barbero a trabajar más\n    • Contras: Ingresos variables para el dueño\n📊 Base a Sillón (Chair Rental):\n    • Renta por silla: $200 - $400/semana\n    • Barbero paga renta fija, se queda con 100% de sus servicios\n    • Pros: Ingreso predecible para el dueño\n    • Contras: Menos control sobre calidad\n\nOPERACIONES\n▪ Sistemas - Software y Tecnología\nSistema de gestión (POS + agendamiento): $100 - $300/mes\nSitio web profesional: $500 - $2,000 (setup inicial)\nHardware (tablet/computadora): $500 - $1,500\n📊 Mejores Software POS para Barberías 2024-2025:\n    • Square Appointments: GRATIS (plan básico) - Ideal para empezar\n    • Squire: Desde $175/mes - Específico para barberías, muy completo\n    • Vagaro: $30-85/mes - Buena relación precio/funcionalidad\n    • Fresha: GRATIS - Booking y pagos integrados\n    • Boulevard: Desde $175/mes - Marketing automation avanzado\n    • Phorest: Premium - App propia, lealtad, marketing\n¿Usas alguna herramienta (CRM, Excel, software)? (Aquí Sponsor)\n¿Te interesa automatizar procesos?\n\nPersonal\n¿Cómo consigo a los Barberos que necesito?\n8. Nómina Inicial (Primer Mes)\n   • 3 barberos: $7,500 - $12,000/mes\n   • Salario promedio por barbero: $2,500 - $4,000/mes\n   • Más beneficios y taxes (10-15% adicional)\n   • Recepcionista: $2,000 - $2,500/mes\n   • Total estimado: $11,500 - $17,500/mes\n📊 Dato Importante - Salarios en Florida:\n    • Salario promedio barbero en Florida: $37,344/año (el más bajo del país)\n    • Salario promedio nacional: $52,123/año\n    • Top 10% de barberos ganan: más de $75,000/año\n\nMarketing (como sistema)\n¿Cómo llegan los Primeros clientes?\n¿Prefieres volumen o tickets altos?\n¿Qué canal te parece más lógico para tu negocio?\n9. Marketing Inicial\n   • Campaña de lanzamiento: $1,000 - $3,000\n   • Redes sociales: $300 - $500/mes\n   • Material promocional: $500 - $1,000\n\n10. Capital de Trabajo\n   • Reserva para 3-6 meses: $20,000 - $50,000\n   • Cubre gastos operativos antes de alcanzar punto de equilibrio\n11. Imprevistos y Contingencia\n   • 10-20% del total: $8,800 - $43,800\n   • Para sobrecostos, reparaciones, ajustes no planificados\n\n📊 MÉTRICAS DE RENTABILIDAD\n📊 Márgenes de Ganancia:\n    • Margen bruto típico: ~60%\n    • Margen neto típico: 8% - 20%\n    • Margen neto óptimo (bien gestionado): 20% - 25%\n    • Barbería de $15,000/mes con 18% margen = $2,700 ganancia neta\n📊 Ingresos por Silla:\n    • Cada silla puede generar: $1,500 - $3,000/mes adicionales\n    • Costo variable adicional por silla: $500 - $1,000/mes\n    • Ganancia neta por silla adicional: $1,000 - $2,000/mes\n📊 Punto de Equilibrio:\n    • Tiempo promedio para alcanzarlo: 6-12 meses\n    • Se recomienda tener capital para 6 meses mínimo\n    • Break-even típico: cuando ingresos cubren $8,000-$15,000/mes en gastos fijos\n\n🎯 CIERRE: Evaluar Críticamente el Negocio\n✅ PROS:\n• Industria en crecimiento constante (+1.7% anual)\n• Demanda estable - los hombres siempre necesitan cortes\n• Múltiples fuentes de ingresos (servicios, productos, membresías)\n• Alto potencial de fidelización (60-70% clientes recurrentes)\n• Bajo costo de inventario comparado con otros negocios\n• Mercado de grooming masculino creciendo a 4-6% anual global\n• Posibilidad de escalar con franquicias\n• Negocio de comunidad - conexión personal con clientes\n\n❌ CONTRAS:\n• Costos de renta aumentando más rápido que ingresos en la mayoría de mercados\n• Márgenes de ganancia se han reducido 12-15% en los últimos 2 años\n• Alta dependencia de la calidad del barbero\n• Competencia intensa en zonas urbanas\n• Requiere presencia física constante (difícil escalar sin personal)\n• Retención de talento es un desafío constante\n• Inversión inicial considerable ($50K-$150K mínimo)\n• Tiempo para alcanzar rentabilidad: 6-12 meses promedio\n\n💡 CONCLUSIÓN PARA EL DEBATE:\nEl negocio de barbería puede ser muy rentable SI:\n• Tienes el capital suficiente para aguantar 6-12 meses\n• Eliges una ubicación estratégica con demanda\n• Construyes un equipo de barberos de calidad\n• Diversificas ingresos (productos, membresías, servicios adicionales)\n• Implementas sistemas de automatización y marketing\n• Mantienes costos controlados\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1984,
+        3984
+      ],
+      "id": "3c6767d3-3278-421d-9e65-5dd4fc804d46",
+      "name": "Agente IA-Sumario"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Accedemos al JSON entrante\nconst data = $input.first().json;\n\n// Extraemos los valores manualmente. Si no existen, ponemos valores de respaldo.\nconst sessionId = $('Preparar Datos').first().json.sessionId || \"sin-id\";\nconst nombre = $('Preparar Datos').first().json.Nombre || \"anonimo\";\nconst output = $input.first().json.output || \"sin-plan\";\n\n// Devolvemos un JSON limpio con nombres de propiedades seguros\nreturn [\n  {\n    json: {\n      id_cliente: sessionId,\n      nombre_cliente: nombre,\n      contenido_plan: output\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        4512
+      ],
+      "id": "b3a8e0f9-8d74-4bd5-99d9-9393a469ff63",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "Plan",
+        "key": "=Plan_{{ $('Formulario Dándote la Luz').item.json['Tu email'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        3712
+      ],
+      "id": "b8a50c6e-4dfe-4926-8d36-d4f9db0c5ddf",
+      "name": "Redis2",
+      "credentials": {
+        "redis": {
+          "id": "kMAR05BH1VYFWni4",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a6e43ecf-4f7c-4213-b843-d131737af9b9",
+              "leftValue": "={{ $json.Plan }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2032,
+        3712
+      ],
+      "id": "9f21ae5a-2dfa-463d-a44d-a8a99cc0b4dc",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "=Plan_{{ $('Preparar Datos').item.json.email }}",
+        "value": "={{$json.contenido_plan}}",
+        "expire": true,
+        "ttl": 86400
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2704,
+        4512
+      ],
+      "id": "ee5adafe-07cd-474c-827b-f890a7c141e9",
+      "name": "Redis1",
+      "credentials": {
+        "redis": {
+          "id": "kMAR05BH1VYFWni4",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Guardar en redis el plan ",
+        "height": 320,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2608,
+        4400
+      ],
+      "typeVersion": 1,
+      "id": "d429809b-9f0b-4183-b2f2-c55e4cdcfa0c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Generar muestra de plan",
+        "height": 512,
+        "width": 656,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1840,
+        3936
+      ],
+      "typeVersion": 1,
+      "id": "6edffef2-9063-4f9e-97fa-df56890416a0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "obtener datos de la bd",
+        "height": 320,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1616,
+        3584
+      ],
+      "typeVersion": 1,
+      "id": "501c4450-5ecf-48a5-9e85-fe93c3295a4f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "si existe un plan con el gmail , recogerlo y volverlo a enviar",
+        "height": 320,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1968,
+        3584
+      ],
+      "typeVersion": 1,
+      "id": "8502dd8c-3766-4091-944e-b9c372ef3658",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Sustituir si es necesario",
+        "height": 400,
+        "width": 448,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3360,
+        3696
+      ],
+      "typeVersion": 1,
+      "id": "d753ff4e-8864-4c1c-8112-d35c0f3b8e69",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\n// Extraer el contenido del plan\nlet contenidoPlan = data.Plan || \"\";\n\n// Convertir \\n a <br> para HTML\ncontenidoPlan = contenidoPlan.replace(/\\\\n/g, '<br>').replace(/\\n/g, '<br>');\n\n// Extraer nombre del cliente desde el nodo \"Preparar Datos\"\nconst nombreCliente = $('Preparar Datos').first().json.Nombre || \"Cliente\";\n\n// Extraer email desde el nodo \"Preparar Datos\"\nconst emailFinal = $('Preparar Datos').first().json.email || \"\";\n\n// Crear el HTML completo\nconst htmlCompleto = `<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Tu Plan de Negocio</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;\">\n    <div style=\"max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px;\">\n        <h1 style=\"color: #333;\">Hola ${nombreCliente},</h1>\n        <p style=\"color: #666; line-height: 1.6;\">${contenidoPlan}</p>\n        \n        <div style=\"text-align: center; margin: 40px 0; padding: 20px; background-color: #f8f9fa; border-radius: 8px;\">\n            <h2 style=\"color: #007bff; margin-bottom: 20px;\">¿Listo para el siguiente nivel?</h2>\n            <a href=\"https://buy.stripe.com/test_14A9AS6mmgeP0xGbWfgjC00\" \n               style=\"background-color: #007bff; \n                      color: white; \n                      padding: 15px 40px; \n                      text-decoration: none; \n                      font-size: 18px; \n                      font-weight: bold; \n                      border-radius: 5px; \n                      display: inline-block;\n                      box-shadow: 0 4px 6px rgba(0,123,255,0.3);\">\n                🚀 Obtener el Plan Completo\n            </a>\n            <p style=\"color: #666; font-size: 14px; margin-top: 15px;\">Accede a estrategias detalladas y herramientas exclusivas</p>\n        </div>\n        \n        <p style=\"color: #999; font-size: 12px; text-align: center; margin-top: 30px;\">\n            © 2024 Dándote la Luz - Todos los derechos reservados\n        </p>\n    </div>\n</body>\n</html>`;\n\nreturn [\n    {\n        json: {\n            // Mantener todos los datos originales\n            ...data,\n            \n            // Agregar los nuevos campos\n            html: htmlCompleto,\n            subject: `Plan de Negocio para ${nombreCliente}`,\n            to: emailFinal\n        }\n    }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2496,
+        3744
+      ],
+      "id": "a6e0b94f-cacb-4d8f-a952-fa9b85b1da7c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw",
+          "mode": "list",
+          "cachedResultName": "Formulario_Dandote_la_Luz",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tpxuklO02siH4r8-m5PXv4_chRKJae3VhE2aZSeYduw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        4272
+      ],
+      "id": "5a7003ad-0699-40ca-8b2c-1ac3733bd586",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "021f2655-8eb5-4acf-9de3-042bf86e85a5",
+              "leftValue": "={{ $('Formulario Dándote la Luz').item.json['Tu email'] }}",
+              "rightValue": "={{ $('Formulario Dándote la Luz').item.json['Tu email'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        4272
+      ],
+      "id": "fca0423d-64e7-46a6-8786-aa0a515ecf4c",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        992,
+        4128
+      ],
+      "id": "9d804b1d-c1f2-414c-8281-080fe7f65d5e",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nconst htmlCompleto = `<!DOCTYPE html>\n<html>\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Tu Plan de Negocio</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;\">\n    <div style=\"max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 10px;\">\n        <h1 style=\"color: #333;\">Hola ${data.nombre_cliente},</h1>\n        <p style=\"color: #666; line-height: 1.6;\">${data.contenido_plan.replace(/\\\\n/g, '<br>').replace(/\\n/g, '<br>')}</p>\n        \n        <div style=\"text-align: center; margin: 40px 0; padding: 20px; background-color: #f8f9fa; border-radius: 8px;\">\n            <h2 style=\"color: #007bff; margin-bottom: 20px;\">¿Listo para el siguiente nivel?</h2>\n            <a href=\"https://buy.stripe.com/test_14A9AS6mmgeP0xGbWfgjC00\" \n               style=\"background-color: #007bff; \n                      color: white; \n                      padding: 15px 40px; \n                      text-decoration: none; \n                      font-size: 18px; \n                      font-weight: bold; \n                      border-radius: 5px; \n                      display: inline-block;\n                      box-shadow: 0 4px 6px rgba(0,123,255,0.3);\">\n                🚀 Obtener el Plan Completo\n            </a>\n            <p style=\"color: #666; font-size: 14px; margin-top: 15px;\">Accede a estrategias detalladas y herramientas exclusivas</p>\n        </div>\n        \n        <p style=\"color: #999; font-size: 12px; text-align: center; margin-top: 30px;\">\n            © 2024 Tu Empresa - Todos los derechos reservados\n        </p>\n    </div>\n</body>\n</html>`;\n\nreturn [{\n    json: {\n        html: htmlCompleto,\n        subject: `Plan de Negocio para ${data.nombre_cliente}`,\n        to: data.id_cliente.split('-')[1].replace('gmailcom', '@gmail.com') // Reconstruye el email\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3008,
+        4512
+      ],
+      "id": "54499b84-4f30-4818-84ba-f28d97f8d7e6",
+      "name": "boton1"
+    }
+  ],
+  "pinData": {
+    "Formulario Dándote la Luz": [
+      {
+        "json": {
+          "1. CONTEXTO - ¿En qué país/ciudad estás?": "miami",
+          "¿Tu negocio sería local, online o mixto?": "Mixto (ambos)",
+          "2. PUNTO DE PARTIDA - ¿Tienes ya el negocio o estás empezando?": "Tengo una idea desarrollada",
+          "¿Cuánto dinero puedes invertir hoy sin endeudarte? (USD)": "$5,000 - $10,000",
+          "¿Cuántas horas reales semanales puedes dedicarle?": "5-10 horas (medio tiempo)",
+          "¿En qué tienes experiencia o habilidad principal?": "barbero amateur ",
+          "3. TIPO DE NEGOCIO - ¿Qué tipo de negocio quieres crear?": "barberia con local ",
+          "¿Qué problema específico resolvería tu negocio?": "atender muchos clientes",
+          "4. PROYECCIÓN - ¿Cómo te gustaría que se vea el negocio en 2-3 años?": "una gran barberia ",
+          "¿Qué tipo de negocio buscas?": "Negocio escalable - Que funcione sin mí",
+          "5. ORDEN Y EJECUCIÓN - ¿Estás dispuesto a separar tus finanzas personales del negocio?": "Sí, desde el día 1",
+          "¿Cómo imaginas conseguir tus primeros clientes?": "redes sociales",
+          "Tu nombre": "jesus",
+          "Tu email": "jesusmiguela546@gmail.com",
+          "submittedAt": "2026-02-03T11:14:50.404-05:00",
+          "formMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Formulario Dándote la Luz": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Preparar Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Datos": {
+      "main": [
+        [
+          {
+            "node": "Redis2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente IA-Sumario",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Sumario": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente IA-Sumario",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Agente IA-Sumario": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Redis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agente IA-Sumario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis1": {
+      "main": [
+        [
+          {
+            "node": "boton1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Preparar Sumario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "boton1": {
+      "main": [
+        [
+          {
+            "node": "Preparar Sumario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d02ab0af-1ece-4f46-9f5f-ef2fc7b1fe2f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "o0r5KIavF5Z4CVh6",
+  "tags": []
+}

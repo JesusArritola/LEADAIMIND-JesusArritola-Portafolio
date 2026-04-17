@@ -1,0 +1,777 @@
+{
+  "name": "Agente_Creador_de_Campañas_de_Ads",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "cfd3e344-162f-4b1f-88ab-9499508413ef",
+        "formTitle": "Brief ADS",
+        "formDescription": "Creador de ADS personalizados con una simple foto",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload_Product",
+              "fieldType": "file",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tagline",
+              "placeholder": "Descripcion llamativa con pocas palabras",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estilo",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "realista"
+                  },
+                  {
+                    "option": "futurista"
+                  },
+                  {
+                    "option": "animado"
+                  },
+                  {
+                    "option": "profesional"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2d3b5349-290c-440c-a551-73fc11645325",
+      "name": "Formulario",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        96
+      ],
+      "webhookId": "cfd3e344-162f-4b1f-88ab-9499508413ef"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Esta sera la entrada del usuario : {{ $json.descripcion }} y este el estilo que utilizara  : {{ $('Edit Fields').item.json.estilo }}\n",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres experto en marketing digital. Crea un texto publicitario breve, impactante y motivador para este producto. Requisitos: máx 200 caracteres, tono emocional y orientado a acción, 2–3 emoticonos, 3–5 hashtags relevantes. Devuelve solo el texto final."
+        }
+      },
+      "id": "1370ad7d-8e75-4571-92af-875a446daebe",
+      "name": "Generar Texto Publicitario",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        736,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        384,
+        640
+      ],
+      "id": "c48cf9ca-95a2-448c-904f-f5318ed720f9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1dca1f53-f6db-427c-8656-6284096cd072",
+              "name": "descripcion",
+              "value": "={{ $('Formulario').item.json.Tagline }}",
+              "type": "string"
+            },
+            {
+              "id": "e4d7a92b-8003-4aa2-9c01-38e5912cc6bc",
+              "name": "estilo",
+              "value": "={{ $('Formulario').item.json.Estilo }}",
+              "type": "string"
+            },
+            {
+              "id": "55e3e331-e943-454d-847d-a1087dc0db72",
+              "name": "descripcion_imagen",
+              "value": "={{ $json.content.parts[0].text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        96
+      ],
+      "id": "283de223-2ee1-44d8-855f-12278991bd4f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        544,
+        656
+      ],
+      "id": "cd36800b-3ad5-471a-abf3-12ae79e8c99d",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23e3b833-78ad-4a26-85ac-5505da81450a",
+              "name": "Texto_publicitario",
+              "value": "={{ $json.data[1].output }}",
+              "type": "string"
+            },
+            {
+              "id": "7eb8e29a-c7e9-496b-b0a4-0cbd0454c910",
+              "name": "prompt",
+              "value": "={{ $json.data[0].output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1728,
+        80
+      ],
+      "id": "c69826d4-dff8-4e8a-9e74-70d5ab8e5050",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "=Imagen para crear una campaña de ads ",
+        "inputType": "binary",
+        "binaryPropertyName": "Upload_Product",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        96
+      ],
+      "id": "e55fde8a-5b45-41cc-9552-6f0bfab1c4a6",
+      "name": "Analyze an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Form Trigger",
+        "height": 288,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1056,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "04802546-a964-4c67-9d3d-5a3465c6e2f0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Obtener Descripcion de la imagen",
+        "height": 288,
+        "width": 448,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "731a1a34-7eca-4387-b93a-37f0fedccf8e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Creacion del Prompt para Generar una imagen Mejorada",
+        "height": 304,
+        "width": 576,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "caacd4df-c672-4e31-a9c2-312d5f6239bb",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Creacion del Texto Publicitario",
+        "height": 304,
+        "width": 576,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "16d12dde-f0de-4d04-bc7e-2599b6e70bdf",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Guardar Datos",
+        "height": 288,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "81e67284-f46d-41c9-81af-8c4783b1a399",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Analisis y Generacion de la Nueva Imagen",
+        "height": 304,
+        "width": 416,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2048,
+        -16
+      ],
+      "typeVersion": 1,
+      "id": "f7053dd3-5d91-43e6-aec0-994ae1b162e4",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive",
+        "height": 256,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2496,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "d35feb04-dba9-420d-b0a1-4e95d0ae9564",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales el Chat Model",
+        "height": 208,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "5765efaf-b941-4e71-a929-14c89b9a3d6d",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "name": "EhancedPhoto",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2576,
+        80
+      ],
+      "id": "cb8d8cce-49cf-45e4-87a7-0fd818c9fafc",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FTH2j_dkAare9nMaQ5VoigAfKGd4sMC5jcs1gjS57iM",
+          "mode": "list",
+          "cachedResultName": "Estudio_Mercado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FTH2j_dkAare9nMaQ5VoigAfKGd4sMC5jcs1gjS57iM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "publicidad",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FTH2j_dkAare9nMaQ5VoigAfKGd4sMC5jcs1gjS57iM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "texto publicitario": "={{ $json.Texto_publicitario }}"
+          },
+          "matchingColumns": [
+            "Texto_Publicitario"
+          ],
+          "schema": [
+            {
+              "id": "texto publicitario",
+              "displayName": "texto publicitario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2304,
+        416
+      ],
+      "id": "04efead3-3015-4ef5-8272-54d368b49d8e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Esta es la entrada del usuario : {{ $json.descripcion_imagen }}  y este sera el estilo que deberas usar : {{ $('Edit Fields').item.json.estilo }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un agente profesional en la creacion de Prompt para generar videos dado los siguientes datos del usuario :\nDescripcion : \nEstilo : \nDescripcion Imagen : \n\nSimepre debes regirte por lo brindado por el usuario y mejorarlos pero nunca, NUNCA puede salirte del tema principal (\"el tema principal es la imagen\").\n\nAsegurate de crear un prompt completamtente profesional y no demasiado extenso para ello utiliza un tono profesional y directo .\n\nLa idea de este prompt es mejorar una foto para captar la atencion el usuario a primera vista y ser los lideres en la creacion de ads.\n\nProcura sobrepasar las expectativas."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        736,
+        -128
+      ],
+      "id": "226ffac4-8708-4bb3-896c-1336100a17dd",
+      "name": "Generar Prompt Ehanced Photo"
+    },
+    {
+      "parameters": {
+        "content": "Guardar Datos",
+        "height": 288,
+        "width": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1696,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "c95a56d6-622d-4fec-af9a-b9e79eaa4015",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA",
+        "height": 1104,
+        "width": 864,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "a1a999df-8e75-4038-b71d-6e7adc8b4b00",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-image",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-image (Nano Banana)"
+        },
+        "prompt": "=Debes genrar una imagen lista para una campaña de ADS guiandote de los siguientes datos : \nTexto_Publicitario : {{ $json.Texto_publicitario }}\nPrompt : {{ $json.prompt }}\nLimitate y por ningun motivo pongas texto en la imagen, NUNCA.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        80
+      ],
+      "id": "29c58075-a08a-42c4-9067-896acd93f6b9",
+      "name": "Generate an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1328,
+        80
+      ],
+      "id": "3b94fd39-d880-4bf2-a6d4-a31a513b8056",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        80
+      ],
+      "id": "54816215-245f-4806-985c-f2079f93426f",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "Union de los Datos",
+        "height": 224,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1280,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "5e2ce80d-b494-4057-b5d4-94774e8f73da",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 256,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2208,
+        352
+      ],
+      "typeVersion": 1,
+      "id": "5923157d-70a8-4097-9c61-409478e76a3f",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 240,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "d291f4df-c5cc-492a-8636-e96b6d56de10",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 240,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2128,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "bb8b5e0b-9749-4588-b7b5-0b536e7330ae",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Utilizadas : \n-Form Trigger : Usado para iniciar el WF y mandar los datos.\n-Analyze image : Usado para extraer todos los detalles de la foto enviada.\n-Set : Usado para guardar datos.\n-AI Agent : Usado para procesar toda la informacion y manejarla.\n-Merge : Usada para unir criterios de los Agentes de IA.\n-Agregate : Usado para unir la informacion recibida por el merge en un array.\n-Generate an image : Usado para generar una imagen mejorada lista para usarse como campaña de ads.\n-Google Sheet : Usado para guardar un texto publicitario para usar junto con la foto.\n-Google Drive : Usado para almacenar la foto generada.",
+        "height": 304,
+        "width": 784,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -816,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "901f995f-4655-423f-8efa-857a38735d61",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "📸 Agente de IA para Campañas de Ads\nEste agente automatiza la creación de campañas publicitarias a partir de una imagen recibida. El flujo combina análisis, generación de prompts y creación de nuevas imágenes optimizadas para marketing.\n\n🔄 Flujo de Trabajo\n📥 Recepción de la Foto\n\nEl agente recibe una imagen enviada por el usuario o sistema.\n\n🔎 Extracción de Información\n\nAnaliza la foto para identificar elementos clave: producto, colores, estilo visual, texto, contexto.\n\n📝 Creación de Prompt\n\nGenera un prompt descriptivo que resume la información extraída.\n\nMejora el prompt con técnicas de marketing (ejemplo: destacar beneficios, añadir estilo visual atractivo).\n\n🎨 Generación de Imagen Optimizada\n\nProduce una nueva versión de la imagen, adaptada para campañas de Ads (más clara, llamativa, con enfoque en el producto).\n\n📊 Uso en Campañas\n\nLa imagen mejorada se guarda y se integra en el flujo de campañas publicitarias.\n\nPuede conectarse con herramientas de Ads, redes sociales o gestores de contenido.\n\n✨ Elementos Clave del Flujo\nAutomatización: todo el proceso ocurre sin intervención manual.\n\nAnálisis Visual: extracción de datos relevantes de la foto original.\n\nOptimización Creativa: prompts enriquecidos con lenguaje publicitario.\n\nGeneración de Contenido: nuevas imágenes listas para anuncios.\n\nIntegración: conexión con Google Ads, Meta Ads o cualquier plataforma de marketing.\n\n💡 Nota para n8n: Este agente convierte una simple foto en una campaña publicitaria lista para usar, reduciendo tiempo, esfuerzo y mejorando la calidad visual de los anuncios. 🚀",
+        "height": 912,
+        "width": 1424,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2256,
+        400
+      ],
+      "typeVersion": 1,
+      "id": "4fd31511-bd7e-4265-8974-3a60da305ff0",
+      "name": "Sticky Note15"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Formulario": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Texto Publicitario": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generar Texto Publicitario",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Generar Prompt Ehanced Photo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Generar Texto Publicitario",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generar Prompt Ehanced Photo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generar Texto Publicitario",
+            "type": "ai_languageModel",
+            "index": 1
+          },
+          {
+            "node": "Generar Prompt Ehanced Photo",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Prompt Ehanced Photo": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "46b38c85-08d6-438c-b3cb-2f6aa77db247",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "5SBlAHx3ftL0g68X",
+  "tags": []
+}

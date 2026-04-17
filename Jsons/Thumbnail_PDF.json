@@ -1,0 +1,437 @@
+{
+  "name": "Thumbnail_PDF",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2304,
+        -32
+      ],
+      "id": "6d9bdbce-5ebb-413c-8915-bead1d9c272d",
+      "name": "OBTENER PDF"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdf.co/v1/pdf/convert/from/image",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "jesusmiguela546@gmail.com_UacpFuBjtQV28mHLVPxQdU5gkepiLBZNA7Rmgc61tTieppzDDmyibXG6nPxNRKsy"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Generate an image').item.json.url }}"
+            },
+            {
+              "name": "async",
+              "value": "false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2112,
+        -32
+      ],
+      "id": "54990d78-4a34-4105-a799-39accbcc5ff7",
+      "name": "CREACIÓN PDF"
+    },
+    {
+      "parameters": {
+        "formTitle": "Tumbnail Generator",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Titulo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Breve Descripcion del Thumbnail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Que elementos quieres que aparezcan en el Thumbnail",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estilo",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        528,
+        -32
+      ],
+      "id": "45359fe5-72ca-468f-9777-b04e6d18e691",
+      "name": "On form submission",
+      "webhookId": "d2155cad-560a-438d-94d7-374cba9086a3"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.output }}",
+        "options": {
+          "dalleQuality": "hd",
+          "size": "1024x1024",
+          "returnImageUrls": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        1504,
+        -32
+      ],
+      "id": "f426384d-27df-4db9-ba0f-f38bb5e5bac2",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Formulario Personalizable o adaptable con Webhook",
+        "height": 256,
+        "width": 304,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "f1d86616-a0b4-4e03-980e-3fb2038395ab",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con IA para generar un PROMPT",
+        "height": 544,
+        "width": 384,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "16bd9ab4-ab93-49f3-957e-48bd5287ad74",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Escribe un prompt basado en esto:\neste es el título del video: {{ $json.Titulo }}\n\nesta es la descripción del video:{{ $json['Breve Descripcion del Thumbnail'] }}\n\nEstos son los elementos que tiene que incluir el video: {{ $json['Que elementos quieres que aparezcan en el Thumbnail'] }}\n\nEste es el estilo del thumbnail: {{ $json.Estilo }}\n\nAsegurate de no usar el título entero, pero si algunas palabras asociadas con el título.\nEl thumbnail debe crear curiosidad y tener elementos sobre el video\nDevuelve solo el prompt.",
+        "options": {
+          "systemMessage": "=Eres un agente especialista creador de prompts profesionales basados en un formulario para crear Thumbnails de videos.\nAsegurate de utilizar los elementos bnrindados por el formulario.\nEl Thumbnail debe ser lo mas atractivo y llamativo posible.\nDebe ser capaz de llamar la atencion a simple vista."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        976,
+        -32
+      ],
+      "id": "11d79bb2-4340-404f-946f-b2a0ddea2343",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "height": 176,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "c61f651d-88d4-4262-a8e5-f8367e08de6d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Generador de imagen con DALL-E 3",
+        "height": 400,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1360,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "65e57322-4fec-49ee-9b7c-49de19415c62",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1424,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "3e07dbed-ccf3-4305-a8c3-21fd5189ad41",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Agente Thumbnail : \nDescripcion : \nAgente de inteligencia artificial que genera una imagen para miniatura de videos con solo una breve descripcion del video.\n\nFuncionalidad : \nGenerar imagenes con facilidad con solo una descripcion.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que crea la iamgen con IA.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 384,
+        "width": 512,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        912,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "a78e34de-a2ee-4572-8b59-529cd2b3266e",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas utilizadas : \n-Form Trigger : Usado para ingresar los datos referentes a la imagen deseada.\n-AI Agent : Usado para generar un PROMPT con los datos recibidos del formulario.\n-OpenAI : Usado para generar la imagen.\n-Drive : Usado para guardar la imagen generada.",
+        "height": 304,
+        "width": 480,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        384,
+        416
+      ],
+      "typeVersion": 1,
+      "id": "4eaec258-069f-4410-beec-4cab930d680d",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "name": "=Thumbnail_{{$now.format(\"yyyy-MM-dd\")}}_PDF",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2768,
+        -32
+      ],
+      "id": "2af8c1cc-027d-470b-867c-af00ee4d9cf3",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        192
+      ],
+      "id": "ed7ab523-7ea6-45e5-b73c-f8f42bd2945c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Subir Url a PDF.CO para convertir la imagen a pdf y luego obtener el pdf",
+        "height": 480,
+        "width": 432,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2032,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "7ffa4dfa-8254-4787-b9bc-eff0eab2b068",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar credenciales de Google Drive",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2688,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "2994c688-09e4-44de-9f1e-5440f8886d0f",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Guardar el archivo pdf en Google Drive\n",
+        "height": 400,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2688,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "979f526d-f4ce-4175-86bd-8d540b00a1ce",
+      "name": "Sticky Note9"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "CREACIÓN PDF": {
+      "main": [
+        [
+          {
+            "node": "OBTENER PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "CREACIÓN PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OBTENER PDF": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "de9c0208-045b-4197-bec1-65b9f5f26ba7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "cLsxVm36IhVSu0VS",
+  "tags": []
+}

@@ -1,0 +1,633 @@
+{
+  "name": "Recordatorio_Propuesta",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos usuario : \nNombre Negocio : {{ $json.nombre }}\nCorreo : {{ $json.email }}\nPropuesta de solucion : {{ $json.Propuesta }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=🧠 Prompt Profesional para Agente de Recordatorios de Propuesta\nObjetivo del agente:  \nGenerar correos de seguimiento profesionales y personalizados para negocios que han recibido previamente una propuesta de automatización: {{ $json.Propuesta }}. El correo debe recordar cordialmente la propuesta enviada, reforzar los beneficios, y motivar al destinatario a tomar acción. El mensaje debe ser claro, directo, visualmente atractivo y con alto potencial de conversión.\n\n🎯 Rol del agente:\nDevuelve el cuerpo del correo en formato HTML con párrafos <p> y listas <ul><li>.\nNo uses texto plano con \\n ni asteriscos.\nActúa como un redactor profesional de correos B2B especializado en ventas, automatización y seguimiento comercial.\n\n📥 Datos de entrada (variables del negocio):\nNombre del negocio\n\nSector/industria\n\nServicios o productos principales\n\nProblema identificado\n\nPersona de contacto\n\nEnlace al formulario o propuesta enviada\n\nFecha aproximada del primer contacto\n\n✍️ Instrucciones de redacción:\nUsa un tono profesional, cordial y proactivo.\n\nMenciona el nombre del negocio y su sector para personalizar el mensaje.\n\nHaz referencia directa a la propuesta enviada anteriormente.\n\nRefuerza brevemente el problema identificado y cómo la automatización lo resuelve.\n\nReitera los beneficios clave en lista con emojis y plecas.\n\nIncluye un CTA claro y directo (ej. completar formulario, agendar llamada).\n\nFormatea el correo con párrafos separados, plecas, emojis y separadores visuales para captar atención.\n\n📬 Formato del correo\nAsunto atractivo y profesional con emoji\n\nSaludo personalizado con pleca\n\nRecordatorio breve de la propuesta enviada\n\nRefuerzo del problema y solución\n\nLista de beneficios con plecas y emojis\n\nCTA final con emoji y enlace\n\nFirma profesional con plecas, emoji y logo si aplica\n\nSiempre vas a adjuntar antes de despedirte este boton con enlace a la consulta gratuita : <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin:0;\"> <tr> <td align=\"center\"> <a href=\"https://v0-leadaimind.vercel.app\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display:inline-block; padding:12px 20px; font-family:Arial, sans-serif; font-size:16px; color:#ffffff; background-color:#1f7aec; text-decoration:none; border-radius:6px; font-weight:600;\"> Consulta Gratis </a> </td> </tr> </table>\n\nEstructura obligatoria despues de la linea divisoria : \n<table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n  <tr>\n    <td style=\"padding:0; text-align:left;\">\n      \n      <!-- TABLA PRINCIPAL: 2 filas -->\n      <table role=\"presentation\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"left\">\n        \n        <!-- FILA 1: Logo + frase -->\n        <tr>\n          <td style=\"padding:0; vertical-align:middle;\">\n            <a href=\"https://ibb.co/60vYXfyM\">\n              <img src=\"https://i.ibb.co/60vYXfyM/LOGO-Lead-AIMind.png\" alt=\"LOGO-Lead-AIMind\" border=\"0\" style=\"display:block; border-radius:12px; width:80px;\">\n            </a>\n          </td>\n          <td style=\"vertical-align:middle; padding-left:10px;\">\n            <p style=\"margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; font-weight:bold; text-align:left; white-space:nowrap;\">\n              Estrategia con Inteligencia Resultados con Precisión.\n            </p>\n          </td>\n        </tr>\n        \n        <!-- FILA 2: Texto debajo (ocupa 2 columnas) -->\n        <tr>\n          <td colspan=\"2\" style=\"padding-top:8px;\">\n            <p style=\"margin:0; font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#333333; font-weight:bold; text-align:left;\">\n              JesusMiguel │ Especialista en Automatización │ Listo para ayudarte 🚀\n            </p>\n          </td>\n        </tr>\n        \n      </table>\n      \n    </td>\n  </tr>\n</table>\n***Reglas Criticas *** :\n-Recuerda que es un recordatorio tiene que ser muy breve solo recordando cuanto puede ayudar al negocio o empresa la automatizacion y siempre debes enviar el boton de la consulta."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        800,
+        384
+      ],
+      "id": "290bf674-e6a0-4c9e-b9d3-021599aaba7e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "Enviar Recordatorio",
+        "height": 944,
+        "width": 2096,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -80,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "6db9fd82-e247-40ec-b0bf-5b12b97b77ae",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -16,
+        496
+      ],
+      "id": "dde5a122-440c-41e5-85ed-f3df13864af5",
+      "name": "Loop Over Items1",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Asunto\": \"Aqui pones las propuestas de asuntos para el correo\",\n\t\"Cuerpo\": \"Aqui poner el cuerpo del correo\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1200,
+        688
+      ],
+      "id": "853b6324-269e-497b-897e-7191770f38fe",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "fromEmail": "=jesusmalonsoarritola@gmail.com",
+        "toEmail": "={{ $('If').item.json.email }}",
+        "subject": "={{ $json.output.Asunto }}",
+        "html": "={{ $json.output.Cuerpo }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1728,
+        384
+      ],
+      "id": "94576773-867a-4ec5-abe9-62ee72c83198",
+      "name": "Send email1",
+      "webhookId": "31a809c8-a8a7-485e-ac77-ae1f549d6c87",
+      "credentials": {
+        "smtp": {
+          "id": "rbkf828y2Cr5tuK5",
+          "name": "SMTP account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        256,
+        128
+      ],
+      "id": "f315d78d-eac5-4f2b-9f7a-d6efea353adb",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -960,
+        496
+      ],
+      "id": "610c9c5a-221a-4a1b-9c1e-a01de4abc5db",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM",
+          "mode": "list",
+          "cachedResultName": "TWIN_Propuestas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 918660704,
+          "mode": "list",
+          "cachedResultName": "TWINLATAMHUNTER",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit#gid=918660704"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -608,
+        496
+      ],
+      "id": "550c24b7-0318-41b6-9873-20ef7e05fa47",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM",
+          "mode": "list",
+          "cachedResultName": "TWIN_Propuestas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 918660704,
+          "mode": "list",
+          "cachedResultName": "TWINLATAMHUNTER",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gECDyVj4Jpe2UUeiBWjy38nAX-pOUd0gknTs2DFEgIM/edit#gid=918660704"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "Recordatorio",
+            "email": "={{ $('Loop Over Items1').item.json.email }}"
+          },
+          "matchingColumns": [
+            "email"
+          ],
+          "schema": [
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "job_title",
+              "displayName": "job_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_domain",
+              "displayName": "company_domain",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Propuesta",
+              "displayName": "Propuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1696,
+        688
+      ],
+      "id": "25ff5f9c-29e0-4ba4-b940-3583f8ac32fb",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        608,
+        624
+      ],
+      "id": "9723b453-d97a-43d1-bd59-eada30ae7aff",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "l2WUEo7lB44DhLVL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        688
+      ],
+      "id": "67b09bce-a31c-4ec4-b71a-6c8b347c0cbf",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "03bbe506-04c2-411b-8262-37d547825870",
+              "leftValue": "={{ $json.Estado }}",
+              "rightValue": "Enviada",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        480
+      ],
+      "id": "1c99b19b-e13b-4703-a082-c10708198825",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fromEmail": "jesusmalonsoarritola@gmail.com",
+        "toEmail": "jesusmiguela546@gmail.com",
+        "subject": "Recordatorio Completado",
+        "html": "Hemos Concluido el Loop de los correos de recordatorio Correctamente De la pagina de Google Sheet TWNHUNTERLATAM",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -32,
+        128
+      ],
+      "id": "0e05efdc-9a90-4143-b1c5-fa89bd2889df",
+      "name": "Send email",
+      "webhookId": "34efd221-9d4b-4919-96ee-1203fe8ad357",
+      "credentials": {
+        "smtp": {
+          "id": "hfDlXZ7EXgITPlR8",
+          "name": "SMTP account jesusmiguela546@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        128
+      ],
+      "id": "0bc86ef2-fadc-4e9e-90b3-54361d5514dc",
+      "name": "Limit"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send email": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ecec6f53-ccb7-428f-ae11-7f0732d38f86",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "gdDuTgZBQNYtPXGPSFhp_",
+  "tags": []
+}

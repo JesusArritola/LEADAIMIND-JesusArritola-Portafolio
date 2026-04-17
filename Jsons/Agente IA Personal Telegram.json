@@ -1,0 +1,1407 @@
+{
+  "name": "Agente IA Personal Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.chatId }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        944
+      ],
+      "id": "d0e2432b-e607-4d43-b7e8-5152ab2579fb",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1808,
+        192
+      ],
+      "id": "951cd063-b8d9-4601-b1a6-e5637a5bd519",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1936,
+        192
+      ],
+      "id": "87456f3a-4a2e-4cf8-9b5d-3a513b869564",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -832,
+        -64
+      ],
+      "id": "329ad3a7-1b68-4daf-8f5b-56d9590efc0a",
+      "name": "Telegram Trigger",
+      "webhookId": "2571dabf-ef8b-4db4-974c-41a13217c7f7",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "bd76be2c-7daa-424f-adb4-f6c0333acc72"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1313eaf0-51ec-4887-a6c9-befa2fdceac7",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Audio"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -400,
+        -80
+      ],
+      "id": "9729aa2b-c7cc-460d-86fd-c7e4edc949a0",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be050ac1-9684-49eb-aea1-a0433afd40d3",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        -144
+      ],
+      "id": "57327fd6-88b1-4cc3-b66f-4b3136b02129",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "63527e7b-6d6d-4bef-885a-363e7fbd7877",
+              "name": "contenido",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "438b218f-e821-4779-8b74-141548b95f0e",
+              "name": "chatId",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        -64
+      ],
+      "id": "b705f198-9722-4786-b017-ac1a8da853c5",
+      "name": "Entrada Agente"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b539abb-4fe0-4bc8-b658-070eddd271cf",
+              "name": "output",
+              "value": "={{ $json.output.replace(/([_*[\\]()~`>#+\\-=|{}])/g, '\\\\$1') }}",
+              "type": "string"
+            },
+            {
+              "id": "a545faae-af8d-4155-ab9d-eadc3737129a",
+              "name": "chatId",
+              "value": "={{ $('Entrada Agente').item.json.chatId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        -144
+      ],
+      "id": "deab93e6-fffd-4a7d-9532-6091f28f6276",
+      "name": "Salida Agente"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        64
+      ],
+      "id": "9e3528f4-552f-4c92-b98d-13e511db402b",
+      "name": "Descargar audio",
+      "webhookId": "bf055873-f1bb-49fc-8646-cf03d53e1079",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        -64,
+        944
+      ],
+      "id": "02c35289-b4de-4379-9008-f69afbd20916",
+      "name": "Think1"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        64,
+        944
+      ],
+      "id": "67ea39c7-054f-46f6-9fc2-2014f6dea662",
+      "name": "Calculator1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Herramienta para agendar, obtener , cambiar , eliminar citas.Siempre usarla para ver disponibilidad y eventos.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un agente de calendario. Te encargas de comprobar disponibilidad y agendar reuniones en Google Calendar.\nHoy es {{ $now }}. Zona horaria: America/Mexico_City (UTC-6)\n\n# Objetivo:\n\nTu trabajo es entender lo que el usuario necesita y actuar en consecuencia, usando las herramientas disponibles. Solo gestionas citas. No respondes preguntas generales.\n\n# Herramientas disponibles:\n\n1. **Disponibilidad**: Verifica si hay disponibilidad en un rango de tiempo específico. SIEMPRE debes usar esta herramienta ANTES de agendar o actualizar una cita.\n\n2. **Reuniones**: Obtiene todas las reuniones en un rango de fechas. Úsala cuando el usuario pregunte \"¿qué tengo hoy?\", \"¿cuáles son mis citas esta semana?\", etc.\n\n3. **ObtenerCita**: Obtiene los detalles de una cita específica en un rango de tiempo.\n\n4. **Agendar**: Crea una nueva cita en el calendario. SOLO úsala después de verificar disponibilidad.\n\n5. **Actualizar**: Modifica una cita existente (cambiar hora, fecha, título, etc.). Necesitas el Event ID de la cita.\n\n6. **Borrar**: Elimina una cita del calendario. Necesitas el Event ID de la cita.\n\n7. **Calculator**: Para operaciones matemáticas (calcular duraciones, sumar días, etc.).\n\n8. **Think**: Para razonar sobre qué herramienta usar y planificar tus acciones.\n\n# Flujo de trabajo para AGENDAR:\n\n1. Extrae del mensaje: título, fecha, hora de inicio, duración (por defecto 1 hora si no se especifica)\n2. Calcula la hora de fin sumando la duración a la hora de inicio\n3. USA la herramienta \"Disponibilidad\" con Start_Time y End_Time en formato ISO 8601\n4. Si hay disponibilidad (la herramienta devuelve que está libre), procede a usar \"Agendar\"\n5. Si NO hay disponibilidad, informa al usuario que ese horario está ocupado y sugiere alternativas\n\n# Flujo de trabajo para ACTUALIZAR:\n\n1. Primero usa \"Reuniones\" o \"ObtenerCita\" para encontrar la cita que el usuario quiere modificar\n2. Extrae el Event ID de la cita encontrada\n3. Si el usuario quiere cambiar la hora/fecha, verifica disponibilidad en el nuevo horario\n4. Usa \"Actualizar\" con el Event ID y los nuevos datos\n\n# Flujo de trabajo para BORRAR:\n\n1. Usa \"Reuniones\" o \"ObtenerCita\" para encontrar la cita\n2. Extrae el Event ID\n3. Usa \"Borrar\" con el Event ID\n\n# Flujo de trabajo para CONSULTAR:\n\n1. Usa \"Reuniones\" con el rango de fechas apropiado (hoy, esta semana, etc.)\n2. Presenta las citas de forma clara y conversacional\n\n# Reglas CRÍTICAS:\n\n- NUNCA agendes citas los sábados o domingos. Si el usuario lo pide, responde que esos días no están disponibles.\n- SIEMPRE verifica disponibilidad ANTES de agendar o actualizar.\n- Si hay una cita en el horario solicitado, di que NO hay disponibilidad, incluso si la cita es de 1 minuto.\n- Para verificar disponibilidad, usa Start_Time y End_Time en formato ISO 8601 (ejemplo: 2024-01-15T14:00:00-06:00)\n- Si no se especifica duración, asume 1 hora.\n- Para actualizar o borrar, NECESITAS el Event ID. Si no lo tienes, búscalo primero.\n\n# Formato de fechas y horas:\n\n- Usa formato ISO 8601 para todas las fechas: YYYY-MM-DDTHH:mm:ss-06:00\n- Ejemplos:\n  - \"mañana a las 10am\" = día siguiente + T10:00:00-06:00\n  - \"el próximo lunes a las 3pm\" = fecha del próximo lunes + T15:00:00-06:00\n  - \"dentro de 8 días a las 2pm\" = fecha actual + 8 días + T14:00:00-06:00\n\n# Formato de respuesta:\n\nTu respuesta debe ser en lenguaje natural, clara y breve, como si estuvieras escribiendo por WhatsApp. Usa emojis si es apropiado.\n\nEjemplos:\n- ✅ \"Listo, agendé tu cita 'Reunión con Laura' para mañana a las 4:00 p.m. 😊\"\n- ✅ \"He actualizado tu cita. Ahora es el miércoles a las 3:00 p.m.\"\n- ✅ \"He cancelado tu cita programada para hoy. 👍\"\n- ❌ \"No hay disponibilidad a las 2:00 p.m. porque ya tienes 'Reunión de equipo' agendada de 2:00 a 3:00 p.m. ¿Prefieres otro horario?\"\n- ✅ \"Tienes 3 citas esta semana: 1) Reunión con equipo - Viernes 10:00 a.m., 2) Llamada con cliente - Miércoles 2:00 p.m., 3) Revisión de proyecto - Jueves 4:00 p.m.\"\n\n# Recordatorios:\n\n- NO incluyas enlaces de videollamadas en tus respuestas\n- NO devuelvas JSON ni estructuras técnicas\n- Si el mensaje es ambiguo, pregunta amablemente\n- Usa la memoria de los últimos mensajes para mantener contexto\n- Si falta información importante (hora, fecha, título), pregúntala antes de actuar"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        304
+      ],
+      "id": "b4076f89-5b7b-4373-a6d3-3a5df86dfaa2",
+      "name": "AgenteCalendario"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Utiliza esta herramienta para las acciones de obtener un contacto, añadir uno nuevo, y modificar uno existente.",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "=# Identidad:\n\nEres un agente encargado de gestionar una base de datos de contactos.\n\n# Objetivo:\n\nTu objetivo consiste en obtener contactos, actualizarlos, o crearlos en función de la instrucción de entrada.\n\n# Herramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que herramienta utilizar en cada caso y también para mejorar tus respuestas.\n\n* \"Crear\": usa esta herramienta para crear un nuevo contacto.\n\n* \"Obtener\": usa esta herramienta para obtener la información de un contacto, si el usuario te da el nombre usaras este para buscar en la tabla y devolveras el email.\n\n* \"Actualizar Contacto\": usa esta herramienta para actualizar un contacto.\n\n# Recordatorios:\nSiempre debes pedir todos los campos necesarios para crear un nuevo contacto.Ejemplo :\"nombre\", \"correo\", \"telefono\", \"descripcion\". Es obligatorio que le pidas todos los campos.\n\n* Fecha y hora actual: {{ $now }}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        1712,
+        352
+      ],
+      "id": "16409082-f030-42d6-9258-d0780c1bd0f7",
+      "name": "AgenteContactos"
+    },
+    {
+      "parameters": {
+        "content": "## Agente de IA para Gestión de Citas, Correos y Contactos en Telegram\n\n### Descripción\n\nEste agente de IA es un bot de Telegram diseñado para facilitar la gestión de citas, correos electrónicos y contactos de manera eficiente. Utilizando inteligencia artificial, el bot interactúa con los usuarios para organizar su agenda y comunicaciones, proporcionando una solución integral para la administración del tiempo y la información.\n\n### Funcionalidades\n\n1. **Gestión de Citas**:\n   - Permite a los usuarios programar, modificar y cancelar citas directamente desde Telegram.\n   - Sincroniza automáticamente con el calendario del usuario (Google Calendar) para mantener un registro actualizado.\n\n2. **Manejo de Correos Electrónicos**:\n   - Facilita el envío y la recepción de correos electrónicos mediante comandos simples.\n   - Permite la lectura de correos nuevos y la respuesta a mensajes directamente desde el chat de Telegram.\n\n3. **Administración de Contactos**:\n   - Permite agregar, eliminar y gestionar contactos fácilmente. (Google Sheets)\n   - Facilita la búsqueda de información de contacto y el envío de mensajes a través de Telegram o correo electrónico.\n\n4. **Recordatorios y Notificaciones**:\n   - Envía recordatorios automáticos para citas y tareas pendientes.\n   - Notifica a los usuarios sobre nuevos correos electrónicos o cambios en su agenda.\n\n5. **Interacción Natural**:\n   - Utiliza procesamiento de lenguaje natural (NLP) para entender y responder a las solicitudes de los usuarios de manera conversacional.\n\n### Beneficios\n\n- **Ahorro de Tiempo**: Automatiza la gestión de citas y correos, permitiendo a los usuarios enfocarse en tareas más importantes.\n- **Accesibilidad**: Permite a los usuarios gestionar su información desde cualquier lugar a través de Telegram.\n- **Interacción Eficiente**: Facilita la comunicación y organización mediante una interfaz conversacional.\n\n### Recomendaciones\n\n- Asegúrate de manejar los datos de los usuarios de manera segura y cumplir con las regulaciones de privacidad.\n- Realiza actualizaciones periódicas para mejorar la funcionalidad y la seguridad del bot.\n- Considera la posibilidad de añadir soporte para múltiples idiomas para ampliar la accesibilidad.\n",
+        "height": 976,
+        "width": 1312,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        1296
+      ],
+      "typeVersion": 1,
+      "id": "a3a4a775-8eec-48cb-9802-be5683a6d439",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Obtienes los datos de la reunion",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "returnAll": true,
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1216,
+        592
+      ],
+      "id": "895ef0e4-a9f3-43c9-a9e8-0ab1c3615ab1",
+      "name": "ObtenerCita",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Dame las reuniones del dia",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1088,
+        592
+      ],
+      "id": "885b1397-98ed-4f98-9c51-8310361dc4d1",
+      "name": "Reuniones",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para buscar disponibilidad en el calendario",
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        592
+      ],
+      "id": "d7323e4f-91f4-4a38-b025-b0962303cbd9",
+      "name": "Disponibilidad",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        832,
+        592
+      ],
+      "id": "ea830841-bcca-4c0b-b3a2-23fa341c2c92",
+      "name": "Borrar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para agendar reunión.",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "sendUpdates": "all",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        592
+      ],
+      "id": "38c37214-4dca-4706-8d78-705a9d059577",
+      "name": "Agendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Actualiza un evento en Google Calendar",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "jesusmiguela546@gmail.com",
+          "mode": "list",
+          "cachedResultName": "jesusmiguela546@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1328,
+        592
+      ],
+      "id": "07dff7f0-23ae-46a7-b0d4-bd67f8b66bfd",
+      "name": "Actualizar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Q0x0cOVAKf6TNI62",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para crear un nuevo contacto",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg",
+          "mode": "list",
+          "cachedResultName": "Personal_Asistent",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}",
+            "Telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telefono', ``, 'string') }}",
+            "Descripcion": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripcion', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion",
+              "displayName": "Descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1760,
+        656
+      ],
+      "id": "ac48e2f0-3ae4-4ef4-a01f-84792b505e4c",
+      "name": "Crear",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para obtener un contacto",
+        "documentId": {
+          "__rl": true,
+          "value": "1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg",
+          "mode": "list",
+          "cachedResultName": "Personal_Asistent",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1904,
+        656
+      ],
+      "id": "1092706a-4e50-4b2f-a4ec-fb3d74868c3f",
+      "name": "Obtener",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta para modificar un contacto existente",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg",
+          "mode": "list",
+          "cachedResultName": "Personal_Asistent",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1M_3DHH-19U96gfJaxIykgBQonMUwKdqLmOH8Hn6Hodg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email__using_to_match_', ``, 'string') }}",
+            "Telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Telefono', ``, 'string') }}",
+            "Descripcion": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripcion', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion",
+              "displayName": "Descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        2064,
+        656
+      ],
+      "id": "2096a0b1-2003-4535-93a7-561488c352f0",
+      "name": "Actualizar Contacto",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Identifica que tipo de mensaje manda el usuario desde telegram",
+        "height": 336,
+        "width": 384,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "1fb7efb7-851f-40fd-8357-7e22dd23189a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Conectar tus creedenciales de calendar",
+        "height": 304,
+        "width": 832,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        624,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "9fbd2645-be75-4e57-97df-edaaa3c6c6b7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Conectar tus creedenciales de google sheets\n",
+        "height": 272,
+        "width": 656,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1616,
+        576
+      ],
+      "typeVersion": 1,
+      "id": "ab848151-472c-4155-9978-34b5b517bb76",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        -160
+      ],
+      "id": "3ee161e3-e3d0-413f-8dc8-03e34553d45c",
+      "name": "Enviar respuesta a telegram",
+      "webhookId": "6c14efed-8a9e-4dc2-96be-b0c550e11731",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Guía Rápida para Configurar el Agente de IA en Telegram\n\n## 1. Crear un Bot en Telegram\n\n1. **Iniciar BotFather**:\n   - Abre Telegram y busca el [BotFather](https://t.me/botfather).\n   - Inicia una conversación.\n\n2. **Crear un Nuevo Bot**:\n   - Usa el comando `/newbot` para crear un nuevo bot y sigue las instrucciones.\n\n3. **Guardar el Token**:\n   - Copia el token de API que te da BotFather. Lo necesitarás más adelante.\n\n## 2. Conectar el Bot a n8n\n\n1. **Acceder a n8n**:\n   - Inicia sesión en tu cuenta de n8n.\n\n2. **Agregar Credenciales**:\n   - Crea una nueva credencial para Telegram.\n   - Pega el token de API que obtuviste de BotFather.\n\n## 3. Configurar Herramientas de Google\n\n1. **Conectar Agentes**:\n   - Asegúrate de que las herramientas de Google que usarás (como Google Calendar y Google Sheets) estén correctamente configuradas en n8n.\n   - Asegurate que cada agente tenga las creedecniales del modelo chatgpt correctamentes configuradas\n\n",
+        "height": 768,
+        "width": 1056,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1056,
+        1296
+      ],
+      "typeVersion": 1,
+      "id": "bc2a1573-88fb-48d9-af95-298c0a4d75ee",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        416,
+        416
+      ],
+      "id": "f1668926-1860-4fa8-8b60-8d4ca9fe92d7",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        192,
+        64
+      ],
+      "id": "89bc8ae1-7b79-4b2c-8d05-8100d5099de3",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        592,
+        160
+      ],
+      "id": "5261fdad-39ac-4fa6-af89-402a001ed156",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        336
+      ],
+      "id": "78438d0f-311c-4d02-b604-79b9f89e32f4",
+      "name": "Google Gemini Chat Model4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "AI Tools",
+        "height": 240,
+        "width": 464,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        864
+      ],
+      "typeVersion": 1,
+      "id": "f4c0543f-b040-4e02-a7da-5d58dbcec7fd",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        384
+      ],
+      "typeVersion": 1,
+      "id": "4b548861-68eb-4da1-8ec0-3ce1ffa1cd87",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model",
+        "height": 192,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        528,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "5f42f1f2-668c-4b0e-b664-ce84d4ca0864",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        176
+      ],
+      "id": "075c4644-a2e8-4178-9719-dfa241a1b52a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "AI Tools",
+        "height": 224,
+        "width": 368,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1744,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "2f9c3b52-ffa6-4705-9c65-08e515559c1c",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Chat Model",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1408,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "83ef45ae-7c1c-4064-97ff-989626b3c731",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Bot de Telegram",
+        "height": 304,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -912,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "7f3b2272-3a77-4be6-8e72-179c4330a582",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Bot de Telegram",
+        "height": 304,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1664,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "c172fa6c-bca5-4a2a-b56b-7fc950297724",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemiini parta transcribir",
+        "height": 192,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        112,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "ce5c7f18-6a0b-4d32-b465-2fa4530503c8",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.contenido }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# Identidad:\nEres un asistente personal encargado de ayudar con tareas de gestión de calendario y contactos.\n\n\n# Objetivo:\n\nDispones de un conjunto de agentes especializados en una labor concreta. Tus objetivos consisten en:\n\n1. Orquestar y redirigir la consulta del usuario al agente  adecuado, asegurando que la consulta que le envías a estos agentes tenga la información suficiente para desarrollar su labor.\n\n2. Generar una respuesta al usuario que sea completa y que resuelva su consulta.\n\n# Herramientas:\n\n* \"Calculator\": utiliza esta herramienta para realizar operaciones matemáticas.\n\n* \"Think\": usa esta herramienta para razonar y analizar que agente utilizar en cada caso y también para mejorar tus respuestas.\n\n\n* \"AgenteCalendario\": agente encargado de gestionar cualquier acción relacionada con calendario o reuniones. Este agente puede comprobar disponibilidad horaria y también agendar una reunión. Envíale la información necesaria para que pueda realizar esta labor correctamente.\nSiempre accede a este agente cuando el usuario pregunte algo relacionado con citas o reuniones.\n\n* \"AgenteContactos\": agente encargado de gestionar cualquier acción relacionada con su base de datos de contactos. Este agente puede obtener contactos, crear nuevos, incluso puede actualizar uno existente. Envíale la información necesaria para que pueda realizar esta labor correctamente.Siempre debes pedir todos los campos necesarios para crear un nuevo contacto.Ejemplo :\"nombre\", \"correo\", \"telefono\", \"descripcion\". Es obligatorio que le pidas todos los campos.\n\n# Reglas:\n\n* Antes de dar cualquier respuesta debes asegurarte de que estas utilizando la herramienta sin importar cuantas veces pregunte el usuario , nunca debes usar la memoria para responder de forma predeterminada.Por ejemplo si pregunta 10 veces por la disponibilidad deberas acceder 10 veces a la herramienta \"AgenteCalendario\".\n\n* Usa un tono profesional y alegre.\n\n* Nunca corrijas a los usuarios, limítate a responder a sus consultas.\n\n* Cuando necesites agendar una reunión con un destinatario y no te hayan facilitado el correo electrónico, utiliza a tu agente \"AgenteContactos\" para obtener el email asociado al nombre del contacto.\n\n* Si no se menciona una duración específica para la cita, asume que es de 1 hora.\n\n* Siempre que el usuario te diga que envies un correo luego de agendar una reunion enviaras el correo.\n\n\n# Recordatorios:\n\n* Cuando la consulta no tenga que ver con tu contenido, limítate a responder que no puedes contestar a eso.\n\n* Utiliza siempre tu MEMORY para mantener el hilo de la conversación. Es muy importante que cuando le pidas datos al usuario para agendar una reunión, consultes primero tu MEMORY para no pedirle datos de forma repetida.\n\n* Si en tu entrada el usuario te dice \"/start\" identificalo como si fuese un hola y actúa de la misma forma.\n\n* Fecha y hora actual: {{ $now }}\n\n####Reglas Criticas : \n-Asegurate de responder con lo que tienes acceso en ese momento no como un mensaje predefinido por ejemplo si no puedes enviar correo no le digas al usuario que puedes ayudarlo con el correo.Ejemplo > **Enviar correos electrónicos**: Puedo ayudarte a redactar y enviar mensajes. estas enviando eso al chat y ya no tienes acceso a ninguna opcion de correo.\n-Nunca por ningun motivo digas que puedes hacer algo que no este a tu alcance.\n-Por ningun motivo agendes cita los fines de semana , bajo ningun concepto.Se lo haces saber al usuario si es necesario.\n-No importa si el usuario ya pregunto una vez por lo mismo siempre debes utilizar las herramientas adecuadas antes de responder."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        928,
+        -96
+      ],
+      "id": "575babe2-4c3e-4c0c-b6da-245ffd6c4273",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "Entrada Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada Agente": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Salida Agente": {
+      "main": [
+        [
+          {
+            "node": "Enviar respuesta a telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgenteCalendario": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AgenteContactos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ObtenerCita": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reuniones": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disponibilidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Contacto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AgenteCalendario",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Entrada Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AgenteContactos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Salida Agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7383b9eb-f8ab-412c-8891-3dcb76c1acda",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "YpGAUloCgsHzFS9b",
+  "tags": []
+}

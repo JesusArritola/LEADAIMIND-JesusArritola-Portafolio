@@ -1,0 +1,729 @@
+{
+  "name": "Campañas_Emails",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Brief de Campaña",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre de la Campaña"
+            },
+            {
+              "fieldLabel": "Objetivo"
+            },
+            {
+              "fieldLabel": "Público Objetivo"
+            },
+            {
+              "fieldLabel": "Tono de Comunicación",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Profesional"
+                  },
+                  {
+                    "option": "Casual"
+                  },
+                  {
+                    "option": "Amigable"
+                  },
+                  {
+                    "option": "Urgente"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Número de Emails",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Información Adicional",
+              "fieldType": "textarea"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "d6fcead8-d895-413c-9026-fbc3aecd80d9",
+      "name": "Recibir Brief de Campaña",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1824,
+        288
+      ],
+      "webhookId": "d2788222-c461-4d06-a3f7-4295fa8a47e5"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y",
+          "mode": "list",
+          "cachedResultName": "Hoja_Contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre_campaña": "={{ $('Recibir Brief de Campaña').item.json['Nombre de la Campaña'] }}",
+            "Objetivo": "={{ $('Recibir Brief de Campaña').item.json.Objetivo }}",
+            "Publico_Objetivo": "={{ $('Recibir Brief de Campaña').item.json['Público Objetivo'] }}",
+            "Tono_comunicacion": "={{ $('Recibir Brief de Campaña').item.json['Tono de Comunicación'] }}",
+            "Cant_Emails": "={{ $('Recibir Brief de Campaña').item.json['Número de Emails'] }}",
+            "Info_Adicional": "={{ $('Recibir Brief de Campaña').item.json['Información Adicional'] }}"
+          },
+          "matchingColumns": [
+            "Nombre Campaña"
+          ],
+          "schema": [
+            {
+              "id": "Nombre_campaña",
+              "displayName": "Nombre_campaña",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Objetivo",
+              "displayName": "Objetivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Publico_Objetivo",
+              "displayName": "Publico_Objetivo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tono_comunicacion",
+              "displayName": "Tono_comunicacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cant_Emails",
+              "displayName": "Cant_Emails",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Info_Adicional",
+              "displayName": "Info_Adicional",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "905183c4-d26a-4526-953c-cb213359d66d",
+      "name": "Guardar Brief Original",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -992,
+        720
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "campaignName",
+              "value": "={{ $('Recibir Brief de Campaña').item.json['Nombre de la Campaña'] }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "createdDate",
+              "value": "={{ $now.format(\"yyyy-MM-dd\") }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "emailCount",
+              "value": "={{ $('Recibir Brief de Campaña').item.json['Número de Emails'] }}",
+              "type": "number"
+            },
+            {
+              "id": "795ef2e9-c268-4d22-938b-04564b279097",
+              "name": "Estado",
+              "value": "Pendiente",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "49087a48-6ed4-4a2c-bc9a-819e52d37df8",
+      "name": "Organizar Etiquetas",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "=Nueva campaña de emails creada: {{ $json.campaignName }}",
+        "message": "=<h2>Nueva Campaña de Emails Generada</h2>\n<p><strong>Campaña:</strong> {{ $json.campaignName }}</p>\n<p><strong>Estado:</strong>{{ $json.Estado }} </p>\n<p><strong>Número de emails:</strong> {{ $json.emailCount }}</p>\n<p><strong>Fecha de creación:</strong> {{ $json.createdDate }}</p>\n<p><strong>Etiquetas:</strong> {{ $json.tags.join(\", \") }}</p>\n<p>Los borradores han sido creados en el CRM y están listos para revisión.</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        384,
+        -16
+      ],
+      "id": "e761d498-a1e9-48f1-90de-5e6a0ff3074b",
+      "name": "Send a message",
+      "webhookId": "63449bfd-74d3-4bef-98cf-e1ce53de7da3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y",
+          "mode": "list",
+          "cachedResultName": "Hoja_Contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2022748466,
+          "mode": "list",
+          "cachedResultName": "hoja2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y/edit#gid=2022748466"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Borrador CRM": "={{ $('Email_Marketing').item.json.output[0].content[0].text }}"
+          },
+          "matchingColumns": [
+            "Borrador CRM"
+          ],
+          "schema": [
+            {
+              "id": "Borrador CRM",
+              "displayName": "Borrador CRM",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -176,
+        240
+      ],
+      "id": "b466d3d6-0c06-4a42-98ae-ce2585b87b00",
+      "name": "CREAR_BORRADORES_CRM",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y",
+          "mode": "list",
+          "cachedResultName": "Hoja_Contactos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1361734298,
+          "mode": "list",
+          "cachedResultName": "hoja3",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GPjmFl_AnNV6JLiqhEg0-T299pnkcAcuy8W2ewUHK1Y/edit#gid=1361734298"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre_Campaña": "={{ $json.campaignName }}",
+            "Fecha": "={{ $json.createdDate }}",
+            "Cant_Email": "={{ $json.emailCount }}",
+            "Estado": "={{ $json.Estado }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre_Campaña",
+              "displayName": "Nombre_Campaña",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cant_Email",
+              "displayName": "Cant_Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        800,
+        320
+      ],
+      "id": "7573228e-f06b-4f05-8d84-2f1ec32f1815",
+      "name": "GUARDAR_CREAR_TAREA",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Formulario para recibir brief principal tambien se puede usar un Webhook",
+        "height": 272,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1904,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "6e4f3818-8538-41be-ae30-f56ebbabb501",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "1. Analizar el brief de la campaña proporcionado.\n2. Crear un esquema estructurado de campaña .",
+        "height": 256,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "55ca07e9-5b4e-46b6-8138-15c8091c4d51",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "1. Usar el esquema de campaña proporcionado.\n2. Generar borradores completos de emails para cada email en la secuencia.",
+        "height": 256,
+        "width": 336,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -688,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "e545e263-c33d-4014-987c-8db023e974d8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con Inteligencia Artificial",
+        "height": 560,
+        "width": 672,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "85066ef0-ba53-4d27-b3d1-c1481526e0db",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheet",
+        "height": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "a3eabf54-0898-4cdf-b7ba-91738cfe84d1",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 224,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -672,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "63a39cc7-cfde-491c-9dcf-2603583dabbe",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheet",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1056,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "14b312eb-3357-4bad-a44f-efa688a11405",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheet",
+        "height": 224,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "a27692f0-a881-4147-a23f-4490b786d431",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 240,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        304,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "469b4593-f5c1-4224-ba7e-fe1f61238324",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Agente Campañas Emails : \nDescripcion : \nSistema automatizado para generar campañas mediante emails y captar clientes.\n\nFuncionalidad : \nGenerar campañas emails con facilidad mediante un formulario.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que crea la campaña con IA.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 384,
+        "width": 512,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1712,
+        976
+      ],
+      "typeVersion": 1,
+      "id": "65e276fc-f38b-4595-b48e-b5deb6f1abde",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas utilizadas : \n-Form Trigger : Usado para ingresar los datos referentes a la campaña deseada.\n-Set : Usado para obtener los datos del formulario.\n-Gemini u Openai : Usado para generar la imagen.\n-Google Sheets : Usado para guardar toda la informacion sobre las campañas.\n-Gmail : Usado para enviar el correo con la campaña.",
+        "height": 304,
+        "width": 480,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2240,
+        976
+      ],
+      "typeVersion": 1,
+      "id": "d2a38a97-a15d-4826-a2be-1bbc6a568eea",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai",
+        "height": 224,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1008,
+        176
+      ],
+      "typeVersion": 1,
+      "id": "4d21c347-4823-495e-803f-4ac6d88dc40a",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Campaña: {{ $json['Nombre de la Campaña'] }}\nObjetivo:{{ $json.Objetivo }}\nPúblico: {{ $json['Público Objetivo'] }}\nTono: {{ $json['Tono de Comunicación'] }}\nNúmero de emails: {{ $json['Número de Emails'] }}\nInfo adicional: {{ $json['Información Adicional'] }}"
+            },
+            {
+              "role": "system",
+              "content": "=Eres un estratega de marketing experto en campañas de email.\n\nTu tarea es:\n1. Analizar el brief de la campaña proporcionado\n2. Crear un esquema estructurado de campaña que incluya:\n   - Estrategia general\n   - Secuencia de emails (basado en el número solicitado)\n   - Asuntos sugeridos para cada email\n   - CTAs (llamadas a la acción) recomendadas\n   - Timing sugerido entre emails\n3. Devolver el esquema en formato JSON con la siguiente estructura:\n{\n  \"estrategia\": \"descripción de la estrategia\",\n  \"emails\": [\n    {\n      \"numero\": 1,\n      \"asunto\": \"asunto sugerido\",\n      \"objetivo\": \"objetivo del email\",\n      \"cta\": \"llamada a la acción\",\n      \"timing\": \"cuándo enviar\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -992,
+        240
+      ],
+      "id": "5608128a-572f-401a-a1ed-ef4a6bfbca5c",
+      "name": "Estrategia_Email1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Esquema de campaña: {{ $json.content.parts[0].text }}\n\nBrief original:\nCampaña: {{ $('Recibir Brief de Campaña').item.json['Nombre de la Campaña'] }}\nObjetivo: {{ $('Recibir Brief de Campaña').item.json.Objetivo }}\nPúblico: {{ $('Recibir Brief de Campaña').item.json['Público Objetivo'] }}\nTono: {{ $('Recibir Brief de Campaña').item.json['Tono de Comunicación'] }}"
+            },
+            {
+              "role": "system",
+              "content": "=Eres un copywriter experto en email marketing.\n\nTu tarea es:\n1. Usar el esquema de campaña proporcionado\n2. Generar borradores completos de emails para cada email en la secuencia\n3. Cada email debe incluir:\n   - Asunto atractivo\n   - Preheader\n   - Cuerpo del email en HTML\n   - CTA clara y persuasiva\n4. Mantener el tono especificado en el brief\n5. Devolver los borradores en formato JSON:\n{\n  \"emails\": [\n    {\n      \"numero\": 1,\n      \"asunto\": \"asunto del email\",\n      \"preheader\": \"texto preheader\",\n      \"cuerpoHtml\": \"<html>...</html>\",\n      \"cta\": \"texto del CTA\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -672,
+        240
+      ],
+      "id": "7e3065fd-291c-48fb-bbc5-a5e236c9c058",
+      "name": "Email_Marketing",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Recibir Brief de Campaña": {
+      "main": [
+        [
+          {
+            "node": "Guardar Brief Original",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Estrategia_Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organizar Etiquetas": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GUARDAR_CREAR_TAREA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CREAR_BORRADORES_CRM": {
+      "main": [
+        [
+          {
+            "node": "Organizar Etiquetas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estrategia_Email1": {
+      "main": [
+        [
+          {
+            "node": "Email_Marketing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email_Marketing": {
+      "main": [
+        [
+          {
+            "node": "CREAR_BORRADORES_CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "09074518-aa5a-4a7b-ad34-6bac569b16dc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "VEZYDuDPFrk2p8ha",
+  "tags": []
+}

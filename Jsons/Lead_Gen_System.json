@@ -1,0 +1,1106 @@
+{
+  "name": "Lead_Gen_System",
+  "nodes": [
+    {
+      "parameters": {
+        "name": "leadScraping",
+        "description": "=Llama a esta herramienta para extraer leads una vez que tengas suficientes detalles sobre la consulta de búsqueda.\n\nTu entrada debe estar en formato JSON como este y tiene que devolver todos los valores resultantes de la búsqueda:\n\n[\n  {\n    \"titulo\": [\n      \"LOCATION1+HERE\",\n      \"LOCATION2+HERE\",\n      ...\n    ],\n    \"perfiles\": [\n      \"BUSINESS1+HERE\",\n      \"BUSINESS2+HERE\",\n      ...\n    ]\n   \n  }\n]",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $workflow.id }}",
+          "mode": "id",
+          "cachedResultUrl": "/workflow/=%7B%7B%20$workflow.id%20%7D%7D"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "0d14141b-ec42-40c8-8130-0610f750fa54",
+      "name": "leadScraping",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        6016,
+        5968
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=Descripción general\nEres Sam Ovens, un agente de generación de leads, responsable de extraer y investigar leads.\n\n***Herramientas****\nleadScraping:\nUsa esta herramienta para extraer leads en una hoja de Google. Solo llama a esta herramienta cuando tengas suficiente información para completar la consulta JSON deseada.\nDevuelve a traves de telegram el total de leads dentro de la hoja de calculo extraidos en cada escaneo con sus datos.\n\nGoogle Sheet Tool:\nUtiliza esta herramienta cuando el usuario solicite los perfiles o scrapes guardados en el hoja de google sheet.\n\nReglas:\nHaz preguntas de aclaración si no estás seguro de algo.\n\nHaz preguntas para reunir suficiente información que satisfaga la consulta para cada una de las herramientas.\n\nDebes presentarte como \"Sam Ovens\" y preguntar al usuario qué leads quiere extraer hoy.\n\nSiempre reemplaza los espacios con '+' en tus consultas de búsqueda. Por ejemplo, en lugar de \"los angeles united states\", tu consulta debe ser \"los+angeles+united+states\".\n\nSiempre necesitas una URL de LinkedIn para investigar un lead.\n\nInvestiga a las personas que te pidan en la entrada.\n\nSiéntete libre de ser ligero y divertido.\n\nAsegúrate de llamar siempre a las herramientas con el formato JSON correcto, pero no envuelvas la consulta en json.\n\nAsegurate de devolver todos los resultantes de la busqueda en la herramienta ¨LeadScraping¨ a traves del chat de telegram.\n\nEjemplo\nEntrada: \"Hola\"\n\nSalida: \"Sam Ovens aquí, el dios del outreach B2B. ¿Qué leads puedo ayudarte a extraer hoy? Solo dime las ubicaciones, negocios y cargos y yo me encargo del resto!\"\n\nEntrada: \"Hagamos \\n Ubicaciones: \\n - Chicago Estados Unidos \\n - Sídney Australia \\n\\n Negocios: \\n - Planificadores financieros \\n\"\n\nSalida: \"Genial. Creo que olvidaste los cargos. ¿Qué cargos debería buscar?\"\n\nEntrada: \"Solo CEOs por favor\"\n\nLlamada a la herramienta leadScrape con la consulta:\n\n[\n{\n\"JobTitlelocation\": [\n\"chicago+estados+unidos\",\n\"sidney+australia\"\n],\n\"JobTitle\": [\n\"planificador+financiero\"\n]\n}\n]\n\n-Entrada de la herramienta: \"¡25 nuevos contactos han sido añadidos a la hoja de Google!\"\n\n-Salida: \"¡Listo! He añadido 25 nuevos contactos a la hoja de Google. Avísame si necesitas algo más!\""
+        }
+      },
+      "id": "4f57511a-4ad5-4e96-a9b6-3b1b72065ed1",
+      "name": "Lead Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        5856,
+        5664
+      ],
+      "typeVersion": 1.7,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "id": "95c83936-80a6-4208-bb5c-a24ca18e3953",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        5664,
+        5984
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "id": "dc4ea506-bc0a-4e2f-89cf-06193e8529c6",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        5888,
+        5968
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "1010d1ef-dea3-4a57-b6dc-8463ce4d8b03",
+      "name": "Download File",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        5072,
+        5616
+      ],
+      "webhookId": "3e98f8c1-55f9-4643-9740-b8a7db8aed09",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "f73829dd-545f-4079-9c50-04f46c285320",
+      "name": "Transcribe",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        5360,
+        5632
+      ],
+      "typeVersion": 1.6,
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fe7ecc99-e1e8-4a5e-bdd6-6fce9757b234",
+              "name": "text",
+              "type": "string",
+              "value": "={{ $json.message.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1e3d4760-d425-4404-909c-800059ed9302",
+      "name": "Text",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        5296,
+        5872
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "8c844924-b2ed-48b0-935c-c66a8fd0c778",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc8e841c-ac20-483c-a2e7-115cde850e04",
+      "name": "Voice or Text",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        4848,
+        5712
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4e35b920-7dc4-4e26-b1ef-e276867a1ce5",
+      "name": "Response",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        6352,
+        5520
+      ],
+      "webhookId": "16a2fb0a-5e8d-4585-88e7-6d55298b4af7",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.error }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "648297a5-7a4a-4f0d-b436-435e145f22b3",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        6352,
+        5712
+      ],
+      "webhookId": "f90cf8b1-6cd6-43e4-857e-1916585ec2e2",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "3af5daab-dd7f-4f17-a575-97a02c32acf1",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        4624,
+        5616
+      ],
+      "webhookId": "e3dd6506-5997-4024-ba33-ff7c1ad12815",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "MENSAJE BOT DE TELEGRAM.",
+        "height": 664,
+        "width": 1008,
+        "color": 5
+      },
+      "id": "f7a61d9b-3b27-48fe-8326-fd3881c6c491",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4528,
+        5456
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "ESCRAPEO O REVISION DE LEADS DEL GOOGLE SHEETS.",
+        "height": 660,
+        "width": 960,
+        "color": 6
+      },
+      "id": "c402de2d-339b-4ca1-ab30-6183effdb7f1",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5584,
+        5456
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Ultimate Lead Gen Agent Telegram\nDescripción General\nUsa tu voz o texto para dar órdenes a un agente de IA basado en Telegram que extrae leads o genera informes de investigación detallados—al instante.\n\nEste flujo de trabajo convierte tu bot de Telegram en una máquina de prospección completa. Solo dile qué tipo de leads necesitas y usará Apollo para encontrarlos y guardarlos en una hoja de cálculo. O comparte un perfil de LinkedIn y generará un dossier de investigación personalizado con información como cargo, resumen de la empresa, análisis de la industria y más. También maneja mensajes de voz—simplemente habla tu solicitud y recibe los resultados como por arte de magia.\n\n¿Para quién es?\nEmailers en frío y marketers de crecimiento\n\nFundadores independientes que hacen outbound\n\nSDRs que realizan prospección diaria\n\nAgencias que construyen listas de leads de alta calidad o investigación personalizada para clientes\n\nCómo funciona\nSe activa con un mensaje (texto o voz) en Telegram\n\nSi es voz, se transcribe usando OpenAI Whisper\n\nUsa un agente de IA para interpretar la intención: extraer leads o investigar a una persona\n\nPara extracción de leads:\n\nRecopila criterios (ejemplo: ubicación, cargo) vía Telegram\n\nLlama a la API de Apollo para devolver leads frescos\n\nGuarda los leads en Google Sheets\n\nPara informes de investigación:\n\nToma un enlace de perfil de LinkedIn\n\nUsa IA y herramientas de datos de leads para crear un informe profesional de 1 página\n\nLo envía de vuelta al usuario por correo electrónico\n\nEjemplos de resultados\nExtracción de leads: Rellena una hoja de cálculo con nombres, cargos, enlaces de LinkedIn, información de la empresa, correos electrónicos y más\n\nInforme de investigación: Un breve estilo PDF con resumen de la persona, empresa y datos clave\n\nCómo configurarlo\nConecta tu bot de Telegram a n8n\n\nAgrega tus credenciales de OpenAI (para Whisper + agente de Chat)\n\nConecta tu clave API de Apollo o herramienta de scraping\n\nReemplaza la hoja de cálculo de ejemplo con la tuya\n\nPersonaliza los prompts para tono o profundidad de datos\n\n(Opcional) Agrega generación de PDF o sincronización con CRM\n\nRequisitos\nToken de Bot de Telegram\n\nClave API de OpenAI\n\nCredenciales de Apollo (u otra API de scraping)\n\nURLs de LinkedIn para la funcionalidad de investigación\n\nCómo personalizar\nReemplaza Apollo con Clay, People Data Labs u otra herramienta de scraping\n\nAgrega un paso de integración con CRM (ejemplo: Airtable, HubSpot, Notion)\n\nAgrega programación para extraer leads automáticamente cada día\n\nReformatea el informe de investigación como PDF descargable\n\nCambia el tono o rol del agente (ejemplo: “Asistente de Outreach”, “Scout de Inversores”, etc.)",
+        "height": 1288,
+        "width": 780,
+        "color": 5
+      },
+      "id": "19dc8b3e-1957-4468-a6f1-348669cc704d",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2896,
+        5504
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4832,
+        5456
+      ],
+      "id": "7188f827-56d5-49b5-bb93-7253bb7f038f",
+      "name": "Send a chat action",
+      "webhookId": "6718d5d6-8c2f-492e-96bd-a8bf8a5c0e4f",
+      "credentials": {
+        "telegramApi": {
+          "id": "lX9giRa3VXXHjNAM",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Trigger cuando es llamado por un SubWF",
+        "height": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4512,
+        6704
+      ],
+      "typeVersion": 1,
+      "id": "114b26fb-3441-4282-95c4-1eab7305d4e3",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        4544,
+        6752
+      ],
+      "id": "127ce94b-d79e-4bae-8370-0460fabd4247",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Esta es la informacion brindada por el usuario :\n{{ $json.query }}",
+        "options": {
+          "systemMessage": "=Eres un agente especializado en encontrar perfiles en linkedin, debes identificar estos parametros del mensaje que manda el usuario: joblitle y location\n\nTienes que ser capaz de extraer el JobTitle y location correctamente introducido por el usuario.\n\nDebes cambiar la query JobTitle-JobTitlelocation-location por los parámetros  que te da el usuario.\n\nEjemplo: JobTitle-editores de video location-peru\n\nAsegurate de devolver todos los valores de las personas encontradas por el escrapeo."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4864,
+        6752
+      ],
+      "id": "a6252883-0bb1-414b-aa61-c65d5be9e3aa",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~google-search-scraper/run-sync-get-dataset-items",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "=apify_api_bqofhC6DRvjD2mcSDsdzPRrAfuyz2G3KBXzO"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"queries\": \"site:linkedin.com/in \\\"{{ $json.jobTitle }}\\\" {{ $json.location }}\",\n  \"resultsPerPage\": 20,\n  \"maxPagesPerQuery\": 1,\n  \"languageCode\": \"es\",\n  \"countryCode\": \"pe\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        5488,
+        6752
+      ],
+      "id": "5b23322c-9d3d-4f61-b202-147d64a8411d",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the output from the AI Agent\nconst output = $json.output;\n\n// Initialize variables\nlet jobTitle = null;\nlet location = null;\n\n// Try to parse the output as JSON first\ntry {\n  // Remove any markdown code blocks if present\n  let cleanOutput = output.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  \n  // Parse the JSON\n  const parsed = JSON.parse(cleanOutput);\n  \n  // Handle array format\n  if (Array.isArray(parsed) && parsed.length > 0) {\n    const data = parsed[0];\n    \n    // Extract JobTitle (handle both single value and array)\n    if (data.JobTitle) {\n      jobTitle = Array.isArray(data.JobTitle) ? data.JobTitle[0] : data.JobTitle;\n      // Remove + signs and clean up\n      jobTitle = jobTitle.replace(/\\+/g, ' ').trim();\n    }\n    \n    // Extract location from JobTitlelocation (handle both single value and array)\n    if (data.JobTitlelocation) {\n      location = Array.isArray(data.JobTitlelocation) ? data.JobTitlelocation[0] : data.JobTitlelocation;\n      // Remove + signs and clean up\n      location = location.replace(/\\+/g, ' ').trim();\n    }\n  }\n} catch (e) {\n  // If JSON parsing fails, try the original regex pattern\n  const match = output.match(/Jobtitle-(.*?)location-(.*)/i);\n  \n  if (match) {\n    jobTitle = match[1].trim();\n    location = match[2].trim();\n  }\n}\n\nreturn {\n  jobTitle,\n  location\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5232,
+        6752
+      ],
+      "id": "cbafddf2-c0aa-46b7-b608-173f6173efdc",
+      "name": "Limpiar"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M",
+          "mode": "list",
+          "cachedResultName": "Scrape_Linkedin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 433867568,
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M/edit#gid=433867568"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Titulo": "={{ $json.title }}",
+            "Perfiles": "={{ $json.url }}"
+          },
+          "matchingColumns": [
+            "Link_Perfiles"
+          ],
+          "schema": [
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Perfiles",
+              "displayName": "Perfiles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        6000,
+        6752
+      ],
+      "id": "272c63cb-8ddb-4832-802d-c1ab3226d665",
+      "name": "Guardar_Links",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst jobTitle = ($('Limpiar').first().json.jobTitle || '').toLowerCase();\nconst location = ($('Limpiar').first().json.location || '').toLowerCase();\n\n// Extraer los resultados orgánicos del HTTP Request\nconst organicResults = items[0].json.organicResults || [];\n\n// Filtrar solo perfiles de LinkedIn que coincidan con el título y ubicación\nconst filteredResults = organicResults.filter(result => {\n  const hasLinkedInUrl = result.url && result.url.includes('linkedin.com/in/');\n  \n  if (!hasLinkedInUrl) return false;\n  \n  // Verificar si el perfil tiene información personal\n  const personalInfo = result.personalInfo || {};\n  const profileJobTitle = (personalInfo.jobTitle || '').toLowerCase();\n  const profileLocation = (personalInfo.location || '').toLowerCase();\n  \n  // Verificar coincidencia de título y ubicación\n  const titleMatch = profileJobTitle.includes(jobTitle) || jobTitle.includes(profileJobTitle);\n  const locationMatch = profileLocation.includes(location) || location.includes(profileLocation);\n  \n  return titleMatch && locationMatch;\n});\n\n// Retornar solo las URLs de los perfiles filtrados\nreturn filteredResults.map(result => ({\n  url: result.url,\n  title: result.title,\n  jobTitle: result.personalInfo?.jobTitle || '',\n  location: result.personalInfo?.location || '',\n  company: result.personalInfo?.companyName || ''\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5760,
+        6752
+      ],
+      "id": "4b9e0788-cf9c-4fba-bf15-00bb55d16b94",
+      "name": "filtrar_links"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4816,
+        6960
+      ],
+      "typeVersion": 1,
+      "id": "9e9f9ba3-aa63-4d69-85a5-2bca3f75c54c",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Parseo y Limpieza de Datos",
+        "height": 224,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5152,
+        6704
+      ],
+      "typeVersion": 1,
+      "id": "4fb4734c-3021-4004-91b4-b78adddaa5c9",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        4880,
+        7008
+      ],
+      "id": "3991b8eb-6e3a-43e9-8cf2-cf7835ca09ec",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Filtrar linkedin",
+        "height": 224,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5680,
+        6688
+      ],
+      "typeVersion": 1,
+      "id": "122a0620-a85a-4944-84bf-d808acb476ae",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5920,
+        6704
+      ],
+      "typeVersion": 1,
+      "id": "1a5247d0-eaa9-4fd9-82ef-efca8e6a4b18",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "content": "LEADSCRAPE  CON GOOGLE SEARCH",
+        "height": 752,
+        "width": 1936,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4512,
+        6368
+      ],
+      "typeVersion": 1,
+      "id": "f3740070-f0b9-4910-9efb-bf85088ef385",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Utiliza esta herramienta para ver los scrapes disponbles en la hoja de google sheet",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M",
+          "mode": "list",
+          "cachedResultName": "Scrape_Linkedin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 433867568,
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M/edit#gid=433867568"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        6352,
+        5968
+      ],
+      "id": "4748e679-bbcc-4164-ae1e-a84c2787cfa6",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "mensaje",
+              "value": "=Se han encontrado y guardado {{ $input.all().length }} perfiles de LinkedIn:\n\n\n{{ $input.all().map(item => item.json.Titulo).join('\\n') }}\n{{ $input.all().map(item => item.json.Perfiles).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9a6fe5a7-f9cb-4093-9f3d-2c94d1426e6c",
+      "name": "Resumen de Resultados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6256,
+        6752
+      ]
+    },
+    {
+      "parameters": {
+        "content": "EXTRACCION DE LOS DATOS DEL USUARIO CON IA",
+        "height": 640,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4816,
+        6480
+      ],
+      "typeVersion": 1,
+      "id": "31914ac4-742b-4c6a-832c-0c4b2363c65e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "ESCRAPEO A TRAVES DE APIFY",
+        "height": 464,
+        "width": 256,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5408,
+        6592
+      ],
+      "typeVersion": 1,
+      "id": "f46ca23d-9753-432a-915f-5062c2756faa",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "SETEAR VALORES FINALES DEL SCRAPE PARA DEVOLVER",
+        "height": 224,
+        "width": 256,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6176,
+        6688
+      ],
+      "typeVersion": 1,
+      "id": "925aa7f7-9599-40eb-a08a-35d2477c5a20",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 176,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4544,
+        5584
+      ],
+      "typeVersion": 1,
+      "id": "bf21043a-e916-45ac-b9c4-a6514e69482c",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 176,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4992,
+        5584
+      ],
+      "typeVersion": 1,
+      "id": "83ba10fb-e207-4aac-a3d7-0033ccc84531",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Telegram",
+        "height": 416,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6272,
+        5456
+      ],
+      "typeVersion": 1,
+      "id": "c19865a5-d2c8-4474-ab38-5660dab62184",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 224,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6272,
+        5888
+      ],
+      "typeVersion": 1,
+      "id": "64b549a9-8d7e-4d85-b924-2da88b6f0305",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "content": "AI Tools",
+        "height": 256,
+        "width": 528,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5584,
+        5856
+      ],
+      "typeVersion": 1,
+      "id": "dd98cb6b-7d97-4e88-a441-6023a849c6ef",
+      "name": "Sticky Note18"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5584,
+        5920
+      ],
+      "typeVersion": 1,
+      "id": "774fa39a-873f-4577-b375-49f726f09dfc",
+      "name": "Sticky Note19"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Openai.",
+        "height": 176,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5280,
+        5600
+      ],
+      "typeVersion": 1,
+      "id": "1e3c4c17-e954-47b8-b646-7517628eaf38",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Utilizadas : \n-Telegram : Usado para interactuar con la IA.\n-Switch : Usado para decidir entre texto o audio.\n-Transcribe Recording : Usado para transcribir el audio recibido.\n-Set : Usado para guardar datos.\n-Ai Agent : Usado para procesar la informacion.\nOpenai Chat Model : Usado como chat model del AI Agent.\n-Simple Memory : Usado para tener contexto del chat .\n-Call another n8n Workflow : Usado para llamar un SubWF de Escrapeo.\n-Gogle Sheets : Usado para guardar los leads escrapeados.\n-When Executed by Another WF : Usado para comezar el otro flujo al ser llamado para la tool del AI Agent.\n-Code : Usado para parseo , limpieza y filtrado de los links de la informacion recibida.\n-Http Request : Usado para realizar el escrapeo ",
+        "height": 320,
+        "width": 672,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3680,
+        5504
+      ],
+      "typeVersion": 1,
+      "id": "4ec6bdb9-60e8-4b7f-8f95-244a234c6bfd",
+      "name": "Sticky Note20"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "[\n {\n \"titulo\": [\"peru\"],\n \"perfiles\": [\"editor+de+video\"]\n }\n ]"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Text": {
+      "main": [
+        [
+          {
+            "node": "Lead Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Agent": {
+      "main": [
+        [
+          {
+            "node": "Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe": {
+      "main": [
+        [
+          {
+            "node": "Lead Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "leadScraping": {
+      "ai_tool": [
+        [
+          {
+            "node": "Lead Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Lead Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice or Text": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Voice or Text",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a chat action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Lead Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Limpiar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "filtrar_links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtrar_links": {
+      "main": [
+        [
+          {
+            "node": "Guardar_Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Lead Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar_Links": {
+      "main": [
+        [
+          {
+            "node": "Resumen de Resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f907a604-febe-45ae-b5c6-a65c1a7ffc7c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "cqnHI6ZCt2yV8Rkb",
+  "tags": []
+}

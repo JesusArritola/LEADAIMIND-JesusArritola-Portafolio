@@ -1,0 +1,444 @@
+{
+  "name": "Linkedin_Scrape",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        3984,
+        1152
+      ],
+      "id": "a7abb97c-ad7e-4a60-a8a4-e5d90c31a3fd",
+      "name": "When chat message received",
+      "webhookId": "08dd918f-9663-413d-8b59-235401b24d16"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Esta es la informacion brindada por el usuario :\n{{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=Eres un agente especializado en encontrar perfiles en linkedin, debes identificar estos parametros del mensaje que manda el usuario: joblitle y location\n\nTienes que ser capaz de extraer el jobTittle y location correctamente introducido por el usuario.\n\nDebes cambiar la query JobTitle-JobTitlelocation-location por los parámetros  que te da el usuario.\n\nEjemplo: Jobtitle-editores de videolocation-peru"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        4272,
+        1008
+      ],
+      "id": "aba85621-d420-468c-8abd-8c693c7d27be",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        4368,
+        1248
+      ],
+      "id": "8d140540-edbf-4e6a-98c2-8fce79d5af7e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Nodo inicial ",
+        "height": 192,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3840,
+        1120
+      ],
+      "typeVersion": 1,
+      "id": "7ef705ed-4f36-4f32-8111-6abfdfd91983",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA.\nSeleccion de parametros",
+        "height": 656,
+        "width": 384,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4208,
+        896
+      ],
+      "typeVersion": 1,
+      "id": "66560c80-0d3a-474c-93c7-3cbd9d312fce",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model",
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4208,
+        1392
+      ],
+      "typeVersion": 1,
+      "id": "a81222a1-0548-4740-9d77-51a05289b197",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Parseo y Limpieza de Datos",
+        "height": 224,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4640,
+        1088
+      ],
+      "typeVersion": 1,
+      "id": "82423bd2-64d0-4f7d-8dca-1034516f7f01",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Peticion a traves de Apify para escrapeo en Google Search",
+        "height": 544,
+        "width": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4976,
+        960
+      ],
+      "typeVersion": 1,
+      "id": "057d57d3-9049-4c5c-ba26-d1080fd6ba2c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~google-search-scraper/run-sync-get-dataset-items",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "=apify_api_bqofhC6DRvjD2mcSDsdzPRrAfuyz2G3KBXzO"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"queries\": \"site:linkedin.com/in \\\"{{ $json.jobTitle }}\\\" {{ $json.location }}\",\n  \"resultsPerPage\": 20,\n  \"maxPagesPerQuery\": 1,\n  \"languageCode\": \"es\",\n  \"countryCode\": \"pe\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        5056,
+        1152
+      ],
+      "id": "ab980c9d-a7b2-4cd4-a212-fdad3b4d67c3",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        4272,
+        1424
+      ],
+      "id": "5542c991-edec-4dcb-99bf-9a0cb9e5bb8b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $json.output; // o la propiedad donde venga el texto del agente\n\nconst match = output.match(/Jobtitle-(.*?)location-(.*)/i);\n\nlet jobTitle = null;\nlet location = null;\n\nif (match) {\n  jobTitle = match[1].trim();\n  location = match[2].trim();\n}\n\nreturn {\n  jobTitle,\n  location,\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4704,
+        1152
+      ],
+      "id": "6629ac63-38ef-4ca4-b2f7-1b395f45d958",
+      "name": "Limpiar"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M",
+          "mode": "list",
+          "cachedResultName": "Scrape_Linkedin",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 433867568,
+          "mode": "list",
+          "cachedResultName": "Perfiles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Q8uM45otWd9WYTtjP8-hLgwjeo5dLYPlfb6Ujml947M/edit#gid=433867568"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Titulo": "={{ $json.title }}",
+            "Perfiles": "={{ $json.url }}"
+          },
+          "matchingColumns": [
+            "Link_Perfiles"
+          ],
+          "schema": [
+            {
+              "id": "Titulo",
+              "displayName": "Titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Perfiles",
+              "displayName": "Perfiles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        5664,
+        1152
+      ],
+      "id": "36d0673d-c51f-460f-ad45-6caccf16a0f9",
+      "name": "Guardar_Links",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Filtrar linkedin",
+        "height": 224,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5280,
+        1088
+      ],
+      "typeVersion": 1,
+      "id": "3196f5e3-d55c-4a80-8f37-9ab0ff0072d9",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 208,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5584,
+        1104
+      ],
+      "typeVersion": 1,
+      "id": "5534de9d-88f0-407a-bd3b-bc62fea70dae",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Linkedin_Scrape : \nDescripcion : \nAutomatizacion para realizar scrape a perfiles de linkedin.\n\nFuncionalidad : \nGenerar leads a traves de linkedin de forma sencilla.\n\nVentajas : \n-Ahorro de tiempo : Permite ahorrar tiempo ya que genera una x cantidad de leads con solo un clic.\n-Facil Implementacion : Permite adapatarla e implementarla de multiples formas.\n-Escalabilidad : Es un sistema completamente escalable a la necesidad.\n-Accesibilidad : Accesible desde cualquier lugar .",
+        "height": 336,
+        "width": 704,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4032,
+        1648
+      ],
+      "typeVersion": 1,
+      "id": "f4b89614-ce9d-4459-bb2d-87b1d1ce308c",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas :\n-Chat trigger : Usado para iniciar el flujo.\n-Ai Agent : Usado para procesar toda la informacion.\n-Simple Memory : Usado para tener contexto y guardar en memoria la conversacion.\n-Code : Usado para parsear, limpiar y filtrar los datos.\n-Http Request : Usado para escrapear a traves de Google Search.\n-Google Sheets : Usado para guardar los perfiles de las personas.",
+        "height": 224,
+        "width": 752,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3232,
+        1648
+      ],
+      "typeVersion": 1,
+      "id": "4c244727-f566-4db0-bafc-569538925109",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst jobTitle = $('Limpiar').first().json.jobTitle.toLowerCase();\nconst location = $('Limpiar').first().json.location.toLowerCase();\n\n// Extraer los resultados orgánicos del HTTP Request\nconst organicResults = items[0].json.organicResults || [];\n\n// Filtrar solo perfiles de LinkedIn que coincidan con el título y ubicación\nconst filteredResults = organicResults.filter(result => {\n  const hasLinkedInUrl = result.url && result.url.includes('linkedin.com/in/');\n  \n  if (!hasLinkedInUrl) return false;\n  \n  // Verificar si el perfil tiene información personal\n  const personalInfo = result.personalInfo || {};\n  const profileJobTitle = (personalInfo.jobTitle || '').toLowerCase();\n  const profileLocation = (personalInfo.location || '').toLowerCase();\n  \n  // Verificar coincidencia de título y ubicación\n  const titleMatch = profileJobTitle.includes(jobTitle) || jobTitle.includes(profileJobTitle);\n  const locationMatch = profileLocation.includes(location) || location.includes(profileLocation);\n  \n  return titleMatch && locationMatch;\n});\n\n// Retornar solo las URLs de los perfiles filtrados\nreturn filteredResults.map(result => ({\n  url: result.url,\n  title: result.title,\n  jobTitle: result.personalInfo?.jobTitle || '',\n  location: result.personalInfo?.location || '',\n  company: result.personalInfo?.companyName || ''\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5360,
+        1152
+      ],
+      "id": "8e5e34ce-d39d-4467-ae27-a0a3c23e4789",
+      "name": "filtrar_links"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Limpiar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "filtrar_links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar_Links": {
+      "main": [
+        []
+      ]
+    },
+    "filtrar_links": {
+      "main": [
+        [
+          {
+            "node": "Guardar_Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "42ff045c-2776-4318-b44f-d7acb7784159",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "hIvgBPBib09XDVZk",
+  "tags": []
+}

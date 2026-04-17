@@ -1,0 +1,892 @@
+{
+  "name": "Agente_Creador_de_Freebies",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Bienvenido a Nuestra Comunidad",
+        "formDescription": "Completa el Formulario y recibe un mini Curso de Regalo !!!!!",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "nombre",
+              "placeholder": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo",
+              "fieldType": "email",
+              "placeholder": "ejemplo@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Numero de Lecciones",
+              "fieldType": "number",
+              "placeholder": "1.2.3.4.5.etc",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nivel del curso",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Basico"
+                  },
+                  {
+                    "option": "Intermedio"
+                  },
+                  {
+                    "option": "Avanzado"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Objetivo del curso",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Educar"
+                  },
+                  {
+                    "option": "Preparar venta"
+                  },
+                  {
+                    "option": "Vender"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Call to Action (CTA)",
+              "fieldType": "textarea",
+              "placeholder": "Escribe un CTA deseado ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Idioma",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Ingles"
+                  },
+                  {
+                    "option": "Español"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Tema del Mini Curso",
+              "fieldType": "textarea",
+              "placeholder": "Escribe el tema deseado para el curso",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -2752,
+        2608
+      ],
+      "id": "13859ceb-aa36-43af-9b47-17ca572c4f4b",
+      "name": "On form submission",
+      "webhookId": "22229145-3f6f-4667-8529-82e1bda568ca"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "79b3d968-4dce-4b68-a645-0988de2cc771",
+              "name": "Nombre",
+              "value": "={{ $json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "99a70d39-cfe2-456f-8a95-d838f31b6901",
+              "name": "Correo",
+              "value": "={{ $json.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "4ca35fda-62b7-480c-81e0-7b463d1138bd",
+              "name": "Lecciones",
+              "value": "={{ $json['Numero de Lecciones'] }}",
+              "type": "number"
+            },
+            {
+              "id": "6e7e4726-729a-4a1b-a86e-76e65617971c",
+              "name": "Nivel",
+              "value": "={{ $json['Nivel del curso'] }}",
+              "type": "string"
+            },
+            {
+              "id": "fc6fa23b-038b-4a3a-ba2a-5adfe37049d9",
+              "name": "Objetivo del curso",
+              "value": "={{ $json['Objetivo del curso'] }}",
+              "type": "string"
+            },
+            {
+              "id": "521a5822-7c57-4c1c-b679-bca73f99a2d0",
+              "name": "CTA",
+              "value": "={{ $json['Call to Action (CTA)'] }}",
+              "type": "string"
+            },
+            {
+              "id": "3847450b-e330-437b-a259-32b232de6d00",
+              "name": "Idioma",
+              "value": "={{ $json.Idioma }}",
+              "type": "string"
+            },
+            {
+              "id": "41c5c32b-8601-4a93-80fa-6c9bd5d83bb7",
+              "name": "Tema",
+              "value": "={{ $json['Tema del Mini Curso'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2416,
+        2608
+      ],
+      "id": "b9dfd5a1-5ec8-4400-b77d-c748b003e3d7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos Ingresados por el usuario : \nNombre : {{ $json.Nombre }}\nCorreo : {{ $json.Correo }}\nLecciones : {{ $json.Lecciones }}\nNivel : {{ $json.Nivel }}\nObjetivo del Curso : {{ $json['Objetivo del curso'] }}\nCTA : {{ $json.CTA }}\nIdioma : {{ $json.Idioma }}\nTema : {{ $json.Tema }}\n",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres un creador experto en cursos educativos por email. Tu misión es generar un mini‑curso completo y profesional basado en los datos proporcionados del usuario.\n\n Instrucciones estrictas:\n- Mantén un tono profesional, claro y directo.\n- El curso debe estar en el idioma especificado por el usuario.\n- Cada lección debe incluir: asunto, introducción, desarrollo, ejemplo práctico, mini‑tarea y CTA final.\n- El objetivo principal del curso esta definido por la entrada del usuario por lo que debe incluir valor real + persuasión estratégica.\n- El CTA debe aparecer al final de cada lección.\n- No inventes datos fuera del formulario.\n- Usa formato limpio, organizado y fácil de leer.\n- No uses lenguaje robótico.\n- Utiliza Siempre los datos recibidos nunca inventes ningun dato.\n- Siempre debes Utilizar un tono profesional y muy claro.\n\n Datos del usuario:\nNombre: {{ $json.Nombre }}\nCorreo: {{ $json.Correo }}\nNúmero de lecciones: {{ $json.Lecciones }}\nNivel: {{ $json.Nivel }}\nObjetivo del curso: {{ $json['Objetivo del curso'] }}\nCTA final: {{ $json.CTA }}\nIdioma: {{ $json.Idioma }}\nTema del curso: {{ $json.Tema }}\n\n Estructura obligatoria del mini‑curso:\n\n**Título del Mini‑Curso:**  \nUn título profesional, atractivo y alineado al tema.\n\n**Descripción General:**  \n- Qué aprenderá el usuario  \n- A quién está dirigido  \n- Qué resultados obtendrá  \n- Por qué es importante este tema  \n\n**Índice del Curso:**  \nLista de las 2 lecciones con títulos claros.\n\n---\n\n### **Lección 1**\n**Asunto del email:**  \n(atractivo y profesional)\n\n**Contenido del email:**  \n- Introducción breve  \n- Explicación intermedia del concepto  \n- Ejemplo práctico  \n- Mini‑tarea para aplicar  \n- CTA final: “Agenda una cita”\n\n---\n\n### **Lección 2**\n**Asunto del email:**  \n(atractivo y profesional)\n\n**Contenido del email:**  \n- Introducción breve  \n- Explicación intermedia del concepto  \n- Ejemplo práctico  \n- Mini‑tarea para aplicar  \n- CTA final: “Agenda una cita”\n\n---\n\nUtiliza la herramienta \"Structured Output Parser\" para formatear todo el output generado.\n\nAl finalizar la generación del curso, utiliza la herramienta \"Append row in sheet in Google Sheets\" para guardar: Nombre, Correo y el Mini_Curso completo generado.\n\nGenera el mini‑curso siguiendo exactamente estas reglas.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1776,
+        2432
+      ],
+      "id": "d1dac108-a2d6-4ac1-b865-4ce3a0bd09c5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1984,
+        2896
+      ],
+      "id": "1723646e-0e92-4936-95ab-0f3f87c0f858",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1824,
+        3120
+      ],
+      "id": "31d4dc07-d4c3-437b-971c-0d12e9f44e69",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "=Mini Curso",
+        "message": "=Aqui tienes tu Curso Gratuito.Aprovechalo.",
+        "options": {
+          "appendAttribution": true,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        2672
+      ],
+      "id": "8c606a58-cfa2-4b45-9554-7085e40df10c",
+      "name": "Send a message",
+      "webhookId": "43099f17-4297-4512-8f41-619562596288",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18Jj4joXFlEc717AR_iBG7wIXAltWxdyLQvtYdlCSrhU",
+          "mode": "list",
+          "cachedResultName": "Freebies",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18Jj4joXFlEc717AR_iBG7wIXAltWxdyLQvtYdlCSrhU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Mini_Cursos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18Jj4joXFlEc717AR_iBG7wIXAltWxdyLQvtYdlCSrhU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Correo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Correo', ``, 'string') }}",
+            "Mini_Curso": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Mini_Curso', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Mini_Curso",
+              "displayName": "Mini_Curso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -1584,
+        2832
+      ],
+      "id": "0a80d4fa-85b4-4f57-9ce0-d5386ef40357",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"nombre\": \"\",\n\t\"correo\": \"\",\n    \"Titulo_Mini_Curso\" : \"\",\n    \"Mini_Curso\" : \"\",\n    \"Lecciones\" : \"\",\n    \"Nivel\" : \"\",\n    \"Objetivo_del_Curso\" : \"\",\n    \"CTA\" : \"CTA\",\n    \"Idioma\" : \"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -1264,
+        2960
+      ],
+      "id": "7b38080e-aa78-412d-8409-cbd72716289f",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "Crear y obtener archivo pdf para enviar por gmail y almacenar en google drive.",
+        "height": 688,
+        "width": 976,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        2208
+      ],
+      "typeVersion": 1,
+      "id": "462bc124-fc8c-4826-9b5c-201bde5f05ad",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Procesamiento con la IA ",
+        "height": 896,
+        "width": 928,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2048,
+        2352
+      ],
+      "typeVersion": 1,
+      "id": "07e83c2d-9c55-44b7-8ded-abf1e3e8f1f7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Captar brief cliente",
+        "height": 208,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2848,
+        2560
+      ],
+      "typeVersion": 1,
+      "id": "12d07f3f-63ae-45ee-bd19-d6a0725778f7",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Setear Datos del Brief",
+        "height": 416,
+        "width": 320,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2512,
+        2448
+      ],
+      "typeVersion": 1,
+      "id": "41fb8c4d-c7fc-4dc4-a097-cbf0cb39e3a9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model.",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1888,
+        3056
+      ],
+      "typeVersion": 1,
+      "id": "0182c2dd-9103-40e7-bd61-f3cdbf40c061",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales del Chat Model.",
+        "height": 192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2048,
+        2832
+      ],
+      "typeVersion": 1,
+      "id": "e6e3cb61-cc21-46db-bea8-2512550ff2bc",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1664,
+        2784
+      ],
+      "typeVersion": 1,
+      "id": "4f893256-6918-4f76-b6b9-e5b14f67100f",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Utilizar Plantillas Personalizadas para cada objetivo del mini curso de freebie.",
+        "height": 1280,
+        "width": 352,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        2000
+      ],
+      "typeVersion": 1,
+      "id": "0422650a-cb92-40f4-a528-e72d49dd97e2",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 240,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        2608
+      ],
+      "typeVersion": 1,
+      "id": "997f0646-63e7-45c3-aa3e-3b5ea0c2e5a5",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Edit Fields').item.json['Objetivo del curso'] }}",
+                    "rightValue": "Educar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b54bce84-b3f2-42d9-808c-1c8771b95650"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Educativo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "47ad5d44-abd2-4a5b-ad46-ffb357c16ec1",
+                    "leftValue": "={{ $('Edit Fields').item.json['Objetivo del curso'] }}",
+                    "rightValue": "Preparar venta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Preparacion_Venta"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ef15103c-26c5-4404-aa5c-4ca417fd7d14",
+                    "leftValue": "={{ $('Edit Fields').item.json['Objetivo del curso'] }}",
+                    "rightValue": "Vender",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vender"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1024,
+        2560
+      ],
+      "id": "baa2521e-1e77-4bc6-a939-ca4a4aad87de",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title> {{ $json.output.Titulo_Mini_Curso }}- Mini Curso</title>\n  <style>\n    body { font-family: Arial, sans-serif; padding: 40px; color: #222; line-height: 1.6; }\n    h1 { color: #1a73e8; }\n    h2 { margin-top: 25px; }\n    .section { margin-top: 30px; }\n    .content-box { background: #f9f9f9; padding: 20px; border-radius: 6px; border: 1px solid #ddd; }\n    .footer { margin-top: 40px; font-size: 12px; color: #777; text-align: center; border-top: 1px solid #ccc; padding-top: 15px; }\n  </style>\n</head>\n<body>\n  <h1>{{ $json.output.Titulo_Mini_Curso }} – Nivel {{ $json.output.Nivel }}</h1>\n  <p><strong>Autor:</strong> {{ $json.output.nombre }} </p>\n  <p><strong>Objetivo:</strong> {{ $json.output.Objetivo_del_Curso }}</p>\n\n  <div class=\"section\">\n    <h2>Descripción General</h2>\n    <p>{{ $json.output.Titulo_Mini_Curso }}</p>\n  </div>\n\n  <div class=\"section content-box\">\n    <h2>Lecciones</h2>\n    <p>{{ $json.output.Mini_Curso }}</p>\n  </div>\n\n  <div class=\"section\">\n    <h2>CTA</h2>\n    <p>{{ $json.output.CTA }}</p>\n  </div>\n\n  <div class=\"footer\">\n    <p>Mini curso generado  · DipusAI</p>\n  </div>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -704,
+        2224
+      ],
+      "id": "c021cd92-5f6f-4b95-8b8a-14dfcf9d18f5",
+      "name": "HTML_Educar"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>{{ $json.output.Titulo_Mini_Curso }} - Mini Curso</title>\n  <style>\n    body { font-family: Arial, sans-serif; padding: 40px; color: #222; line-height: 1.6; }\n    h1 { color: #333; }\n    h2 { margin-top: 25px; }\n    .highlight { background: #f5f5f5; padding: 20px; border-radius: 6px; border: 1px solid #ddd; }\n    .footer { margin-top: 40px; font-size: 12px; color: #777; text-align: center; border-top: 1px solid #ccc; padding-top: 15px; }\n  </style>\n</head>\n<body>\n  <h1>{{ $json.output.Titulo_Mini_Curso }} – Nivel {{ $json.output.Nivel }}</h1>\n  <p><strong>Instructor:</strong> {{ $json.output.nombre }} </p>\n  <p><strong>Objetivo:</strong> {{ $json.output.Objetivo_del_Curso }}</p>\n\n  <div class=\"highlight\">\n    <h2>Descripción General</h2>\n    <p>{{ $json.output.Titulo_Mini_Curso }}</p>\n  </div>\n\n  <div class=\"section highlight\">\n    <h2>Lecciones</h2>\n    <p>{{ $json.output.Mini_Curso }}</p>\n  </div>\n\n  <div class=\"section\">\n    <h2>CTA</h2>\n    <p>{{ $json.output.CTA }}</p>\n  </div>\n\n  <div class=\"footer\">\n    <p>Mini curso generado  · DipusAI</p>\n  </div>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -704,
+        2576
+      ],
+      "id": "f1990961-8b27-468a-a69a-bdf22c87dc00",
+      "name": "HTML_PrepararVenta"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>{{ $json.output.Titulo_Mini_Curso }} - Mini Curso</title>\n  <style>\n    body { font-family: Arial, sans-serif; padding: 40px; color: #222; line-height: 1.6; }\n    h1 { color: #d32f2f; }\n    h2 { margin-top: 25px; }\n    .cta-box { background: #fbe9e7; padding: 20px; border: 1px solid #d32f2f; border-radius: 6px; text-align: center; }\n    .footer { margin-top: 40px; font-size: 12px; color: #777; text-align: center; border-top: 1px solid #ccc; padding-top: 15px; }\n  </style>\n</head>\n<body>\n  <h1>{{ $json.output.Titulo_Mini_Curso }} – Nivel {{ $json.output.Nivel }}</h1>\n  <p><strong>Instructor:</strong> {{ $json.output.nombre }} </p>\n  <p><strong>Objetivo:</strong> {{ $json.output.Objetivo_del_Curso }}</p>\n\n  <div class=\"section\">\n    <h2>Descripción General</h2>\n    <p>{{ $json.output.Titulo_Mini_Curso }}</p>\n  </div>\n\n  <div class=\"section\">\n    <h2>Lecciones</h2>\n    <p>{{ $json.output.Mini_Curso }}</p>\n  </div>\n\n  <div class=\"cta-box\">\n    <h2>¡Actúa ahora!</h2>\n    <p>{{ $json.output.CTA }}</p>\n  </div>\n\n  <div class=\"footer\">\n    <p>Mini curso generado  · DipusAI</p>\n  </div>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -672,
+        2960
+      ],
+      "id": "4a9fc3dc-74ce-413b-8e21-93a805e21852",
+      "name": "HTML_Vender"
+    },
+    {
+      "parameters": {
+        "name": "mini_curso_Guia",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1nuCfRESKVrfKCDboks9RMBrwNmyqzel6",
+          "mode": "list",
+          "cachedResultName": "Imagen_Factura",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        352,
+        2304
+      ],
+      "id": "d5237e7d-10af-4af3-9e74-a6b759d7f0db",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qHjDWLou0NCCmWB8",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Parsear el output del agente",
+        "height": 256,
+        "width": 256,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1376,
+        2880
+      ],
+      "typeVersion": 1,
+      "id": "7470570e-30bc-4d61-8530-c3e943fe55b9",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Drive.",
+        "height": 240,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        2240
+      ],
+      "typeVersion": 1,
+      "id": "2e0d9b7e-036f-4218-a037-3b95c5665096",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "📌 Descripción del Workflow “Creador_Freebies”\nObjetivo que resuelve:  \nAutomatiza la creación y entrega de mini‑cursos personalizados como “freebies” a partir de un formulario. El flujo transforma los datos del usuario en un curso estructurado, lo convierte en PDF y lo guarda/envía automáticamente.\n\nImportancia y utilidad:\n\nAhorra tiempo en la generación de materiales educativos o de marketing.\n\nGarantiza consistencia y personalización según el objetivo del curso (Educar, Preparar venta, Vender).\n\nFacilita la entrega inmediata al cliente y el registro en Google Sheets para seguimiento.\n\nMejora la experiencia del usuario al recibir un recurso profesional sin intervención manual.\n\nHerramientas usadas:\n\nForm Trigger: captura datos del usuario.\n\nSet Node (Edit Fields): normaliza y organiza los campos.\n\nAI Agent (Gemini / OpenAI): genera el contenido del mini‑curso.\n\nSwitch + HTML Nodes: selecciona la plantilla adecuada según el objetivo.\n\nPDF.co  API (HTTP Request): convierte el HTML en PDF.\n\nCode Node: renombra el archivo PDF con formato dinámico.\n\nGoogle Sheets Tool: guarda registro del curso generado.\n\nOpcional Gmail/Drive: envía o almacena el PDF.\n\nPaso a paso breve de uso:\n\nEl usuario completa el formulario con sus datos (nombre, correo, tema, objetivo, etc.).\n\nEl nodo Edit Fields organiza la información.\n\nEl AI Agent genera el contenido del curso según los parámetros.\n\nEl Switch selecciona la plantilla HTML correspondiente (Educar, Preparar venta, Vender).\n\nEl HTML se convierte en PDF mediante PDF.co.\n\nEl Code Node renombra el PDF con el formato Freebie_Tipo_Tema_Cliente_MESAÑO.pdf.\n\nEl archivo se guarda en Google Sheets y puede enviarse por Gmail o subirse a Drive.",
+        "height": 1024,
+        "width": 1616,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        1984
+      ],
+      "typeVersion": 1,
+      "id": "e6bc33ff-9d0f-48bd-aaa2-71ddde42dfb6",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "authentication": "apiKey",
+        "outputFormat": "pdf",
+        "inputBinaryData": false,
+        "inputFileContent": "={{ $json.html }}",
+        "inputFilename": "html.html"
+      },
+      "type": "@cloudconvert/n8n-nodes-cloudconvert.cloudConvert",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        2496
+      ],
+      "id": "ee312d0a-6f76-4ac9-a828-d74eb35249aa",
+      "name": "CloudConvert",
+      "credentials": {
+        "cloudConvertApi": {
+          "id": "ejhGXnAUE5bnOOwB",
+          "name": "CloudConvert account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "HTML_Educar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTML_PrepararVenta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTML_Vender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML_Educar": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML_Vender": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML_PrepararVenta": {
+      "main": [
+        [
+          {
+            "node": "CloudConvert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CloudConvert": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "173dc62d-b16c-4acb-b8b3-748fb5455806",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "bqh2hVMLuPRhdnfV",
+  "tags": []
+}

@@ -1,0 +1,731 @@
+{
+  "name": "Loom_Outreach_Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Bienvenido a la comunidad",
+        "formDescription": "Automatizaciones al Instante.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre",
+              "placeholder": "Escribe tu nombre",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Apellido",
+              "placeholder": "Escribe tu apellido",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "correo",
+              "placeholder": "correo@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Descripcion",
+              "fieldType": "textarea",
+              "placeholder": "Explica brevemente el motivo para unirte a nuestra comunidad",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -592,
+        -80
+      ],
+      "id": "3b9d7af7-f44a-4c17-bfe4-8c4b2b8efa40",
+      "name": "On form submission",
+      "webhookId": "9e628169-8d56-4159-966f-124e26586fcf"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Datos Nuevo Cliente : \nNombre : {{ $json.Nombre }}\nApellido : {{ $json.Apellido }}\nCorreo : {{ $json.Correo }}\nDescripcion del problema : {{ $json.Descripcion }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Eres Agente Profesional Creador de Correos Outreach con videos de tipo loom dentro del correo con una url adaptado a cada cliente nuevo ingresado a la comunidad. \n\nExplica claramente los beneficios que ofrecemos y cómo podemos ayudar al cliente a resolver su problema y mejorar sus resultados.\n\nPersonaliza el mensaje con el nombre del cliente y nombre de la empresa cuando sea posible.\nFinaliza siempre con una invitación a continuar la conversación o agendar una reunión.\n\nNUNCA pongas texto extra ni comentarios solo devuelve la propuesta de correo electronico.\n\nDebes analizar los datos del usuario, pensar y proponer soluciones reales a su problema.\n\nDebes usar un tono profesional y ser breve y directo a la hora de generar el correo.\n\nUtiliza saltos de linea y separalo todo como si fuera un correo completamente profesional de una empresa de alto prestigio.\n\nEjemplo de correo generado\n\"Asunto: Bienvenido, [Nombre del Cliente] – Soluciones para impulsar tu negocio.\n\nCuerpo del correo:  \nHola {{ $json.Nombre }} {{ $json.Apellido }},\n\nEs un placer darte la bienvenida a DipusAI. Nuestro objetivo es ayudarte a optimizar tus procesos y resolver los desafíos que enfrentan negocios como el tuyo. Con nuestras soluciones, podrás ahorrar tiempo, mejorar la eficiencia y enfocarte en lo que realmente importa: hacer crecer tu empresa.\n\nNos encantaría conversar contigo para entender mejor tus necesidades y mostrarte cómo podemos aportar valor desde el primer día.\n\n¿Te parece si agendamos una breve reunión esta semana?\n\nSaludos cordiales,\n\nJesus Miguel\n\nDipusAI\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        880,
+        -80
+      ],
+      "id": "0a9d482a-b258-48ac-a815-0935186364d5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        656,
+        192
+      ],
+      "id": "ce27995e-4424-4e86-8dea-6e815ce9121a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "AxhKH3fJkjujb2Wj",
+          "name": "DIPUS Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ByVbqnN377uBuVJD347Wuyp9KaPtspss3fXw8JSzOoQ",
+          "mode": "list",
+          "cachedResultName": "Loom_Outreach_Client",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ByVbqnN377uBuVJD347Wuyp9KaPtspss3fXw8JSzOoQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 699802104,
+          "mode": "list",
+          "cachedResultName": "Propuesta",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ByVbqnN377uBuVJD347Wuyp9KaPtspss3fXw8JSzOoQ/edit#gid=699802104"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $('Edit Fields1').item.json.Nombre }}",
+            "Apellido": "={{ $('Edit Fields1').item.json.Apellido }}",
+            "Correo": "={{ $('Edit Fields1').item.json.Correo }}",
+            "Propuesta de solucion": "={{ $json.output[0].content[0].text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Apellido",
+              "displayName": "Apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Propuesta de solucion",
+              "displayName": "Propuesta de solucion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2144,
+        -80
+      ],
+      "id": "a59e3020-d578-4dc9-9128-bd9914099155",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "jesusmiguela546@gmail.com",
+        "subject": "={{ $('Message a model').item.json.output[0].content[0].text.Asunto }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        3120,
+        -80
+      ],
+      "id": "e17464b3-a816-4062-a60e-b1ce4d099347",
+      "name": "Send a message",
+      "webhookId": "b95444ae-5f12-4792-95c9-a1f5287bd129",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "seEAOnw1M8I2Sy5Y",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Seleccion de Datos",
+        "height": 256,
+        "width": 288,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "17a2ec9b-8eb0-4c79-82e9-18612f6b7ee0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Propuesta personalizada</title>\n  <meta name=\"color-scheme\" content=\"light\">\n  <meta name=\"supported-color-schemes\" content=\"light\">\n  <style>\n    /* Estilos sencillos y seguros para email */\n    body { margin:0; padding:0; }\n    table { border-collapse: collapse; }\n    img { border:0; display:block; }\n    .container { width:100%; background:#f5f7fa; padding:20px 0; }\n    .content { width:100%; max-width:600px; margin:0 auto; background:#ffffff; }\n    .padded { padding:24px; font-family: Arial, sans-serif; color:#222222; }\n    .h1 { font-size:22px; line-height:28px; color:#0b5bd3; margin:0 0 12px 0; }\n    .p { font-size:14px; line-height:20px; margin:0 0 12px 0; }\n    .label { font-weight:bold; }\n    .cta {\n      display:inline-block; background:#0b5bd3; color:#ffffff; text-decoration:none;\n      font-size:14px; padding:10px 16px; border-radius:4px;\n    }\n    .footer { font-size:12px; color:#666666; }\n  </style>\n</head>\n<body>\n  <table class=\"container\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n    <tr>\n      <td align=\"center\">\n        <table class=\"content\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n          <tr>\n            <td class=\"padded\">\n              <div class=\"h1\">Hola {{ $json.Nombre }} {{ $json.Apellido }},</div>\n              <p class=\"p\">Te comparto una propuesta personalizada para abordar tus desafíos con enfoque práctico y resultados medibles.</p>\n\n              <p class=\"p\"><span class=\"label\"> {{ $json[\"Propuesta de solucion\"].cuerpo }}</span> </p>\n             \n              <p class=\"p\">Preparé un breve video explicativo con la propuesta y próximos pasos.</p>\n              <p class=\"p\"><span class=\"label\">URL del video:</span> https://drive.google.com/drive/folders/1nuCfRESKVrfKCDboks9RMBrwNmyqzel6</p>\n\n              <p class=\"p\">\n                <a class=\"cta\" href=\"[URL_del_video_o_landing]\" target=\"_blank\" rel=\"noopener\">Ver el video</a>\n              </p>\n\n              <p class=\"p footer\"> ¿Te va bien una llamada de 15 minutos esta semana?</p>\n              <p class=\"p footer\">Gracias por tu tiempo. — Jesus Miguel · DipusAI · jesusmiguel546@gmai.com</p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>\n"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2640,
+        -80
+      ],
+      "id": "ea2856a5-51e6-421c-a1c2-5b84f7fd6865",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        352
+      ],
+      "id": "f0bebbad-f97e-47d8-b29d-011000760043",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Eres un Profesional en la revision,correccion y mejoramiento de correos electronicos personalizados para nuevo clientes de la empresa.\n\nTu mision es analizar, revisar y mejorar la propuesta de correo electronico siguiente : \n{{ $json.output }}\n\nDevuelve unicamente el resultado final sin comentario ni texto extra.\n\nDevuelve el Formato exclusivamente en JSON :\nEjemplo : \n[\n {\n\"Asunto\": \"aqui pones el asunto\",\n\"cuerpo\": \"aqui pones el cuerpo\"\n\n }\n\n\n]"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        -80
+      ],
+      "id": "41053875-e24a-4654-ac2d-4172c5cc57e6",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "cboKKSMqn7q3K0IJ",
+          "name": "OpenAi DIPUS Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96ac026c-2444-49da-a504-08e515b23b68",
+              "name": "Nombre",
+              "value": "={{ $json.Nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "86561580-5256-4369-a7fc-0eecf599af7a",
+              "name": "Apellido",
+              "value": "={{ $json.Apellido }}",
+              "type": "string"
+            },
+            {
+              "id": "71eef059-cee5-48d1-94a8-fd81aa2e5aa3",
+              "name": "Correo",
+              "value": "={{ $json.Correo }}",
+              "type": "string"
+            },
+            {
+              "id": "b7575793-0c69-4a4c-8f32-fdf9edb72b22",
+              "name": "Descripcion",
+              "value": "={{ $json['Descripcion problema'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        272,
+        -80
+      ],
+      "id": "68433921-6999-4331-962a-050f4365daf3",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ByVbqnN377uBuVJD347Wuyp9KaPtspss3fXw8JSzOoQ",
+          "mode": "list",
+          "cachedResultName": "Loom_Outreach_Client",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ByVbqnN377uBuVJD347Wuyp9KaPtspss3fXw8JSzOoQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Nuevos_Clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ByVbqnN377uBuVJD347Wuyp9KaPtspss3fXw8JSzOoQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ $json.Nombre }}",
+            "Apellido": "={{ $json.Apellido }}",
+            "Correo": "={{ $json.correo }}",
+            "Descripcion problema": "={{ $json.Descripcion }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Apellido",
+              "displayName": "Apellido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Correo",
+              "displayName": "Correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion problema",
+              "displayName": "Descripcion problema",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -192,
+        -80
+      ],
+      "id": "bbe36524-9edb-4e4a-a1f2-bf746ec04745",
+      "name": "Append row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Jpb0IHPZisLw92v8",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Form Trigger",
+        "height": 224,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -688,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "e7ffd4a4-6620-4cad-bd9f-8593b2d05897",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -288,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "6d092523-41bc-45de-9548-b9f03e4d2aee",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gemini",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "55e57f6f-a758-49a5-bd6c-5e3e7cf11047",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        848,
+        304
+      ],
+      "typeVersion": 1,
+      "id": "803a3eb9-549b-46a9-91e7-774afe9d8d3d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Analisis de Problema y Creacion de la Propuesta de Solucion.",
+        "height": 992,
+        "width": 688,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "20a51f72-c40f-4fdc-a15f-b67e0cae8d19",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de OpenAI",
+        "height": 272,
+        "width": 320,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1440,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "89a705eb-13b5-45d9-8af5-90a048046b8d",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Revision, correccion y mejoramiento de la propuesta de correo",
+        "height": 576,
+        "width": 544,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1344,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "e750f7fc-87d1-42ad-b12a-f33321468461",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Google Sheets",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2048,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "44548926-806d-4fd6-b3ca-be6734f8c0b1",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "Estructura HTML para enviar a traves del correo electronico",
+        "height": 320,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2416,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "428de099-8aed-43e6-9998-922fc6a0afbb",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Conectar Credenciales de Gmail",
+        "height": 208,
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3040,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "9333b950-267b-48a3-91a4-e4aa74da32e4",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "¿Por que no se uso Loom ? \nLoom es una herramienta para grabar y compartir videos de pantalla y cámara de manera rápida y sencilla.Asi que como  esto es una plantilla y se puede adaptar y modificar para cualquier necesidad. A continuacion un paso a paso de como conectar Loom en este flujo de n8n :\n\nPrimeramente debera crear su cuenta y video.\n1-Obtener metadata del video (oEmbed)\nNodo: HTTP Request.\n\nMétodo: GET.\n\nURL: https://www.loom.com/oembed?url={{ $json.loomUrl }}&hide_owner=true\n\nSalida esperada: JSON con title, thumbnail_url, html (código de embed para web), author_name.\n\nConsejo: guarda thumbnail_url, title y html para usar luego.\n\n2-Construir el enlace con seguimiento\nNodo: Set (o Function).\n\nObjetivo: crear trackingUrl que redirija al video (o a una landing con el embed).\n\nOpción A (redirigida): tu dominio https://tudominio.com/r?vid=ABC123&lead={{$json.prospectEmail}}.\n\nConfigura esa ruta en tu servidor para redirigir a la loomUrl o a tu landing y registrar el clic.\n\nOpción B (acortador): usa Bitly/Rebrandly y guarda el link acortado.\n",
+        "height": 560,
+        "width": 1056,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1856,
+        464
+      ],
+      "typeVersion": 1,
+      "id": "8f7207f2-2ced-447b-bb84-58b5d8f37adb",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "LOOM_OUTREACH_AGENT : \n\n📌 Descripción General\nEste workflow está diseñado para automatizar la captación y seguimiento de leads mediante un formulario de bienvenida, generación de propuestas personalizadas con IA y envío de correos profesionales con video (tipo Loom).\nIntegra varias herramientas (Google Sheets, Gmail, OpenAI, Gemini) para crear un flujo completo de onboarding y outreach automatizado.\n\n⚙️ Características Principales\nForm Trigger 📝\nCaptura datos de nuevos clientes (Nombre, Apellido, Correo, Descripción del problema).\n\nProcesamiento con IA (Gemini + OpenAI) 🤖\n\nGemini y OpenAI analizan la información del lead.\n\nGeneran un correo profesional personalizado con propuesta de solución.\n\nCorrigen y mejoran el texto para asegurar calidad y tono corporativo.\n\nGestión en Google Sheets 📊\n\nGuarda los datos del lead en una hoja (“Nuevos_Clientes”).\n\nRegistra la propuesta generada en otra hoja (“Propuesta”).\n\nGeneración de HTML para Email 💻\n\nConstruye un correo con estructura visual clara y CTA (botón de acción).\n\nIncluye enlace a video explicativo (ejemplo: carpeta Drive).\n\nEnvío automático por Gmail 📩\n\nEnvía el correo final al prospecto con propuesta y video.\n\n🛠️ Utilidades\nAutomatización de Outreach: elimina tareas manuales de redacción y envío de correos.\n\nPersonalización Escalable: cada lead recibe un mensaje adaptado a su problema.\n\nRegistro Centralizado: todos los datos y propuestas quedan guardados en Google Sheets.\n\nIntegración Multiplataforma: combina IA (Gemini/OpenAI), almacenamiento (Sheets), y comunicación (Gmail).\n\nProfesionalización del Contacto: el correo tiene formato corporativo, CTA y video explicativo.\n\n🔄 Función del Workflow\nCaptación: el cliente llena el formulario.\n\nProcesamiento: IA analiza y redacta propuesta personalizada.\n\nCorrección: OpenAI revisa y mejora el correo.\n\nRegistro: datos y propuesta se guardan en Sheets.\n\nEntrega: se genera HTML y se envía correo con video.\n\nSeguimiento: invitación a reunión o continuar conversación.\n\n✨ Puntos Destacables\nUso de IA dual (Gemini + OpenAI) para enriquecer la propuesta.\n\nSeparación de funciones: cada nodo cumple un rol específico (captura, análisis, registro, envío).\n\nEscalabilidad: se puede adaptar para múltiples campañas o comunidades.\n\nFlexibilidad: el sticky note explica cómo integrar Loom directamente con oEmbed para tracking avanzado.",
+        "height": 1280,
+        "width": 1248,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2096,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "ba04d20b-3aa9-423b-a43c-a08522aac10a",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Herramientas Utilizadas : \n\nForm Trigger : Usado para iniciar el workflow y captar los datos del cliente.\n\nGoogle Sheets  : Guarda los datos básicos del lead en la hoja Nuevos_Clientes. y registra la propuesta final de solución en la hoja Propuesta.\n\nSet  : Organiza y normaliza los campos del formulario para usarlos en el flujo.\n\nGoogle Gemini Chat Model : Genera una primera propuesta de correo personalizada a partir de los datos del cliente.\n\nOpenAI Chat Model : Complementa la generación de texto y conecta con el agente de IA.\n\nAI Agent : Crea el correo outreach profesional con beneficios y CTA adaptados al cliente.\n\nMessage a model : Revisa, corrige y mejora la propuesta de correo, devolviendo asunto y cuerpo en JSON.\n\nHTML : Construye la estructura visual del correo electrónico con saludo, propuesta y enlace al video.\n\nGmail  : Envía el correo final al prospecto con la propuesta y CTA.",
+        "height": 464,
+        "width": 1216,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "06072e4e-6b12-4327-9cd3-05c329f56cff",
+      "name": "Sticky Note13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8494b1a9-ff1f-418f-92b2-48096f9fee2f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e961393280904d1ec6d5445395224814ed81a50280c62aa05ae2658a77af53c"
+  },
+  "id": "iSfuRA883MO1bFiv",
+  "tags": []
+}
