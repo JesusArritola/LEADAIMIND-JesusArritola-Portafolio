@@ -36,9 +36,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://leadaimind.com',
   },
-  icons: {
-    icon: '/favicon.ico',
-  },
   openGraph: {
     title: 'LeadAIMind | Automatización Empresarial Profesional',
     description: 'Soluciones inteligentes de automatización que optimizan procesos empresariales y liberan tiempo de tu equipo.',

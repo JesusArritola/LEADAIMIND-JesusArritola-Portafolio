@@ -72,6 +72,34 @@ export function Portafolio3D() {
     setMounted(true)
   }, [])
 
+  // Lock body scroll while any modal is open
+  useEffect(() => {
+    const anyOpen = showCertModal || showCVModal || selectedCert !== null
+    if (anyOpen) {
+      const previous = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = previous
+      }
+    }
+  }, [showCertModal, showCVModal, selectedCert])
+
+  // ESC closes the top-most modal
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (selectedCert) {
+        setSelectedCert(null)
+      } else if (showCVModal) {
+        setShowCVModal(false)
+      } else if (showCertModal) {
+        setShowCertModal(false)
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [showCertModal, showCVModal, selectedCert])
+
   const handleCopy = async () => {
     await navigator.clipboard.writeText('jesusarritola@gmail.com')
     setCopied(true)
@@ -79,17 +107,25 @@ export function Portafolio3D() {
   }
 
   return (
-    <div className="min-h-screen relative bg-[#0c1324]">
-      {/* Background Image - Only on right side */}
-      <div className="absolute right-0 top-0 w-full md:w-[50%] lg:w-[45%] h-full pointer-events-none">
+    <div className="min-h-screen relative bg-[#0c1324] overflow-hidden">
+      {/* Background Image - Only on right side (hidden on mobile for clean content) */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 hidden md:block md:w-[55%] lg:w-[50%]"
+        aria-hidden="true"
+      >
         <Image
           src="/images/Foto3DPortafolio.png"
-          alt="Jesús Miguel Arritola"
+          alt=""
           fill
-          className="object-cover"
           priority
+          className="object-cover object-center opacity-[0.62] md:opacity-[0.7] saturate-[0.95]"
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-[#0c1324] via-[#0c1324]/60 to-transparent" />
+        {/* Left-to-right fade: seamless blend into the dark background */}
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-[#0c1324]/55 to-[#0c1324]" />
+        {/* Top/bottom vignette to frame the subject */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0c1324]/45 via-transparent to-[#0c1324]/75" />
+        {/* Subtle accent glow to tie into the brand color */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_68%_42%,rgba(0,255,194,0.08),transparent_72%)]" />
       </div>
 
       {/* Main Content */}
@@ -166,7 +202,7 @@ export function Portafolio3D() {
             transition={{ delay: 0.4 }}
             className="mb-6 md:mb-8"
           >
-            <div className="flex gap-2 md:gap-3 mb-4 md:mb-6 overflow-x-auto pb-2 items-center">
+            <div className="flex gap-3 md:gap-4 mb-4 md:mb-6 overflow-x-auto pb-2 items-center">
               {aboutData.map((item, i) => (
                 <button
                   key={item.title}
@@ -181,24 +217,29 @@ export function Portafolio3D() {
                   )}
                 </button>
               ))}
-              {/* Divider */}
-              <div className="w-px h-6 bg-[#3a4a43]/40 mx-1" />
-              {/* Certificados tab - highlighted */}
-              <button
-                onClick={() => setShowCertModal(true)}
-                className="relative whitespace-nowrap capitalize flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00FFC2]/10 border-2 border-[#00FFC2]/40 text-[#00FFC2] text-xs md:text-sm font-semibold hover:bg-[#00FFC2]/20 hover:border-[#00FFC2]/60 transition-all animate-glow-button"
-              >
-                <Award className="w-3.5 h-3.5" />
-                Certificados
-              </button>
-              {/* CV tab - highlighted */}
-              <button
-                onClick={() => setShowCVModal(true)}
-                className="relative whitespace-nowrap capitalize flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00FFC2]/10 border-2 border-[#00FFC2]/40 text-[#00FFC2] text-xs md:text-sm font-semibold hover:bg-[#00FFC2]/20 hover:border-[#00FFC2]/60 transition-all animate-glow-button"
-              >
-                <File className="w-3.5 h-3.5" />
-                CV
-              </button>
+
+              {/* Separator between tabs and action buttons */}
+              <div className="w-px h-6 bg-[#3a4a43]/40 ml-2 mr-1" aria-hidden="true" />
+
+              {/* Highlighted action buttons - spaced so glow halos never overlap */}
+              <div className="flex items-center gap-4 md:gap-5 pl-1 pr-2">
+                <button
+                  onClick={() => setShowCertModal(true)}
+                  aria-label="Abrir mis certificados"
+                  className="relative whitespace-nowrap capitalize flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00FFC2]/10 border-2 border-[#00FFC2]/40 text-[#00FFC2] text-xs md:text-sm font-semibold hover:bg-[#00FFC2]/20 hover:border-[#00FFC2]/60 transition-all animate-glow-button"
+                >
+                  <Award className="w-3.5 h-3.5" />
+                  Certificados
+                </button>
+                <button
+                  onClick={() => setShowCVModal(true)}
+                  aria-label="Abrir mi CV"
+                  className="relative whitespace-nowrap capitalize flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#00FFC2]/10 border-2 border-[#00FFC2]/40 text-[#00FFC2] text-xs md:text-sm font-semibold hover:bg-[#00FFC2]/20 hover:border-[#00FFC2]/60 transition-all animate-glow-button"
+                >
+                  <File className="w-3.5 h-3.5" />
+                  CV
+                </button>
+              </div>
             </div>
 
             {/* Tab Content */}
@@ -259,24 +300,53 @@ export function Portafolio3D() {
             
             <div className="grid grid-cols-1 gap-3">
               {certificados.map((cert, i) => (
-                <a 
-                  key={i} 
-                  href={cert.file}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 rounded-xl bg-[#0c1324]/50 border border-[#3a4a43]/20 hover:border-[#00FFC2]/40 transition-all group cursor-pointer"
+                <div
+                  key={i}
+                  className="group flex items-center justify-between gap-3 p-4 rounded-xl bg-[#0c1324]/50 border border-[#3a4a43]/20 hover:border-[#00FFC2]/40 transition-all"
                 >
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-10 h-10 rounded-lg bg-[#00FFC2]/10 flex items-center justify-center flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCert(cert)
+                      setShowCertModal(false)
+                    }}
+                    className="flex flex-1 items-center gap-4 min-w-0 text-left focus-visible:outline-2 focus-visible:outline-[#00FFC2] focus-visible:outline-offset-2 rounded-lg"
+                    aria-label={`Ver certificado: ${cert.name}`}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-[#00FFC2]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#00FFC2]/20 transition-colors">
                       <FileText className="w-5 h-5 text-[#00FFC2]" />
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <span className="text-sm text-white font-medium block truncate">{cert.name}</span>
-                      <span className="text-xs text-[#dce1fb]/50">Click para ver</span>
+                      <span className="text-xs text-[#dce1fb]/50">Click para previsualizar</span>
                     </div>
+                  </button>
+
+                  {/* Secondary actions: open in new tab / download */}
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <a
+                      href={cert.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2 rounded-lg text-[#dce1fb]/60 hover:text-[#00FFC2] hover:bg-[#00FFC2]/10 transition-all"
+                      title="Abrir en nueva pestaña"
+                      aria-label={`Abrir ${cert.name} en nueva pestaña`}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                    <a
+                      href={cert.file}
+                      download
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2 rounded-lg text-[#dce1fb]/60 hover:text-[#00FFC2] hover:bg-[#00FFC2]/10 transition-all"
+                      title="Descargar"
+                      aria-label={`Descargar ${cert.name}`}
+                    >
+                      <Download className="w-4 h-4" />
+                    </a>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-[#dce1fb]/40 flex-shrink-0" />
-                </a>
+                </div>
               ))}
             </div>
           </div>
@@ -319,36 +389,13 @@ export function Portafolio3D() {
                 </button>
               </div>
             </div>
-            <div className="h-[calc(100%-72px)] w-full">
-              <object
-                data="/CV_Jesus_Miguel_Arritola.pdf"
-                type="application/pdf"
-                className="w-full h-full"
-              >
-                <div className="flex flex-col items-center justify-center h-full bg-[#0c1324] p-8 text-center">
-                  <File className="w-16 h-16 text-[#00FFC2]/30 mb-4" />
-                  <p className="text-white mb-4">No se pudo cargar el PDF</p>
-                  <div className="flex gap-4">
-                    <a
-                      href="/CV_Jesus_Miguel_Arritola.pdf"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#00FFC2] text-[#003828] font-bold"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Abrir en nueva pestaña
-                    </a>
-                    <a
-                      href="/CV_Jesus_Miguel_Arritola.pdf"
-                      download
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#00FFC2] text-[#003828] font-bold"
-                    >
-                      <Download className="w-4 h-4" />
-                      Descargar
-                    </a>
-                  </div>
-                </div>
-              </object>
+            <div className="h-[calc(100%-72px)] w-full bg-[#0c1324]">
+              <iframe
+                src="/CV_Jesus_Miguel_Arritola.pdf#view=FitH&toolbar=1&navpanes=0"
+                title="Curriculum Vitae - Jesús Miguel Arritola"
+                className="w-full h-full border-0"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
@@ -387,36 +434,13 @@ export function Portafolio3D() {
                 </button>
               </div>
             </div>
-            <div className="h-[calc(100%-72px)] w-full">
-              <object
-                data={selectedCert.file}
-                type="application/pdf"
-                className="w-full h-full"
-              >
-                <div className="flex flex-col items-center justify-center h-full bg-[#0c1324] p-8 text-center">
-                  <FileText className="w-16 h-16 text-[#00FFC2]/30 mb-4" />
-                  <p className="text-white mb-4">No se pudo cargar el certificado</p>
-                  <div className="flex gap-4">
-                    <a
-                      href={selectedCert.file}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#00FFC2] text-[#003828] font-bold"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Abrir en nueva pestaña
-                    </a>
-                    <a
-                      href={selectedCert.file}
-                      download
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#00FFC2] text-[#003828] font-bold"
-                    >
-                      <Download className="w-4 h-4" />
-                      Descargar
-                    </a>
-                  </div>
-                </div>
-              </object>
+            <div className="h-[calc(100%-72px)] w-full bg-[#0c1324]">
+              <iframe
+                src={`${selectedCert.file}#view=FitH&toolbar=1&navpanes=0`}
+                title={selectedCert.name}
+                className="w-full h-full border-0"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
