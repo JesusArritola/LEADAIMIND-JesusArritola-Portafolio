@@ -646,7 +646,7 @@ tools: ['SAP', 'OpenAI', 'Contable', 'Stripe'],
     features: ['Generación de SOP con IA', 'Almacenamiento automático', 'Estructura profesional', 'Validación de datos'],
     useCases: ['Documentación de procesos', 'Estandarización empresarial', 'Onboarding de equipos'],
     tools: ['n8n', 'OpenAI GPT-4', 'Google Sheets', 'Google Drive', 'CloudConvert'],
-    image: '/images/Fotos_Jsons/Agente_Creador_de_SOPs(Procesos_Estandarizados)_MIO.png'
+    image: '/images/Fotos_Jsons/Agente_Creador_de_SOPs_MIO.png'
   },
   {
     id: 'agente-contratos-abogado',
@@ -718,7 +718,7 @@ tools: ['SAP', 'OpenAI', 'Contable', 'Stripe'],
     features: ['Generación de voiceover IA', 'Animaciones automáticas', 'Sincronización audio perfecta', 'Exportación MP4'],
     useCases: ['Videos educativos', 'Explicadores de producto', 'Marketing de contenido visual'],
     tools: ['n8n', 'ElevenLabs', 'Nano Banana', 'FFmpeg', 'Google Drive'],
-    image: '/images/Fotos_Jsons/Agente_Creador_de_Videos_"Whiteboard"_Mio.png'
+    image: '/images/Fotos_Jsons/Agente_Creador_de_Videos_Whiteboard_Mio.png'
   },
   {
     id: 'agente-avatar-generator',
@@ -949,7 +949,7 @@ tools: ['SAP', 'OpenAI', 'Contable', 'Stripe'],
     features: ['Videos personalizados', 'Personalización de email', 'Seguimiento de engagement', 'Análisis de conversión'],
     useCases: ['Sales outreach', 'Cold email campaigns', 'B2B prospección'],
     tools: ['n8n', 'Loom API', 'Gmail', 'Google Sheets', 'Lemlist'],
-    image: '/images/Fotos_Jsons/Loom_Outreach_Agent.png'
+    image: '/placeholder.svg'
   },
   {
     id: 'restaurant-order-chatbot',
